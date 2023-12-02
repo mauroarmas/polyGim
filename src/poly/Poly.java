@@ -21,7 +21,7 @@ public class Poly {
        Cliente c = new Cliente(43652957,"mercado","agustin","3865",fec,"recomendacion");
        
         System.out.println(c.toString());
-        
+          ///sdfsdfdsf
     }
     
 }
