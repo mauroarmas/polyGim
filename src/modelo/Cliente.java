@@ -4,6 +4,7 @@
  */
 package modelo;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -15,13 +16,13 @@ public class Cliente {
     private String apellido;
     private String nombre;
     private String telefono;
-    private Date fechaIngreso; 
+    private LocalDate  fechaIngreso; 
     private String comoLlego;
 
     public Cliente() {
     }
 
-    public Cliente(int dni, String apellido, String nombre, String telefono, Date fechaIngreso, String comoLlego) {
+    public Cliente(int dni, String apellido, String nombre, String telefono, LocalDate fechaIngreso, String comoLlego) {
         this.dni = dni;
         this.apellido = apellido;
         this.nombre = nombre;
@@ -62,13 +63,7 @@ public class Cliente {
         this.telefono = telefono;
     }
 
-    public Date getFechaIngreso() {
-        return fechaIngreso;
-    }
-
-    public void setFechaIngreso(Date fechaIngreso) {
-        this.fechaIngreso = new Date();
-    }
+   
 
     public String getComoLlego() {
         return comoLlego;
@@ -76,6 +71,11 @@ public class Cliente {
 
     public void setComoLlego(String comoLlego) {
         this.comoLlego = comoLlego;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" + "dni=" + dni + ", apellido=" + apellido + ", nombre=" + nombre + ", telefono=" + telefono + ", fechaIngreso=" + fechaIngreso + ", comoLlego=" + comoLlego + '}';
     }
     
     

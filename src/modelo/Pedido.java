@@ -4,6 +4,7 @@
  */
 package modelo;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -12,17 +13,17 @@ import java.util.Date;
  */
 public class Pedido {
     private int idPedido;
-    private Date fechaPedido;
-    private Date fechaVencimiento;
+    private LocalDate fechaPedido;
+    private LocalDate fechaVencimiento;
     private boolean estado;
     private Cliente cliente;
 
     public Pedido() {
     }
 
-    public Pedido(int idPedido, Date fechaPedido, Date fechaVencimiento, boolean estado, Cliente cliente) {
+    public Pedido(int idPedido, LocalDate fechaPedido, LocalDate fechaVencimiento, boolean estado, Cliente cliente) {
         this.idPedido = idPedido;
-        this.fechaPedido = new Date();
+        this.fechaPedido = fechaPedido;
         this.fechaVencimiento = fechaVencimiento;
         this.estado = estado;
         this.cliente = cliente;
@@ -39,22 +40,23 @@ public class Pedido {
         this.idPedido = idPedido;
     }
 
-    public Date getFechaPedido() {
+    public LocalDate getFechaPedido() {
         return fechaPedido;
     }
 
-    public void setFechaPedido(Date fechaPedido) {
+    public void setFechaPedido(LocalDate fechaPedido) {
         this.fechaPedido = fechaPedido;
     }
 
-    public Date getFechaVencimiento() {
+    public LocalDate getFechaVencimiento() {
         return fechaVencimiento;
     }
 
-    public void setFechaVencimiento(Date fechaVencimiento) {
+    public void setFechaVencimiento(LocalDate fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
     }
 
+  
     public boolean isEstado() {
         return estado;
     }
