@@ -4,48 +4,77 @@
  */
 package modelo;
 
-import java.util.ArrayList;
+
 
 /**
  *
  * @author agust
  */
 public class Localidad {
-    private int idLocalidad;
-    private String localidad;
-    ArrayList<Direccion> direcciones = new ArrayList<>();
-    
-    public Localidad() {
-    }
+   
+    //
+  // Fields
+  //
 
-    public Localidad(String localidad) {
-        this.localidad = localidad;
-    }
+  private int idLocalidad;
+  private String localidad;
+  
+  //
+  // Constructors
+  //
+  public Localidad () { };
 
-    public int getIdLocalidad() {
-        return idLocalidad;
-    }
-
-    public void setIdLocalidad(int idLocalidad) {
+  public Localidad(int idLocalidad, String localidad) {
         this.idLocalidad = idLocalidad;
-    }
-
-    public String getLocalidad() {
-        return localidad;
-    }
-
-    public void setLocalidad(String localidad) {
         this.localidad = localidad;
     }
+  
+  
+  //
+  // Methods
+  //
 
 
-    public void addDirecciones(String calle, int altura, Cliente c){
-     Direccion d = new Direccion();
-     d.setAltura(altura);
-     d.setCalle(calle);
-     d.setC(c);
-     direcciones.add(d);
+  //
+  // Accessor methods
+  //
+
+  /**
+   * Set the value of idLocalidad
+   * @param newVar the new value of idLocalidad
+   */
+  public void setIdLocalidad (int newVar) {
+    idLocalidad = newVar;
+  }
+
+  /**
+   * Get the value of idLocalidad
+   * @return the value of idLocalidad
+   */
+  public int getIdLocalidad () {
+    return idLocalidad;
+  }
+
+  /**
+   * Set the value of localidad
+   * @param newVar the new value of localidad
+   */
+  public void setLocalidad (String newVar) {
+    localidad = newVar;
+  }
+
+  /**
+   * Get the value of localidad
+   * @return the value of localidad
+   */
+  public String getLocalidad () {
+    return localidad;
+  }
+
+  //
+  // Other methods
+  //
     
-    }
+    
     
 }

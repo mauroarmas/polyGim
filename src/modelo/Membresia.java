@@ -9,42 +9,79 @@ package modelo;
  * @author agust
  */
 public class Membresia {
-    private int idMembresia;
-    private String membresia;
-    private double precio;
-
-    public Membresia() {
-    }
-
-    public Membresia(int idMembresia, String membresia, double precio) {
-        this.idMembresia = idMembresia;
-        this.membresia = membresia;
-        this.precio = precio;
-    }
-
-    public int getIdMembresia() {
-        return idMembresia;
-    }
-
-    public void setIdMembresia(int idMembresia) {
-        this.idMembresia = idMembresia;
-    }
-
-    public String getMembresia() {
-        return membresia;
-    }
-
-    public void setMembresia(String membresia) {
-        this.membresia = membresia;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
-    }
     
+    //
+  // Fields
+  //
+
+  private int idMembresia;
+  private String membresia;
+  private double precio;
+  
+  //
+  // Constructors
+  //
+  public Membresia () { };
+  
+  //
+  // Methods
+  //
+
+
+  //
+  // Accessor methods
+  //
+
+  /**
+   * Set the value of idMembresia
+   * @param newVar the new value of idMembresia
+   */
+  public void setIdMembresia (int newVar) {
+    idMembresia = newVar;
+  }
+
+  /**
+   * Get the value of idMembresia
+   * @return the value of idMembresia
+   */
+  public int getIdMembresia () {
+    return idMembresia;
+  }
+
+  /**
+   * Set the value of membresia
+   * @param newVar the new value of membresia
+   */
+  public void setMembresia (String newVar) {
+    membresia = newVar;
+  }
+
+  /**
+   * Get the value of membresia
+   * @return the value of membresia
+   */
+  public String getMembresia () {
+    return membresia;
+  }
+
+  /**
+   * Set the value of precio
+   * @param newVar the new value of precio
+   */
+  public void setPrecio (double newVar) {
+    precio = newVar;
+  }
+
+  /**
+   * Get the value of precio
+   * @return the value of precio
+   */
+  public double getPrecio () {
+    return precio;
+  }
+
+  //
+  // Other methods
+  //
     
 }

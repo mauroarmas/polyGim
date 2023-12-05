@@ -11,45 +11,97 @@ import java.util.ArrayList;
  * @author agust
  */
 public class Direccion {
-    private int idDireccion;
-    private String calle;
-    private int altura;
-    private Cliente c;
-    public Direccion() {
-    }
+   
+//
+  // Fields
+  //
 
-    public int getIdDireccion() {
-        return idDireccion;
-    }
+  private int idDireccion;
+  private String calle;
+  private int altura;
+  private Localidad m_localidad;
+  
+  //
+  // Constructors
+  //
+  public Direccion () { };
+  
+  //
+  // Methods
+  //
 
-    public void setIdDireccion(int idDireccion) {
-        this.idDireccion = idDireccion;
-    }
 
-    public String getCalle() {
-        return calle;
-    }
+  //
+  // Accessor methods
+  //
 
-    public void setCalle(String calle) {
-        this.calle = calle;
-    }
+  /**
+   * Set the value of idDireccion
+   * @param newVar the new value of idDireccion
+   */
+  public void setIdDireccion (int newVar) {
+    idDireccion = newVar;
+  }
 
-    public int getAltura() {
-        return altura;
-    }
+  /**
+   * Get the value of idDireccion
+   * @return the value of idDireccion
+   */
+  public int getIdDireccion () {
+    return idDireccion;
+  }
 
-    public void setAltura(int altura) {
-        this.altura = altura;
-    }
+  /**
+   * Set the value of calle
+   * @param newVar the new value of calle
+   */
+  public void setCalle (String newVar) {
+    calle = newVar;
+  }
 
-    public Cliente getC() {
-        return c;
-    }
+  /**
+   * Get the value of calle
+   * @return the value of calle
+   */
+  public String getCalle () {
+    return calle;
+  }
 
-    public void setC(Cliente c) {
-        this.c = c;
-    }
+  /**
+   * Set the value of altura
+   * @param newVar the new value of altura
+   */
+  public void setAltura (int newVar) {
+    altura = newVar;
+  }
 
+  /**
+   * Get the value of altura
+   * @return the value of altura
+   */
+  public int getAltura () {
+    return altura;
+  }
+
+  /**
+   * Set the value of m_localidad
+   * @param newVar the new value of m_localidad
+   */
+  private void setLocalidad (Localidad newVar) {
+    m_localidad = newVar;
+  }
+
+  /**
+   * Get the value of m_localidad
+   * @return the value of m_localidad
+   */
+  private Localidad getLocalidad () {
+    return m_localidad;
+  }
+
+  //
+  // Other methods
+  //
  
 
    
