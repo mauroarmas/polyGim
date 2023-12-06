@@ -3,10 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package poly;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.*;
+import org.mariadb.jdbc.Connection;
 /**
  *
  * @author agust
@@ -45,12 +49,16 @@ public class Poly {
         }
                  
          */
-         
+           
+    }
+           
+              
+    }
        
        
        
         
      
-    }
     
-}
+    
+
