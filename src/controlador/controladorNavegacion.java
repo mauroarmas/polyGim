@@ -4,12 +4,12 @@
  */
 package controlador;
 
-import View.Pedido;
+import View.PedidoJF;
 
 /**
  *
  * @author mercadito
  */
 public class controladorNavegacion {
-    static Pedido pedido = new Pedido();
+    static PedidoJF pedido = new PedidoJF();
 }
