@@ -4,10 +4,16 @@
  */
 package controlador;
 
+import java.util.ArrayList;
+import modelo.Cliente;
+
 /**
  *
  * @author mercadito
  */
 public class controladorCliente {
+    ArrayList<Cliente> clientes = new ArrayList<>();
+    
+    
     
 }
