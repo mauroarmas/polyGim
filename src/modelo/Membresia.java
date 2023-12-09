@@ -27,6 +27,12 @@ public class Membresia {
   // Methods
   //
 
+    public Membresia(int idMembresia, String membresia, double precio) {
+        this.idMembresia = idMembresia;
+        this.membresia = membresia;
+        this.precio = precio;
+    }
+
 
   //
   // Accessor methods
