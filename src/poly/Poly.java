@@ -51,7 +51,6 @@ public class Poly {
                  
          */
 
-       controlador.controladorPedido.estadoInicialPedido();
   
            
     }

@@ -24,7 +24,7 @@ public class controladorPedido {
     static Membresia a = new Membresia(1, "Dos semanas", 400);
     static Membresia b = new Membresia(2, "Mensual", 50000);
     static ArrayList<Membresia> membresiasRepositorio = new ArrayList<>();
-    static ArrayList<Pedido> pedidos = new ArrayList<>();
+    static ArrayList<Pedido> pedidosRepositorio = new ArrayList<>();
     static PedidoDb pedidoQuery = new PedidoDb();
 
     public static void estadoInicialPedido() {

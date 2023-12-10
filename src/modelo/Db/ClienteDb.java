@@ -12,13 +12,16 @@ import java.sql.SQLException;
  * @author mercadito
  */
 public class ClienteDb extends Db {   ///***HEREDAMOS LOS METODOS PARA LAS COSNULTAS
-
+  private String tabla="Cliente";
     
   public int ingresarCLiente(int dni) throws SQLException{
   
-   String sql = "asdasd 1";
+      
+      
+   String sql = "INSERT tabla INTO (dni) VALUES (?)";
    
-   sql=sql.replace("1", Integer.toString(dni));
+   sql=sql.replace("?", Integer.toString(dni));
+     sql=sql.replace("tabla", tabla);
 
   
    int filaAfectadas = ejecutarUpdateDeleteInsert(sql);
@@ -53,7 +56,7 @@ public class ClienteDb extends Db {   ///***HEREDAMOS LOS METODOS PARA LAS COSNU
   return null;
   }  
     
-    
+    //// SELECT idPedido, fecha_pedido,estado,fecha_vencimiento FROM Pedido WHERE dni=? ;
     
     
     

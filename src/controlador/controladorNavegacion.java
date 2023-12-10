@@ -21,7 +21,8 @@ public class controladorNavegacion {
         
    }
     public static void iniciarCLiente() {
-
+      clientejf.setVisible(true);
+      controladorCliente.estadoInicial();
 
     }
     

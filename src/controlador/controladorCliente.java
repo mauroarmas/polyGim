@@ -6,6 +6,7 @@ package controlador;
 
 import java.util.ArrayList;
 import modelo.Cliente;
+import static  controlador.controladorPedido.pedidosRepositorio;
 
 /**
  *
@@ -14,6 +15,12 @@ import modelo.Cliente;
 public class controladorCliente {
    static ArrayList<Cliente> clientesRepositorio = new ArrayList<>();
     
+   
+   public static void estadoInicial(){
+   
+   
+   
+   }
     
     
 }
