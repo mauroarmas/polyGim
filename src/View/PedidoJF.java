@@ -1,5 +1,8 @@
 package View;
 
+import controlador.controladorPedido;
+import java.awt.event.ActionListener;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -16,6 +19,7 @@ public class PedidoJF extends javax.swing.JFrame {
      */
     public PedidoJF() {
         initComponents();
+        
     }
 
     /**
@@ -127,7 +131,7 @@ public class PedidoJF extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel9.setText("Tiempo del pedido:");
 
-        comboTiempoPedido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mensual", "Dos semanas" }));
+        comboTiempoPedido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "...", "Mensual", "Dos semanas" }));
         comboTiempoPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboTiempoPedidoActionPerformed(evt);
@@ -422,7 +426,7 @@ public class PedidoJF extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegistrarPedidoActionPerformed
 
     private void comboTiempoPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboTiempoPedidoActionPerformed
-        // TODO add your handling code here:
+        controladorPedido.combobox();
     }//GEN-LAST:event_comboTiempoPedidoActionPerformed
 
     private void comboCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboCantidadActionPerformed
@@ -518,4 +522,6 @@ public class PedidoJF extends javax.swing.JFrame {
     public javax.swing.JTextField txtDniBuscarPedido;
     public javax.swing.JTextField txtDniPedido;
     // End of variables declaration//GEN-END:variables
+
+    
 }

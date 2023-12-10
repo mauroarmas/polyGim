@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import modelo.*;
 import org.mariadb.jdbc.Connection;
 /**
@@ -50,7 +51,8 @@ public class Poly {
                  
          */
 
-       System.out.println("sdffsdfs");
+       controlador.controladorPedido.estadoInicialPedido();
+  
            
     }
            

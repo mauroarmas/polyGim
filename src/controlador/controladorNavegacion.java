@@ -4,12 +4,37 @@
  */
 package controlador;
 
-import View.PedidoJF;
+import View.*;
 
 /**
  *
  * @author mercadito
  */
 public class controladorNavegacion {
-    static PedidoJF pedido = new PedidoJF();
+    static PedidoJF pedidojf = new PedidoJF();
+     static ClienteJF clientejf = new ClienteJF();
+   
+    public static void iniciarPrincipal(){
+
+     ///**AQUI ARRANCA EL SISTEMA**********////////// 
+     ///**AUN SE DEBE DEFINIR ÑA PANTALLA PRINCIPAL**********//////////       
+        
+   }
+    public static void iniciarCLiente() {
+
+
+    }
+    
+    
+    
+    
+    
+   public static void iniciarPedido(){
+   
+   
+   
+   
+   }
+    
+    
 }

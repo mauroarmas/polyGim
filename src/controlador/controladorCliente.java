@@ -12,7 +12,7 @@ import modelo.Cliente;
  * @author mercadito
  */
 public class controladorCliente {
-   static ArrayList<Cliente> clientes = new ArrayList<>();
+   static ArrayList<Cliente> clientesRepositorio = new ArrayList<>();
     
     
     

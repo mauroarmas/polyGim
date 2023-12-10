@@ -12,7 +12,25 @@ import java.sql.SQLException;
  * @author mercadito
  */
 public class PedidoDb extends Db{
-
+   private String tabla = "Pedido";
+    
+    
+     public ResultSet obtenerTodosLosPedidos(){
+     
+     
+         return null;
+     
+     
+     }
+     
+     
+    
+    
+    
+    
+    
+    
+    
     @Override
     protected int ejecutarUpdateDeleteInsert(String sql) throws SQLException {
         return super.ejecutarUpdateDeleteInsert(sql); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
