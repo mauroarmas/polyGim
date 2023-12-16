@@ -64,51 +64,110 @@ public class Db {
     /////******************************//////
     
     
-    
-    
-  /////**************FUNCION PARA HACER UNA CONSULTA SELECT****************//////
-    protected ResultSet ejecutarSelect(String sql) throws SQLException {
-        Connection c = getConnection();
-        ResultSet res = null;
-        try {
-            Statement statement = c.createStatement();
-            statement.execute(sql);
-            res = statement.getResultSet();
 
-        } catch (SQLException ex) {
-            System.out.println(ex);
+    
+     protected int ejecutarInsertConDevolucionDeClavePrimariaGenerada(String sql, Object... params) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int idGenerado = -1;
+
+        try {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            // Establecer los parámetros en la consulta preparada
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
+                System.out.println(params[i]);
+            }
+
+            int filasAfectadas = preparedStatement.executeUpdate();
+               System.out.println(filasAfectadas);
+            if (filasAfectadas > 0) {
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        idGenerado = generatedKeys.getInt(1);
+                         System.out.println(idGenerado);
+                    }
+                }
+            }
         } finally {
-            if (c != null) {
-                c.close();
+            closeResources(connection, preparedStatement);
+        }
+
+        return idGenerado;
+    }
+    
+     protected ResultSet ejecutarSelect(String sql, Object... params) throws SQLException {
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+    ResultSet resultSet = null;
+
+    try {
+        connection = getConnection();
+        preparedStatement = connection.prepareStatement(sql);
+
+        // Verificar si hay parámetros antes de establecerlos en la consulta preparada
+        if (params != null && params.length > 0) {
+            // Establecer los parámetros en la consulta preparada
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
             }
         }
-        return res;
+
+        preparedStatement.execute();
+        resultSet = preparedStatement.getResultSet();
+    } finally {
+        closeResources(connection, preparedStatement);
     }
 
-    /////************************************************************+************////// 
+    return resultSet;
+}
     
-    
-    
-     /////**************FUNCION PARA HACER UNA CONSULTA UPDATE,DELETE O INSERT****************//////
-    protected int ejecutarUpdateDeleteInsert(String sql) throws SQLException {
-        Connection c = getConnection();
+      protected int ejecutarUpdateDeleteInsert(String sql, Object... params) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         int filasAfectadas = 0;
+
         try {
-            Statement statement = c.createStatement();
-            filasAfectadas = statement.executeUpdate(sql);
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        } finally {
-            if (c != null) {
-                c.close();
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+
+            // Establecer los parámetros en la consulta preparada
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
             }
 
+            filasAfectadas = preparedStatement.executeUpdate();
+        } finally {
+            closeResources(connection, preparedStatement);
         }
-        return filasAfectadas;
 
+        return filasAfectadas;
     }
-    /////************************************************************+************////// 
+    
+    
+    
+    
    
-   
+  private void closeResources(Connection connection, Statement statement) {
+    try {
+        if (statement != null) {
+            statement.close();
+        }
+        if (connection != null) {
+            connection.close();
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        // Manejar la excepción de manera adecuada, como lanzar una excepción personalizada o registrarla.
+    }
+}
     
 }
+
+    
+
+
+
+

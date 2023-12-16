@@ -4,77 +4,76 @@
  */
 package modelo;
 
-
-
 /**
  *
  * @author agust
  */
 public class Localidad {
-   
-    //
-  // Fields
-  //
 
-  private int idLocalidad;
-  private String localidad;
-  
-  //
-  // Constructors
-  //
-  public Localidad () { };
+    //
+    // Fields
+    //
+    private int idLocalidad;
+    private String localidad;
+
+    //
+    // Constructors
+    //
+    public Localidad() {
+    }
+
+    ;
 
   public Localidad(int idLocalidad, String localidad) {
         this.idLocalidad = idLocalidad;
         this.localidad = localidad;
     }
-  
-  
-  //
-  // Methods
-  //
 
+    //
+    // Accessor methods
+    //
+    /**
+     * Set the value of idLocalidad
+     *
+     * @param newVar the new value of idLocalidad
+     */
+    public void setIdLocalidad(int newVar) {
+        idLocalidad = newVar;
+    }
 
-  //
-  // Accessor methods
-  //
+    /**
+     * Get the value of idLocalidad
+     *
+     * @return the value of idLocalidad
+     */
+    public int getIdLocalidad() {
+        return idLocalidad;
+    }
 
-  /**
-   * Set the value of idLocalidad
-   * @param newVar the new value of idLocalidad
-   */
-  public void setIdLocalidad (int newVar) {
-    idLocalidad = newVar;
-  }
+    /**
+     * Set the value of localidad
+     *
+     * @param newVar the new value of localidad
+     */
+    public void setLocalidad(String newVar) {
+        localidad = newVar;
+    }
 
-  /**
-   * Get the value of idLocalidad
-   * @return the value of idLocalidad
-   */
-  public int getIdLocalidad () {
-    return idLocalidad;
-  }
+    /**
+     * Get the value of localidad
+     *
+     * @return the value of localidad
+     */
+    public String getLocalidad() {
+        return localidad;
+    }
 
-  /**
-   * Set the value of localidad
-   * @param newVar the new value of localidad
-   */
-  public void setLocalidad (String newVar) {
-    localidad = newVar;
-  }
+    //
+    // Other methods
+    //
+    @Override
+    public String toString() {
+        return "Localidad{" + "idLocalidad=" + idLocalidad + ", localidad=" + localidad + '}';
+    }
 
-  /**
-   * Get the value of localidad
-   * @return the value of localidad
-   */
-  public String getLocalidad () {
-    return localidad;
-  }
-
-  //
-  // Other methods
-  //
-    
-    
-    
 }

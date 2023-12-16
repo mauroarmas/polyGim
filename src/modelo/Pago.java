@@ -10,59 +10,67 @@ package modelo;
  */
 public class Pago {
     //
-  // Fields
-  //
+    // Fields
+    //
 
-  private int idPago;
-  private double monto;
+    private Integer idPago;
+    private double monto;
+
+    //
+    // Constructors
+    //
+    public Pago() {
+    }
+
+    ;
   
-  //
-  // Constructors
-  //
-  public Pago () { };
-  
-  //
-  // Methods
-  //
 
 
-  //
-  // Accessor methods
-  //
+  public Pago(Integer idPago, double monto) {
+        this.idPago = idPago;
+        this.monto = monto;
+    }
 
-  /**
-   * Set the value of idPago
-   * @param newVar the new value of idPago
-   */
-  public void setIdPago (int newVar) {
-    idPago = newVar;
-  }
+    //
+    // Accessor methods
+    //
+    /**
+     * Set the value of idPago
+     *
+     * @param newVar the new value of idPago
+     */
+    public void setIdPago(Integer newVar) {
+        idPago = newVar;
+    }
 
-  /**
-   * Get the value of idPago
-   * @return the value of idPago
-   */
-  public int getIdPago () {
-    return idPago;
-  }
+    /**
+     * Get the value of idPago
+     *
+     * @return the value of idPago
+     */
+    public Integer getIdPago() {
+        return idPago;
+    }
 
-  /**
-   * Set the value of monto
-   * @param newVar the new value of monto
-   */
-  public void setMonto (double newVar) {
-    monto = newVar;
-  }
+    /**
+     * Set the value of monto
+     *
+     * @param newVar the new value of monto
+     */
+    public void setMonto(double newVar) {
+        monto = newVar;
+    }
 
-  /**
-   * Get the value of monto
-   * @return the value of monto
-   */
-  public double getMonto () {
-    return monto;
-  }
+    /**
+     * Get the value of monto
+     *
+     * @return the value of monto
+     */
+    public double getMonto() {
+        return monto;
+    }
 
-  //
-  // Other methods
-  //
+    //
+    // Other methods
+    //
 }

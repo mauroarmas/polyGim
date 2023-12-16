@@ -5,6 +5,7 @@
 package controlador;
 
 import View.*;
+import java.sql.SQLException;
 
 /**
  *
@@ -12,17 +13,16 @@ import View.*;
  */
 public class controladorNavegacion {
     static PedidoJF pedidojf = new PedidoJF();
-     static ClienteJF clientejf = new ClienteJF();
-   
+    static ClienteJF clientejf = new ClienteJF();
+    static ServicioJF serviciojf = new ServicioJF();
     public static void iniciarPrincipal(){
-
+  
      ///**AQUI ARRANCA EL SISTEMA**********////////// 
      ///**AUN SE DEBE DEFINIR ÑA PANTALLA PRINCIPAL**********//////////       
         
    }
     public static void iniciarCLiente() {
-      clientejf.setVisible(true);
-      controladorCliente.estadoInicial();
+     
 
     }
     
@@ -30,11 +30,14 @@ public class controladorNavegacion {
     
     
     
-   public static void iniciarPedido(){
-   
-   
-   
-   
+   public static void iniciarPedido() throws SQLException{
+   //pedidojf.setVisible(true);
+   //controladorPedido.estadoInicialPedido();
+        //controladorServicio.cargarArrayServicios();
+       
+       
+        controladorPedido.estadoInicialPedido();
+        
    }
     
     

@@ -13,7 +13,7 @@ public class Detalle {
   // Fields
   //
 
-  private int idDetalle;
+  private Integer idDetalle;
   private int cantidad;
   private double subtotal;
 
@@ -37,7 +37,7 @@ public class Detalle {
    * Set the value of idDetalle
    * @param newVar the new value of idDetalle
    */
-  public void setIdDetalle (int newVar) {
+  public void setIdDetalle (Integer newVar) {
     idDetalle = newVar;
   }
 
@@ -45,7 +45,7 @@ public class Detalle {
    * Get the value of idDetalle
    * @return the value of idDetalle
    */
-  public int getIdDetalle () {
+  public Integer getIdDetalle () {
     return idDetalle;
   }
 
@@ -99,5 +99,10 @@ public class Detalle {
   //
   // Other methods
   //
+
+    @Override
+    public String toString() {
+        return "Detalle{" + "idDetalle=" + idDetalle + ", cantidad=" + cantidad + ", subtotal=" + subtotal + ", idMembresia=" + m_mem.getIdMembresia() + '}';
+    }
     
 }

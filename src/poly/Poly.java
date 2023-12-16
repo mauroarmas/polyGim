@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package poly;
+import controlador.controladorDatos;
+import controlador.controladorNavegacion;
+import controlador.controladorServicio;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,7 +24,7 @@ public class Poly {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
        /* 
         ///CALCULAR FECHA ACTUAL
         LocalDate aa =  LocalDate.now();
@@ -50,8 +53,17 @@ public class Poly {
         }
                  
          */
-
-  
+            
+                
+                //LocalDate aa =  LocalDate.now();
+                //java.sql.Date fechaaql = java.sql.Date.valueOf(aa);
+                //System.out.println(aa);
+                //System.out.println(fechaaql);
+            //   controladorNavegacion.iniciarPedido();
+            
+           //  controladorNavegacion.iniciarPedido();
+            controladorDatos.loadArrayList();
+            controladorNavegacion.iniciarPedido();
            
     }
            

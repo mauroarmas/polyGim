@@ -11,7 +11,18 @@ import java.util.ArrayList;
  * @author mercadito
  */
 public class Pruba {
-    int nombre;
+    String nombre;
+    int pago;
+
+    public Pruba() {
+    }
+
+    @Override
+    public String toString() {
+        return "Pruba{" + "nombre=" + nombre + ", pago=" + pago + '}';
+    }
+    
+    /*
     ArrayList<Pago> pag ;
 
     public Pruba() {
@@ -53,8 +64,24 @@ public class Pruba {
    
    
     
+    */
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getPago() {
+        return pago;
+    }
+    
+    public void pago(){
+       pago = 100000;
     
     
-    
+    }
     
 }
