@@ -2,6 +2,9 @@ package View;
 
 import controlador.controladorPedido;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -462,7 +465,11 @@ public class PedidoJF extends javax.swing.JFrame {
     }//GEN-LAST:event_txtDniBuscarPedidoActionPerformed
 
     private void btnAñadirPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAñadirPagoActionPerformed
-        controladorPedido.añadirPago();
+        try {
+            controladorPedido.añadirPago();
+        } catch (SQLException ex) {
+            Logger.getLogger(PedidoJF.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnAñadirPagoActionPerformed
 
     /**
