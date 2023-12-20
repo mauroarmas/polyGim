@@ -6,13 +6,19 @@ package poly;
 import controlador.controladorDatos;
 import controlador.controladorNavegacion;
 import controlador.controladorServicio;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import modelo.*;
 import org.mariadb.jdbc.Connection;
 /**
@@ -62,10 +68,14 @@ public class Poly {
             //   controladorNavegacion.iniciarPedido();
             
            //  controladorNavegacion.iniciarPedido();
+          
             controladorDatos.loadArrayList();
-            controladorNavegacion.iniciarPedido();
-           
+           controladorNavegacion.iniciarPedido();
+       
+          
     }
+    
+   
            
               
 }

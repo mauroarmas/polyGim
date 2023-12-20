@@ -39,6 +39,7 @@ import modelo.Pago;
 public class controladorPedido {
 
     static PedidoDb pedidoQuery = new PedidoDb();
+    
 
     public static void estadoInicialPedido() throws SQLException {
          pedidojf.setVisible(true);
@@ -125,7 +126,7 @@ public class controladorPedido {
 
             if (nombreMembresia.equals("...") || (cantidadMem.isEmpty() || cantidadMem.equals("..."))) {
                 JOptionPane.showMessageDialog(null, "Seleccione adecuadamente los datos de la memebresia", "Adevertencia", JOptionPane.WARNING_MESSAGE);
-                ///pedidojf.txtDniPedido.setText("");
+              
                 return;
             }
 
@@ -161,13 +162,15 @@ public class controladorPedido {
             }
 
             Pago pago = controladorPago.iniciarPago(idPedido);
+            System.out.println(pago.getIdPago());
             if (pago.getIdPago() == null) {
                
                 pedidosRepositorio.add(p);
-
+                System.out.println("AAAAAAAAAAA");
             } else {
                 p.agregarPago(pago.getIdPago(), pago.getMonto());
                 pedidosRepositorio.add(p);
+                 System.out.println("BBBBBBBB");
             }
 
             cargarTatable();
@@ -183,15 +186,23 @@ public class controladorPedido {
     public static void añadirPago() throws SQLException {
         Object[] ped = getSelectRowData();
         int idPedido = (int) ped[0];
+        System.out.println(idPedido + "idPedido");
+        for(int i=0;i<5;i++){
         Pago pago = controladorPago.iniciarPago(idPedido);
-        if(pago.getIdPago() != null){
-             int index = buscarPedidoPoridPedido(idPedido);
-             pedidosRepositorio.get(index).agregarPago(pago.getIdPago(), pago.getMonto());
+        System.out.println(pago.getIdPago());
+        if(pago.getIdPago() == null){
+             
              pedidojf.tablaPedido.clearSelection();
              
         }else{
+            int index = buscarPedidoPoridPedido(idPedido);
+             System.out.println(index + "indice de pedido");
+             pedidosRepositorio.get(index).agregarPago(pago.getIdPago(), pago.getMonto());
           pedidojf.tablaPedido.clearSelection();
         }
+        }
+        
+        
         
         
     }
@@ -268,13 +279,13 @@ public class controladorPedido {
         for (Cliente cliente : clientesRepositorio) {
 
             if (cliente.getDni() == dni) {
-                // El cliente fue encontrado
+                
                 return true;
             }
 
         }
 
-        // El cliente no fue encontrado
+       
         return false;
     }
 
