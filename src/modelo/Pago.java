@@ -73,4 +73,10 @@ public class Pago {
     //
     // Other methods
     //
+
+    @Override
+    public String toString() {
+        return "Pago{" + "idPago=" + idPago + ", monto=" + monto + '}';
+    }
+    
 }

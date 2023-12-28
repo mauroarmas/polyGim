@@ -4,6 +4,8 @@
  */
 package View;
 
+import controlador.controladorPago;
+
 /**
  *
  * @author mercadito
@@ -314,11 +316,11 @@ public class PagoJF extends javax.swing.JFrame {
     }//GEN-LAST:event_txtMontoActionPerformed
 
     private void btnCancelarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarPagoActionPerformed
-      
+      controladorPago.cancelarPaggo();
     }//GEN-LAST:event_btnCancelarPagoActionPerformed
 
     private void btnRegistrarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarPagoActionPerformed
-        // TODO add your handling code here:
+       controladorPago.registrarPago();
     }//GEN-LAST:event_btnRegistrarPagoActionPerformed
 
     private void txtMontoAncestorMoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_txtMontoAncestorMoved

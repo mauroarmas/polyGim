@@ -161,7 +161,14 @@ public class Pedido {
         detalle.setSubtotal();
         detalles.add(detalle);
     }
-
+   public void modificarArrayDetalle(int index,int cantidad, Membresia mem){
+       detalles.get(index).setCantidad(cantidad);
+        detalles.get(index).setMem(mem);
+        detalles.get(index).setSubtotal();
+        
+       
+   
+   }
     public double getTotal() {
         return total;
     }
@@ -171,7 +178,7 @@ public class Pedido {
     }
 
     public void calcularSumaSubtotales() {
-
+        total=0;
         for (Detalle detalle : detalles) {
             total = total + detalle.getSubtotal();
         }
@@ -221,7 +228,7 @@ public class Pedido {
 
         } else {
 
-            fechaVencimiento = fechaPedido.plusDays(15);
+            fechaVencimiento = fechaPedido.plusWeeks(cantidadM);
 
         }
 

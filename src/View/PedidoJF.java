@@ -56,9 +56,6 @@ public class PedidoJF extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         txtDniBuscarPedido = new javax.swing.JTextField();
-        btnBuscarPedido = new javax.swing.JButton();
-        btnVerDetalle = new javax.swing.JButton();
-        btnActualizarTablaPedido = new javax.swing.JButton();
         btnModificarPedidoTabla = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaPedido = new javax.swing.JTable();
@@ -136,7 +133,7 @@ public class PedidoJF extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel9.setText("Tiempo del pedido:");
 
-        comboTiempoPedido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "...", "Mensual", "Dos semanas" }));
+        comboTiempoPedido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "...", "Mensual", "Semanal" }));
         comboTiempoPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboTiempoPedidoActionPerformed(evt);
@@ -257,36 +254,6 @@ public class PedidoJF extends javax.swing.JFrame {
             }
         });
 
-        btnBuscarPedido.setBackground(new java.awt.Color(255, 102, 102));
-        btnBuscarPedido.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        btnBuscarPedido.setForeground(new java.awt.Color(255, 255, 255));
-        btnBuscarPedido.setText("BUSCAR");
-        btnBuscarPedido.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarPedidoActionPerformed(evt);
-            }
-        });
-
-        btnVerDetalle.setBackground(new java.awt.Color(255, 102, 102));
-        btnVerDetalle.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        btnVerDetalle.setForeground(new java.awt.Color(255, 255, 255));
-        btnVerDetalle.setText("VER DETALLE");
-        btnVerDetalle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVerDetalleActionPerformed(evt);
-            }
-        });
-
-        btnActualizarTablaPedido.setBackground(new java.awt.Color(255, 102, 102));
-        btnActualizarTablaPedido.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        btnActualizarTablaPedido.setForeground(new java.awt.Color(255, 255, 255));
-        btnActualizarTablaPedido.setText("ACTUALIZAR");
-        btnActualizarTablaPedido.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActualizarTablaPedidoActionPerformed(evt);
-            }
-        });
-
         btnModificarPedidoTabla.setBackground(new java.awt.Color(255, 102, 102));
         btnModificarPedidoTabla.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         btnModificarPedidoTabla.setForeground(new java.awt.Color(255, 255, 255));
@@ -343,11 +310,8 @@ public class PedidoJF extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnBuscarPedido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnActualizarTablaPedido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnVerDetalle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnModificarPedidoTabla, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnAñadirPago, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(btnAñadirPago, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnModificarPedidoTabla, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 982, Short.MAX_VALUE)
                 .addContainerGap())
@@ -361,17 +325,11 @@ public class PedidoJF extends javax.swing.JFrame {
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtDniBuscarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnBuscarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnActualizarTablaPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnVerDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(36, 36, 36)
                         .addComponent(btnModificarPedidoTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(btnAñadirPago, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 11, Short.MAX_VALUE))
+                        .addGap(0, 128, Short.MAX_VALUE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -420,20 +378,8 @@ public class PedidoJF extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnBuscarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPedidoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscarPedidoActionPerformed
-
-    private void btnVerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerDetalleActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnVerDetalleActionPerformed
-
-    private void btnActualizarTablaPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarTablaPedidoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnActualizarTablaPedidoActionPerformed
-
     private void btnModificarPedidoTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarPedidoTablaActionPerformed
-        // TODO add your handling code here:
+      controladorPedido.btnModificar();
     }//GEN-LAST:event_btnModificarPedidoTablaActionPerformed
 
     private void btnActualizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarPedidoActionPerformed
@@ -461,7 +407,7 @@ public class PedidoJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void txtDniBuscarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDniBuscarPedidoActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_txtDniBuscarPedidoActionPerformed
 
     private void btnAñadirPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAñadirPagoActionPerformed
@@ -516,12 +462,9 @@ public class PedidoJF extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnActualizarPedido;
-    public javax.swing.JButton btnActualizarTablaPedido;
     public javax.swing.JButton btnAñadirPago;
-    public javax.swing.JButton btnBuscarPedido;
     public javax.swing.JButton btnModificarPedidoTabla;
     public javax.swing.JButton btnRegistrarPedido;
-    public javax.swing.JButton btnVerDetalle;
     public javax.swing.JComboBox<String> comboCantidad;
     public javax.swing.JComboBox<String> comboTiempoPedido;
     public javax.swing.JComboBox<String> comoServicio;

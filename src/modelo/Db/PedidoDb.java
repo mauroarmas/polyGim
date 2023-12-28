@@ -43,14 +43,14 @@ int idGenerado = ejecutarInsertConDevolucionDeClavePrimariaGenerada(sql, fechaIs
     }
     public ResultSet selectPedido() throws SQLException{
     
-    String sql = "SELECT * FROM Pedido";
+    String sql = "SELECT * FROM Pedido ORDER BY estado";
     ResultSet res = ejecutarSelect(sql);
     return res;
     }
     
     public ResultSet getPedidoByDni(int dni) throws SQLException{
-    String sql = "SELECT * FROM Pedido WHERE clienteDni=?";
-    ResultSet res = ejecutarSelect(sql,dni);
+    String sql = "SELECT * FROM Pedido p  WHERE clienteDni  LIKE ? ORDER BY estado";
+    ResultSet res = ejecutarSelect(sql,dni + "%");
     return res;
     
     }
@@ -60,8 +60,27 @@ int idGenerado = ejecutarInsertConDevolucionDeClavePrimariaGenerada(sql, fechaIs
     int filasAfectadas = ejecutarUpdateDeleteInsert(sql,idPedido);
     return filasAfectadas; 
     }
-   
     
+    
+    public ResultSet getClienteForPedido(int dni) throws SQLException{
+    String sql ="SELECT c.apellido,c.nombre FROM Cliente as c WHERE dni=? ";
+     ResultSet res = ejecutarSelect(sql,dni);
+     return res;
+    }
+   
+    public int updatePedido(int idPedido, LocalDate fechaI, LocalDate fechaV, int estado, double total) throws SQLException{
+        java.sql.Date fechaIsql = java.sql.Date.valueOf(fechaI);
+        java.sql.Date fechaVsql = java.sql.Date.valueOf(fechaV);
+     String sql ="UPDATE Pedido SET fecha_pedido=?, fecha_vencimiento=? ,estado=? ,total=? WHERE idPedido=?";
+    int filasAfectadas=ejecutarUpdateDeleteInsert(sql,fechaIsql,fechaVsql,estado,total,idPedido);
+    return filasAfectadas;
+    }
+    public int updateDetalle(int idDetalle,int idPedido, int cantidad, int idMembresia, double subtotal) throws SQLException{
+        String sql ="UPDATE Detalle SET cantidad=?, idMembresia=?, subtotal=? WHERE idPedido=? AND idDetalle=?";
+        
+    int filasAfectadas=ejecutarUpdateDeleteInsert(sql,cantidad,idMembresia,subtotal,idPedido,idDetalle);
+    return filasAfectadas;
+    }
     
     
     ///*********************FUNCIONES HEREDADAS**************////////////////////

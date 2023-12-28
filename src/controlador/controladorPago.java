@@ -16,6 +16,8 @@ import javax.swing.JOptionPane;
 import modelo.Db.PagoDb;
 import modelo.Pago;
 import static controlador.controladorPedido.pedidoQuery;
+import static controlador.controladorDatos.pedidosRepositorio;
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import javax.swing.SwingUtilities;
 
@@ -29,12 +31,13 @@ public class controladorPago {
 
     static PagoDb queryPago = new PagoDb();
     static PagoJF pagojf = new PagoJF();
-  
+    static int idPedidoP;
 
 
 
-    public static Pago iniciarPago(int idPedido) throws SQLException {
-      double de = -1;
+    public static void iniciarPago(int idPedido) throws SQLException {
+        idPedidoP=idPedido;
+        double de = -1;
         pagojf.txtMonto.setText("");
         pagojf.setVisible(true);
         ResultSet resDatosDePago = queryPago.traerDatosDePago(idPedido);
@@ -63,7 +66,7 @@ public class controladorPago {
         if (de == 0) {
             pagojf.btnRegistrarPago.setEnabled(false);
         }
-
+         /*
         for (ActionListener al : pagojf.btnRegistrarPago.getActionListeners()) {
             pagojf.btnRegistrarPago.removeActionListener(al);
         }
@@ -71,15 +74,23 @@ public class controladorPago {
             pagojf.btnCancelarPago.removeActionListener(al);
         }
 
-        pagojf.btnRegistrarPago.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent m) {
-              try {
+     
+
+      */
+
+
+}
+    
+    public static void registrarPago(){
+        System.out.println(idPedidoP + "PEDIDO EN BTNREGIS");
+        ArrayList <Pago> p = new ArrayList<>();
+                    try {
+                        Pago pago = new Pago();
                     double deuda = Double.parseDouble(pagojf.txtPagoDeuda.getText());
 
                     double monto = Double.parseDouble(pagojf.txtMonto.getText());
                     if (monto > deuda) {
-                        int idPago = queryPago.registrarPago(deuda, idPedido);
+                        int idPago = queryPago.registrarPago(deuda, idPedidoP);
                         if (idPago == -1) {
                             JOptionPane.showMessageDialog(null, "Hubo un error al registrar el pago", "Adevertencia", JOptionPane.WARNING_MESSAGE);
                             pagojf.txtMonto.setText("");
@@ -96,15 +107,17 @@ public class controladorPago {
                             pagojf.txtPagoDeuda.setText("0");
                             pagojf.txtMonto.setText("");
                             pagojf.btnRegistrarPago.setEnabled(false);
-                            int filasAfectadas = pedidoQuery.modificarEstadoPedido(idPedido);
-
+                            int filasAfectadas = pedidoQuery.modificarEstadoPedido(idPedidoP);
+                            int index = controladorPedido.buscarPedidoPoridPedido(idPedidoP);
+                            pedidosRepositorio.get(index).agregarPago(pago.getIdPago(),pago.getMonto() );
+                              
                             controladorPedido.cargarTatable();
                              
                             return;
                         }
 
                     } else if (monto < deuda) {
-                        int idPago = queryPago.registrarPago(monto, idPedido);
+                        int idPago = queryPago.registrarPago(monto, idPedidoP);
                         if (idPago == -1) {
                             JOptionPane.showMessageDialog(null, "Hubo un error al registrar el pago", "Adevertencia", JOptionPane.WARNING_MESSAGE);
                             pagojf.txtMonto.setText("");
@@ -118,11 +131,13 @@ public class controladorPago {
                             pago.setMonto(monto);
                             pagojf.txtMonto.setText("");
                             pagojf.txtPagoDeuda.setText(String.valueOf(deuda - monto));
-                        
+                             int index = controladorPedido.buscarPedidoPoridPedido(idPedidoP);
+                            pedidosRepositorio.get(index).agregarPago(pago.getIdPago(),pago.getMonto() );
+                           
                             return;
                         }
                     } else {
-                        int idPago = queryPago.registrarPago(monto, idPedido);
+                        int idPago = queryPago.registrarPago(monto, idPedidoP);
                         if (idPago == -1) {
                             JOptionPane.showMessageDialog(null, "Hubo un error al registrar el pago", "Adevertencia", JOptionPane.WARNING_MESSAGE);
                             pagojf.txtMonto.setText("");
@@ -136,8 +151,11 @@ public class controladorPago {
                             pago.setMonto(monto);
                             pagojf.txtPagoDeuda.setText("0");
                             pagojf.btnRegistrarPago.setEnabled(false);
-                            int filasAfectadas = pedidoQuery.modificarEstadoPedido(idPedido);
-
+                            int filasAfectadas = pedidoQuery.modificarEstadoPedido(idPedidoP);
+                            int index = controladorPedido.buscarPedidoPoridPedido(idPedidoP);
+                            pedidosRepositorio.get(index).agregarPago(pago.getIdPago(),pago.getMonto() );
+                             p = pedidosRepositorio.get(index).getPagos();
+                            
                             controladorPedido.cargarTatable();
                             
 
@@ -150,28 +168,15 @@ public class controladorPago {
                     System.out.println("La cadena no es un número double válido.");
                 } catch (SQLException ex) {
                     Logger.getLogger(controladorPago.class.getName()).log(Level.SEVERE, null, ex);
-                }             
-                
-              
-            }
-
-        });
-
-        pagojf.btnCancelarPago.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pagojf.setVisible(false);
-                
-               
-               
-            }
-
-        });
-          
-
-        return pago;
-
-
-}
+                }
+            
+    }
+    
+    public static void cancelarPaggo(){
+    
+    
+    pagojf.setVisible(false);
+    
+    }
 
 }
