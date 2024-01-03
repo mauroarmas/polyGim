@@ -331,19 +331,139 @@ public class controladorPedido {
                 
                 if(montoTotal>pedidosRepositorio.get(indexPedido).getTotal()){
                     
+                      try {
+                        int filasAfectadasPedido=pedidoQuery.updatePedido(idPedido,
+                                pedidosRepositorio.get(indexPedido).getFechaPedido() ,
+                                pedidosRepositorio.get(indexPedido).getFechaVencimiento(),
+                                1,
+                                pedidosRepositorio.get(indexPedido).getTotal());
+                    int[] filasAfectadasDetalle = new int[detP.size()];
+                    for(int l=0;l<detP.size();l++){
+                     filasAfectadasDetalle[l]=pedidoQuery.updateDetalle(detP.get(l).getIdDetalle(),
+                             idPedido,
+                             detP.get(l).getCantidad(),
+                             detP.get(l).getMem().getIdMembresia(),
+                             detP.get(l).getSubtotal());
+                    }
+                        pedidojf.btnActualizarPedido.setEnabled(false);
+                        pedidojf.btnRegistrarPedido.setEnabled(true);
+                         pedidojf.txtDniPedido.setEnabled(true);
+                         pedidojf.txtDniPedido.setText("");
+                          pedidojf.comboTiempoPedido.setSelectedIndex(0);
+                         
+                       cargarTatable();
+                            
+                        
+                    } catch (SQLException ex) {
+                        Logger.getLogger(controladorPedido.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    
+                    pedidosRepositorio.get(indexPedido).getPagos().clear();
+                    int filasAfectadasDeleteP = 0;
+                    try {
+                        filasAfectadasDeleteP = pedidoQuery.deletePago(pedidosRepositorio.get(indexPedido).getIdPedido());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(controladorPedido.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    int idGenerado = 0;
+                    try {
+                        idGenerado = pedidoQuery.insertPago(montoTotal, pedidosRepositorio.get(indexPedido).getIdPedido());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(controladorPedido.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                     if(idGenerado == -1 || filasAfectadasDeleteP==0){
+                         JOptionPane.showMessageDialog(null, "HUBO UN ERROR CON LA BASE DE DATOS", "ERROR", JOptionPane.WARNING_MESSAGE);
+
+                          return;
+                     
+                     }
+                    
+                    
+                     double vuelto = montoTotal - pedidosRepositorio.get(indexPedido).getTotal();
+                     
+                         JOptionPane.showMessageDialog(null, "el vuelto del cliente es "+vuelto, "INFORMACION", JOptionPane.WARNING_MESSAGE);
+                       
+                    
                     
                 }else if(montoTotal<pedidosRepositorio.get(indexPedido).getTotal()){
-                
+                     try {
+                        int filasAfectadasPedido=pedidoQuery.updatePedido(idPedido,
+                                pedidosRepositorio.get(indexPedido).getFechaPedido() ,
+                                pedidosRepositorio.get(indexPedido).getFechaVencimiento(),
+                                0,
+                                pedidosRepositorio.get(indexPedido).getTotal());
+                    int[] filasAfectadasDetalle = new int[detP.size()];
+                    for(int l=0;l<detP.size();l++){
+                     filasAfectadasDetalle[l]=pedidoQuery.updateDetalle(detP.get(l).getIdDetalle(),
+                             idPedido,
+                             detP.get(l).getCantidad(),
+                             detP.get(l).getMem().getIdMembresia(),
+                             detP.get(l).getSubtotal());
+                    }
+                        pedidojf.btnActualizarPedido.setEnabled(false);
+                        pedidojf.btnRegistrarPedido.setEnabled(true);
+                         pedidojf.txtDniPedido.setEnabled(true);
+                         pedidojf.txtDniPedido.setText("");
+                          pedidojf.comboTiempoPedido.setSelectedIndex(0);
+                         
+                       cargarTatable();
+                            
+                        
+                    } catch (SQLException ex) {
+                        Logger.getLogger(controladorPedido.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        controladorPago.iniciarPago(pedidosRepositorio.get(indexPedido).getIdPedido());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(controladorPedido.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 
                 }else{
-                
+                     try {
+                        int filasAfectadasPedido=pedidoQuery.updatePedido(idPedido,
+                                pedidosRepositorio.get(indexPedido).getFechaPedido() ,
+                                pedidosRepositorio.get(indexPedido).getFechaVencimiento(),
+                                1,
+                                pedidosRepositorio.get(indexPedido).getTotal());
+                    int[] filasAfectadasDetalle = new int[detP.size()];
+                    for(int l=0;l<detP.size();l++){
+                     filasAfectadasDetalle[l]=pedidoQuery.updateDetalle(detP.get(l).getIdDetalle(),
+                             idPedido,
+                             detP.get(l).getCantidad(),
+                             detP.get(l).getMem().getIdMembresia(),
+                             detP.get(l).getSubtotal());
+                    }
+                        pedidojf.btnActualizarPedido.setEnabled(false);
+                        pedidojf.btnRegistrarPedido.setEnabled(true);
+                         pedidojf.txtDniPedido.setEnabled(true);
+                         pedidojf.txtDniPedido.setText("");
+                          pedidojf.comboTiempoPedido.setSelectedIndex(0);
+                         
+                       cargarTatable();
+                            
+                        
+                    } catch (SQLException ex) {
+                        Logger.getLogger(controladorPedido.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        controladorPago.iniciarPago(pedidosRepositorio.get(indexPedido).getIdPedido());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(controladorPedido.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 
                 }
                 
                 }
+                
+                  pedidojf.btnActualizarPedido.setEnabled(false);
+                        pedidojf.btnRegistrarPedido.setEnabled(true);
+                         pedidojf.txtDniPedido.setEnabled(true);
+                         pedidojf.txtDniPedido.setText("");
 
             }
-
+                    
         });
 
     }

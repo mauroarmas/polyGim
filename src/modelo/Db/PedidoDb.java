@@ -82,6 +82,24 @@ int idGenerado = ejecutarInsertConDevolucionDeClavePrimariaGenerada(sql, fechaIs
     return filasAfectadas;
     }
     
+    public int deletePago(int idPedido) throws SQLException{
+    String sql = "DELETE FROM Pago WHERE idPedido=?";
+    int filasAfectadas=ejecutarUpdateDeleteInsert(sql,idPedido);
+    
+    return filasAfectadas;
+    }
+    
+    public int insertPago(double monto,int idPedido ) throws SQLException{
+    String sql = "INSERT INTO Pago (montoPago,idPedido) VALUES (?,?)";
+    
+    int idGenerado = ejecutarInsertConDevolucionDeClavePrimariaGenerada(sql,monto,idPedido);
+    
+    return idGenerado;
+    
+    
+    
+    }
+    
     
     ///*********************FUNCIONES HEREDADAS**************////////////////////
 

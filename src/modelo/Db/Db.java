@@ -18,8 +18,8 @@ public class Db {
 
     private static final String DRIVER = "org.mariadb.jdbc.Driver";
     private static final String HOST = "localhost";
-    private static final String USUARIO = "mercado";
-    private static final String PASSWORD = "agugu261201";
+    private static final String USUARIO = "agustin";
+    private static final String PASSWORD = "luciaAgustin261201";
     private static final int PORT = 3306;
     private static final String database = "POLLYGYM";
     private static final String URL = "jdbc:mariadb://" + HOST + ":" + PORT + "/" + database;

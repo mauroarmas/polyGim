@@ -59,7 +59,8 @@ public class controladorPago {
             pagojf.btnRegistrarPago.setEnabled(true);
         } else {
             de = Double.parseDouble(pagojf.txtPagoTotal.getText()) - resPagos.getDouble("SumaMontos");
-            pagojf.txtPagoDeuda.setText(String.valueOf(de));
+            if(de<0){pagojf.txtPagoDeuda.setText("0.0");}else{ pagojf.txtPagoDeuda.setText(String.valueOf(de));}
+           
 
         }
 
