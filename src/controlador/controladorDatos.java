@@ -32,6 +32,7 @@ import modelo.Servicio;
 public class controladorDatos {
 
     static ArrayList<Localidad> localidadRepositorio = new ArrayList<>();
+    static ArrayList<String> comoLlegoRepositorio = new ArrayList<>();
     static ArrayList<Direccion> direccionRepositorio = new ArrayList<>();
     static ArrayList<Servicio> servicioRepositorio = new ArrayList<>();
     static ArrayList<Cliente> clientesRepositorio = new ArrayList<>();
@@ -46,6 +47,7 @@ public class controladorDatos {
         loadArrayPedido();
         loadDetallesAndPagos();
         loadPedidosInCLiente();
+        loadComoLlego();
 
     }
 
@@ -225,6 +227,14 @@ public class controladorDatos {
             clientesRepositorio.get(index).addPedido(pedidosRepositorio.get(i));
         }
 
+    }
+
+    private static void loadComoLlego() {
+        comoLlegoRepositorio.add("Recomendación");
+        comoLlegoRepositorio.add("Iba Pasando");
+        comoLlegoRepositorio.add("Redes Sociales");
+        comoLlegoRepositorio.add("Promociones/Descuentos");
+        comoLlegoRepositorio.add("Otro");
     }
 
 }

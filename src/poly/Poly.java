@@ -69,8 +69,8 @@ public class Poly {
             
            //  controladorNavegacion.iniciarPedido();
           
-            controladorDatos.loadArrayList();
-           controladorNavegacion.iniciarPedido();
+           controladorDatos.loadArrayList();
+           controladorNavegacion.iniciarCLiente();
          
           
     }

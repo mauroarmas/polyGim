@@ -21,8 +21,8 @@ public class controladorNavegacion {
      ///**AUN SE DEBE DEFINIR ÑA PANTALLA PRINCIPAL**********//////////       
         
    }
-    public static void iniciarCLiente() {
-     
+    public static void iniciarCLiente() throws SQLException {
+        controladorCliente.estadoInicialCliente();
 
     }
     

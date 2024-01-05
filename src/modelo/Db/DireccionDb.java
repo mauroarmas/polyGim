@@ -26,7 +26,7 @@ public class DireccionDb extends Db {
     }
 
     @Override
-    protected ResultSet ejecutarSelect(String sql, Object... params) throws SQLException {
+    public ResultSet ejecutarSelect(String sql, Object... params) throws SQLException {
         return super.ejecutarSelect(sql, params); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
