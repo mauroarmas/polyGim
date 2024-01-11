@@ -51,7 +51,7 @@ public class ClienteDb extends Db {   ///***HEREDAMOS LOS METODOS PARA LAS COSNU
   }  
 
     @Override
-    protected int ejecutarUpdateDeleteInsert(String sql, Object... params) throws SQLException {
+    public int ejecutarUpdateDeleteInsert(String sql, Object... params) throws SQLException {
         return super.ejecutarUpdateDeleteInsert(sql, params); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 

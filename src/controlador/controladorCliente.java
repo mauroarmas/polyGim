@@ -19,6 +19,7 @@ import java.sql.SQLException;
 
 
 import java.time.LocalDate;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Db.ClienteDb;
 import modelo.Db.DireccionDb;
@@ -48,10 +49,13 @@ public class controladorCliente {
         clientejf.txtCalle.setEnabled(false);
         clientejf.txtNombre.setEnabled(false);
         clientejf.txtApellido.setEnabled(false);
+        clientejf.txtTelefonoArea.setEnabled(false);
         clientejf.txtTelefono.setEnabled(false);
         clientejf.txtDni.setEnabled(false);
         clientejf.comboLocalidad.setEnabled(false);
         clientejf.comboComoLlego.setEnabled(false);
+        clientejf.btnNuevaLocalidad.setEnabled(false);
+        clientejf.buscadorCliente.setEnabled(true);
 
         clientejf.btnModificar.setEnabled(false);
         clientejf.btnHistorial.setEnabled(false);
@@ -68,10 +72,13 @@ public class controladorCliente {
         clientejf.txtCalle.setEnabled(true);
         clientejf.txtNombre.setEnabled(true);
         clientejf.txtApellido.setEnabled(true);
+        clientejf.txtTelefonoArea.setEnabled(true);
         clientejf.txtTelefono.setEnabled(true);
         clientejf.txtDni.setEnabled(true);
         clientejf.comboLocalidad.setEnabled(true);
         clientejf.comboComoLlego.setEnabled(true);
+        clientejf.btnNuevaLocalidad.setEnabled(true);
+        clientejf.buscadorCliente.setEnabled(false);
 
         clientejf.btnRegistrar.setVisible(true);
         clientejf.btnNuevo.setVisible(false);
@@ -128,15 +135,23 @@ public class controladorCliente {
 
     }
 
-    public static void registrarCliente() {
-        String alturaCliente = clientejf.txtAltura.getText();
+    public static void registrarCliente() throws SQLException {
+        int alturaCliente = Integer.parseInt(clientejf.txtAltura.getText());
         String calleCliente = clientejf.txtCalle.getText();
         String nombreCliente = clientejf.txtNombre.getText();
         String apellidoCliente = clientejf.txtApellido.getText();
-        String telefonoCliente = clientejf.txtTelefono.getText();
+        String telefonoCliente = clientejf.txtTelefonoArea.getText() + "-" + clientejf.txtTelefono.getText();
         String dniCliente = clientejf.txtDni.getText();
         String localidadCliente = clientejf.comboLocalidad.getSelectedItem().toString();
         String comoLlegoCliente = clientejf.comboComoLlego.getSelectedItem().toString();
+        LocalDate fechaActual = LocalDate.now();
+        int idDireccionCliente = verifDireccion(calleCliente,alturaCliente, localidadCliente);
+        
+        
+        queryCliente.ejecutarUpdateDeleteInsert("insert into cliente (dni, apellido, nombre, telefono, fecha_ingreso, como_llego, idDireccion) values (?, ?, ?, ?, ?, ?, ?)", dniCliente, apellidoCliente, nombreCliente, telefonoCliente, fechaActual, comoLlegoCliente, idDireccionCliente);
+        setDefault();
+        cargarTable();
+        limpiarLabels();
         
     }
 
@@ -149,8 +164,116 @@ public class controladorCliente {
             clientejf.comboLocalidad.addItem(localidad.getLocalidad());
         }
     }
+    
+    //Este metodo verifica si existe la direccion de lo contrario la crea
+    
+    private static int verifDireccion(String calleCliente, int alturaCliente, String localidad) throws SQLException { 
+        
+        ResultSet resLocalidad =  queryLocalidad.ejecutarSelect("SELECT idLocalidad FROM localidad WHERE localidad=?", localidad);
+        int idLoc = 0;
+        if(resLocalidad.next()){
+            idLoc = resLocalidad.getInt("idLocalidad");
+            System.out.println("idLoc = " + idLoc);
+        }
+        
+        ResultSet resDireccion = queryDireccion.ejecutarSelect("SELECT idDireccion FROM direccion WHERE calle=? and altura=? and idLocalidad=?", calleCliente, alturaCliente, idLoc);
+        
+        int idDireccion = 0;
+        if(resDireccion.next()){
+            idDireccion = resDireccion.getInt("idDireccion");
+            System.out.println("idDireccion ya existente = " + idDireccion);
+        }else{
+            idDireccion = queryDireccion.ejecutarInsertConDevolucionDeClavePrimariaGenerada("insert into direccion (calle, altura, idLocalidad) values (?, ?, ?);",calleCliente, alturaCliente, idLoc);
+            System.out.println("idDireccion recien creada = " + idDireccion);
+        }
+        
+        return idDireccion;
+    }
+
+    private static void limpiarLabels() {
+        clientejf.txtNombre.setText("");
+        clientejf.txtApellido.setText("");
+        clientejf.txtDni.setText("");
+        clientejf.txtTelefonoArea.setText("");
+        clientejf.txtTelefono.setText("");
+      
+        clientejf.comboLocalidad.setSelectedIndex(0);
+        clientejf.txtAltura.setText("");
+        clientejf.txtCalle.setText("");
+
+        clientejf.comboComoLlego.setSelectedIndex(0);
+    }
+    
+    public static boolean verificarCampos(){
+        
+        boolean resultado=true;
+        boolean isEmpty=false;
+           
+        if(clientejf.txtNombre.getText().length()<2 || clientejf.txtNombre.getText().length()>30){
+            resultado = false;
+            if(clientejf.txtNombre.getText().length()==0){
+                isEmpty=true;
+            }else{
+                JOptionPane.showMessageDialog(null, "Nombre Invalido", "Error", JOptionPane.ERROR_MESSAGE);
+            } 
+            
+        }else if(clientejf.txtApellido.getText().length()<2 || clientejf.txtApellido.getText().length()>30){
+            resultado = false;
+            if(clientejf.txtApellido.getText().length()==0){
+                isEmpty=true;
+            }else{
+                JOptionPane.showMessageDialog(null, "Apellido Invalido", "Error", JOptionPane.ERROR_MESSAGE);
+            } 
+        }else if(clientejf.txtDni.getText().length()!=8){
+            resultado = false;
+            if(clientejf.txtDni.getText().length()==0){
+                isEmpty=true;
+            }else{
+                JOptionPane.showMessageDialog(null, "DNI Invalido", "Error", JOptionPane.ERROR_MESSAGE);
+            } 
+        }else if(clientejf.txtTelefonoArea.getText().length()+clientejf.txtTelefono.getText().length() != 10){
+            resultado = false;
+            if((clientejf.txtTelefonoArea.getText().length()==0) || (clientejf.txtTelefono.getText().length()==0)){
+                isEmpty=true;
+            }else{
+                JOptionPane.showMessageDialog(null, "Código de Área o Telefono Invalido/s", "Error", JOptionPane.ERROR_MESSAGE);
+            } 
+        }else if(clientejf.txtCalle.getText().length()<2 || clientejf.txtCalle.getText().length()>40){
+            resultado = false;
+            if(clientejf.txtCalle.getText().length()==0){
+                isEmpty=true;
+            }else{
+                JOptionPane.showMessageDialog(null, "Nombre de calle Invalido", "Error", JOptionPane.ERROR_MESSAGE);
+            } 
+        }else if(clientejf.txtAltura.getText().length()<1 || clientejf.txtAltura.getText().length()>5){
+            resultado = false;
+            if(clientejf.txtAltura.getText().length()==0){
+                isEmpty=true;
+            }else{
+                JOptionPane.showMessageDialog(null, "Altura de calle Invalido", "Error", JOptionPane.ERROR_MESSAGE);
+            } 
+        }else if(clientejf.comboLocalidad.getSelectedIndex() == 0){
+            JOptionPane.showMessageDialog(null, "Seleccione una localidad", "Error", JOptionPane.ERROR_MESSAGE);
+            resultado = false;
+        }else if(clientejf.comboComoLlego.getSelectedIndex() == 0){
+            JOptionPane.showMessageDialog(null, "Seleccione un motivo de llegada", "Error", JOptionPane.ERROR_MESSAGE);
+            resultado = false;
+        }
 
         
+        if(isEmpty){
+            JOptionPane.showMessageDialog(null, "Complete todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        return resultado;
+    }
+    
+    
+    
+    
+    private static void actualizarCliente(){
+        
+    }
 
 }
 

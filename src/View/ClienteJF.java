@@ -1,6 +1,10 @@
 package View;
 
 import controlador.controladorCliente;
+import static controlador.controladorCliente.verificarCampos;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /*
@@ -44,7 +48,7 @@ public class ClienteJF extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtDni = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        txtTelefono = new javax.swing.JTextField();
+        txtTelefonoArea = new javax.swing.JTextField();
         btnActualizar = new javax.swing.JButton();
         btnRegistrar = new javax.swing.JButton();
         txtCalle = new javax.swing.JTextField();
@@ -58,6 +62,10 @@ public class ClienteJF extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        btnNuevaLocalidad = new javax.swing.JToggleButton();
+        txtTelefono = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
         btnNuevo = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
@@ -111,6 +119,12 @@ public class ClienteJF extends javax.swing.JFrame {
 
         jPanel4.setBackground(new java.awt.Color(204, 204, 204));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreKeyTyped(evt);
+            }
+        });
         jPanel4.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 80, 218, -1));
 
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
@@ -120,17 +134,35 @@ public class ClienteJF extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel2.setText("Nombre:");
         jPanel4.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 49, -1, -1));
+
+        txtApellido.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtApellidoKeyTyped(evt);
+            }
+        });
         jPanel4.add(txtApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 218, -1));
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel3.setText("Apellido:");
         jPanel4.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, -1, -1));
+
+        txtDni.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDniKeyTyped(evt);
+            }
+        });
         jPanel4.add(txtDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 218, -1));
 
         jLabel4.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel4.setText("Teléfono:");
         jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, -1, -1));
-        jPanel4.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 218, -1));
+
+        txtTelefonoArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelefonoAreaKeyTyped(evt);
+            }
+        });
+        jPanel4.add(txtTelefonoArea, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 50, -1));
 
         btnActualizar.setBackground(new java.awt.Color(255, 102, 102));
         btnActualizar.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
@@ -153,11 +185,22 @@ public class ClienteJF extends javax.swing.JFrame {
             }
         });
         jPanel4.add(btnRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(795, 280, 218, 33));
+
+        txtCalle.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCalleKeyTyped(evt);
+            }
+        });
         jPanel4.add(txtCalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(439, 150, 152, -1));
 
         txtAltura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtAlturaActionPerformed(evt);
+            }
+        });
+        txtAltura.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtAlturaKeyTyped(evt);
             }
         });
         jPanel4.add(txtAltura, new org.netbeans.lib.awtextra.AbsoluteConstraints(597, 150, 60, -1));
@@ -171,15 +214,15 @@ public class ClienteJF extends javax.swing.JFrame {
         jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(439, 49, -1, -1));
 
         comboLocalidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "..." }));
-        jPanel4.add(comboLocalidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 80, 218, -1));
+        jPanel4.add(comboLocalidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 80, 150, -1));
 
         jLabel11.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel11.setText("Calle:");
         jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(439, 120, -1, -1));
 
         jLabel12.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        jLabel12.setText("Altura:");
-        jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(597, 120, -1, -1));
+        jLabel12.setText("Nuevo:");
+        jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(597, 50, -1, -1));
 
         comboComoLlego.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "..." }));
         jPanel4.add(comboComoLlego, new org.netbeans.lib.awtextra.AbsoluteConstraints(795, 80, 218, -1));
@@ -195,6 +238,33 @@ public class ClienteJF extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("SansSerif", 0, 28)); // NOI18N
         jLabel9.setText("Datos Personales");
         jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 6, -1, -1));
+
+        btnNuevaLocalidad.setText("+");
+        btnNuevaLocalidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaLocalidadActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnNuevaLocalidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(597, 80, 60, -1));
+
+        txtTelefono.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTelefonoActionPerformed(evt);
+            }
+        });
+        txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelefonoKeyTyped(evt);
+            }
+        });
+        jPanel4.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 290, 150, -1));
+
+        jLabel15.setText("-");
+        jPanel4.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(78, 290, 10, 20));
+
+        jLabel16.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        jLabel16.setText("Altura:");
+        jPanel4.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(597, 120, -1, -1));
 
         SeccionDatos.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 6, 1030, 328));
 
@@ -268,6 +338,12 @@ public class ClienteJF extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel5.setText("DNI o Nombre:");
         jPanel6.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 50, -1, -1));
+
+        buscadorCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buscadorClienteActionPerformed(evt);
+            }
+        });
         jPanel6.add(buscadorCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 170, -1));
 
         SeccionDatos.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 1270, 280));
@@ -310,11 +386,19 @@ public class ClienteJF extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        controladorCliente.registrarCliente();
+        try {
+            if(verificarCampos()){
+                controladorCliente.registrarCliente();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteJF.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        // TODO add your handling code here:
+        if(verificarCampos()){
+            actualizarCliente();
+        }
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
@@ -332,6 +416,64 @@ public class ClienteJF extends javax.swing.JFrame {
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         controladorCliente.setDefault();
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnNuevaLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaLocalidadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnNuevaLocalidadActionPerformed
+
+    private void txtTelefonoAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoAreaKeyTyped
+        char c = evt.getKeyChar(); 
+            
+        if(c<'0' || c>'9') evt.consume();        
+    
+        
+    }//GEN-LAST:event_txtTelefonoAreaKeyTyped
+
+    private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
+        char c = evt.getKeyChar(); 
+            
+        if(c<'0' || c>'9') evt.consume();      
+    }//GEN-LAST:event_txtTelefonoKeyTyped
+
+    private void txtTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTelefonoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTelefonoActionPerformed
+
+    private void txtDniKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniKeyTyped
+        char c = evt.getKeyChar(); 
+            
+        if(c<'0' || c>'9') evt.consume();      
+    }//GEN-LAST:event_txtDniKeyTyped
+
+    private void txtAlturaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAlturaKeyTyped
+        char c = evt.getKeyChar(); 
+            
+        if(c<'0' || c>'9') evt.consume();      
+    }//GEN-LAST:event_txtAlturaKeyTyped
+
+    private void txtApellidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoKeyTyped
+        char c = evt.getKeyChar(); 
+            
+        if((c<'a' || c>'z') && (c<'A' || c>'Z') && c!=' ') evt.consume(); 
+    }//GEN-LAST:event_txtApellidoKeyTyped
+
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
+        char c = evt.getKeyChar(); 
+            
+        if((c<'a' || c>'z') && (c<'A' || c>'Z') && c!=' ') evt.consume(); 
+    }//GEN-LAST:event_txtNombreKeyTyped
+
+    private void txtCalleKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCalleKeyTyped
+        char c = evt.getKeyChar(); 
+            
+        if((c<'a' || c>'z') && (c<'A' || c>'Z') && c!=' ') evt.consume(); 
+        
+                
+    }//GEN-LAST:event_txtCalleKeyTyped
+
+    private void buscadorClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscadorClienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buscadorClienteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -378,6 +520,7 @@ public class ClienteJF extends javax.swing.JFrame {
     public javax.swing.JButton btnCancelar;
     public javax.swing.JButton btnHistorial;
     public javax.swing.JButton btnModificar;
+    public javax.swing.JToggleButton btnNuevaLocalidad;
     public javax.swing.JButton btnNuevo;
     public javax.swing.JButton btnRegistrar;
     public javax.swing.JTextField buscadorCliente;
@@ -391,6 +534,8 @@ public class ClienteJF extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -411,5 +556,10 @@ public class ClienteJF extends javax.swing.JFrame {
     public javax.swing.JTextField txtDni;
     public javax.swing.JTextField txtNombre;
     public javax.swing.JTextField txtTelefono;
+    public javax.swing.JTextField txtTelefonoArea;
     // End of variables declaration//GEN-END:variables
+
+    private void actualizarCliente() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

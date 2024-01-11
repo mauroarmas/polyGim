@@ -21,7 +21,7 @@ public class DireccionDb extends Db {
     }
 
     @Override
-    protected int ejecutarUpdateDeleteInsert(String sql, Object... params) throws SQLException {
+    public int ejecutarUpdateDeleteInsert(String sql, Object... params) throws SQLException {
         return super.ejecutarUpdateDeleteInsert(sql, params); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
@@ -31,7 +31,7 @@ public class DireccionDb extends Db {
     }
 
     @Override
-    protected int ejecutarInsertConDevolucionDeClavePrimariaGenerada(String sql, Object... params) throws SQLException {
+    public int ejecutarInsertConDevolucionDeClavePrimariaGenerada(String sql, Object... params) throws SQLException {
         return super.ejecutarInsertConDevolucionDeClavePrimariaGenerada(sql, params); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
