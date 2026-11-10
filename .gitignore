@@ -1,0 +1,10 @@
+# Legacy de referencia con repositorio propio y configuración sensible.
+/original/
+
+# Configuración local y secretos; los ejemplos solo contienen valores ficticios.
+.env
+.env.*
+!.env.example
+
+# Artefactos de compilación Maven.
+target/
