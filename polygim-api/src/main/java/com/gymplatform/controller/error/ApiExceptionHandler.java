@@ -20,6 +20,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.beans.TypeMismatchException;
+import com.gymplatform.service.BusinessConflictException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -79,7 +80,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return error(HttpStatus.NOT_FOUND, "RESOURCE_NOT_FOUND", "Recurso no encontrado", "No se encontró el recurso solicitado.", request);
     }
 
-    @ExceptionHandler({DataIntegrityViolationException.class, ObjectOptimisticLockingFailureException.class})
+    @ExceptionHandler({DataIntegrityViolationException.class, ObjectOptimisticLockingFailureException.class, BusinessConflictException.class})
     public ResponseEntity<Object> conflict(RuntimeException ex, WebRequest request) {
         return error(HttpStatus.CONFLICT, "CONFLICT", "Conflicto", "La operación entra en conflicto con datos existentes.", request);
     }

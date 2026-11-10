@@ -90,5 +90,30 @@ class SchemaMigrationIT extends PostgresIntegrationSupport {
                 assertThatThrownBy(statement::executeUpdate).isInstanceOf(SQLException.class);
             }
         }
+        var orders = Flyway.configure().dataSource(DATABASE.getJdbcUrl(), DATABASE.getUsername(), DATABASE.getPassword())
+                .schemas(schema).target("5").load();
+        orders.migrate();
+        assertThat(orders.info().current().getVersion().toString()).isEqualTo("5");
+        try (var connection = DriverManager.getConnection(DATABASE.getJdbcUrl(), DATABASE.getUsername(), DATABASE.getPassword())) {
+            connection.setSchema(schema);
+            UUID discipline = UUID.randomUUID(), membership = UUID.randomUUID(), client;
+            try (var statement = connection.prepareStatement("insert into disciplina (id,gimnasio_id,nombre,created_at,updated_at,version) values (?,?,'Otra',now(),now(),0)")) {
+                statement.setObject(1, discipline); statement.setObject(2, gymA); statement.executeUpdate();
+            }
+            try (var statement = connection.prepareStatement("insert into membresia (id,gimnasio_id,disciplina_id,nombre,precio,duracion,unidad_duracion,created_at,updated_at,version) values (?,?,?,'Plan',1.00,1,'DIAS',now(),now(),0)")) {
+                statement.setObject(1, membership); statement.setObject(2, gymA); statement.setObject(3, discipline); statement.executeUpdate();
+            }
+            try (var statement = connection.prepareStatement("select id from cliente where gimnasio_id = ?")) {
+                statement.setObject(1, gymA); try (var result = statement.executeQuery()) { result.next(); client = result.getObject(1, UUID.class); }
+            }
+            UUID previous = UUID.randomUUID();
+            try (var statement = connection.prepareStatement("insert into pedido (id,gimnasio_id,cliente_id,membresia_id,cantidad,precio_unitario,duracion_membresia,unidad_duracion,total,fecha_compra,fecha_base_vencimiento,fecha_vencimiento,pedido_anterior_id,registrado_por_id,created_at) values (?,?,?,?,1,1.00,1,'DIAS',1.00,current_date,current_date,current_date+1,?,?,now())")) {
+                statement.setObject(1, previous); statement.setObject(2, gymA); statement.setObject(3, client); statement.setObject(4, membership);
+                statement.setObject(5, null); statement.setObject(6, account); statement.executeUpdate();
+                statement.setObject(1, UUID.randomUUID()); statement.setObject(5, previous); statement.executeUpdate();
+                statement.setObject(1, UUID.randomUUID());
+                assertThatThrownBy(statement::executeUpdate).isInstanceOf(SQLException.class);
+            }
+        }
     }
 }
