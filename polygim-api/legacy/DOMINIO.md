@@ -78,7 +78,9 @@ Las reglas siguientes son decisiones para la versión nueva; reemplazan los comp
 - **[DECISIÓN] Gimnasio (tenant):** nombre, logo, color primario. Base compartida; toda entidad de negocio lleva `gimnasio_id`, y el aislamiento entre gimnasios es automático y probado con tests de integración. Se prevé Hibernate 6 con `@TenantId`; su alcance concreto debe verificarse en el plan técnico.
 - **[DECISIÓN] Configuración por gimnasio:** disciplinas, membresías (precio y duración), cantidad máxima por compra, canales de llegada, cupos y políticas de reserva y cancelación. Nada de esto es constante de negocio en el código.
 - **[DECISIÓN] Identidad del cliente:** clave propia y DNI como `String`, único por gimnasio, con validación de siete u ocho dígitos. La exigencia legacy de ocho dígitos no se hereda.
+- **[DECISIÓN] Datos del cliente:** DNI, nombre y apellido son obligatorios y no vacíos. Teléfono, canal de llegada, dirección y localidad son opcionales; su ausencia no impide registrar al cliente ni comprar una membresía.
 - **[DECISIÓN] Canal de llegada:** catálogo configurable por gimnasio. Seed inicial: recomendación, iba pasando, redes sociales, promociones y otro.
+- **[DECISIÓN] Precio de membresía:** debe ser mayor a cero. Se rechazan precios cero o negativos al crear o modificar el catálogo; las membresías gratuitas quedan fuera de la feature 1.
 - **[DECISIÓN] Seed inicial:** Poly con Funcional, Boxeo y Crossfit como datos. Las membresías y precios serán ejemplos ficticios, a ajustar después; no se presentan como valores recuperados del legacy.
 
 ### Pedidos, duración y vigencia
@@ -89,33 +91,38 @@ Las reglas siguientes son decisiones para la versión nueva; reemplazan los comp
 - **[DECISIÓN]** El detalle congela el precio unitario vigente al comprar. Su subtotal es `cantidad × precio unitario congelado`; en la feature 1, el total del pedido coincide con ese subtotal. Los cambios de precio del catálogo no modifican compras anteriores.
 - **[DECISIÓN]** La vigencia comienza en la fecha de compra, por defecto hoy. Si se renueva una membresía que sigue vigente, la renovación continúa desde el vencimiento anterior. El día de vencimiento está incluido en la vigencia.
 - **[DECISIÓN]** En la feature 1 se permiten fechas de compra de hoy o pasadas; se rechazan fechas futuras.
-- **[DECISIÓN]** Para renovar se elige una compra previa del mismo cliente y de la misma membresía, dentro del mismo gimnasio; no se elige automáticamente por disciplina.
+- **[DECISIÓN]** Para renovar se elige una compra previa del mismo cliente y de la misma membresía, dentro del mismo gimnasio; no se elige automáticamente por disciplina. Se evalúa su vigencia respecto de la fecha de compra registrada; si ya venció, se calcula desde esa fecha.
+- **[DECISIÓN]** En compras retroactivas se congela el precio vigente al registrarlas; no se reconstruye un catálogo histórico. Cambios posteriores del catálogo no alteran precios, totales ni vencimientos ya calculados.
+- **[DECISIÓN]** Cada compra admite como máximo una renovación; se continúa desde la última compra de la cadena. Los intentos sobre un antecedente ya renovado, incluidos los simultáneos, se rechazan sin crear otro pedido.
+- **[DECISIÓN]** Las semanas equivalen a siete días. Al sumar meses, si el día original no existe en el mes destino se utiliza su último día válido.
 - **[DECISIÓN]** Pago y vigencia son conceptos separados: estado de pago `PENDIENTE` o `PAGADO`; vigencia `VIGENTE` o `VENCIDA`, calculada por fecha. `VENCIDO` no es un estado de pago. Un pago parcial no altera la vigencia; la deuda se rastrea aparte.
 
 ### Pagos y conservación del historial
 
 - **[DECISIÓN]** Los montos de pago deben ser mayores a cero. Se admiten pagos parciales; la deuda se calcula con el total y los pagos aplicados no anulados. El pedido queda `PENDIENTE` mientras tenga deuda y `PAGADO` cuando esté saldado.
 - **[DECISIÓN]** Si el monto recibido supera la deuda, se registra como pago solo lo aplicado a la deuda; el vuelto se informa y no se incorpora al importe del pago, tanto en memoria como en persistencia.
-- **[DECISIÓN]** Un pedido con pagos no se edita. Los pagos no se borran: solo `ADMIN` puede anularlos y la anulación queda registrada, conservando el historial.
+- **[DECISIÓN]** Un pedido con pagos registrados no se edita, aunque se hayan anulado. La feature 1 no exige editar pedidos sin pagos.
+- **[DECISIÓN]** Los pagos no se borran: solo `ADMIN` del gimnasio puede anularlos y queda registro del actor y la fecha. Repetir la anulación no duplica su efecto económico.
+- **[DECISIÓN]** No se registran pagos sobre pedidos sin deuda. Los cobros simultáneos no pueden superar el total aplicado y los fallos no dejan operaciones parciales.
 
 ### Cuentas y permisos
 
-- **[DECISIÓN]** Cada cuenta pertenece a un solo gimnasio, excepto `SUPERADMIN`, que opera a nivel de plataforma.
+- **[DECISIÓN]** Cada cuenta pertenece a un solo gimnasio, excepto `SUPERADMIN`, que opera a nivel de plataforma. El acceso es por email único en toda la plataforma y contraseña, sin indicar gimnasio. La unicidad incluye SUPERADMIN y cuentas deshabilitadas; deshabilitar una cuenta no libera su email para otra.
 - **[DECISIÓN] ADMIN:** puede realizar todas las operaciones de su gimnasio, incluidas configuración y anulación de pagos.
-- **[DECISIÓN]** En la feature 1, ADMIN crea y deshabilita cuentas RECEPCION de su gimnasio.
+- **[DECISIÓN]** En la feature 1, ADMIN crea y deshabilita cuentas RECEPCION de su gimnasio; una cuenta deshabilitada no puede operar aunque haya iniciado sesión antes.
 - **[DECISIÓN] RECEPCION:** gestiona clientes, pedidos y pagos de su gimnasio; no accede a configuración ni realiza anulaciones.
 - **[DECISIÓN] SUPERADMIN:** gestiona gimnasios y sus primeros administradores, sin acceso a datos de negocio de los gimnasios.
-- **[DECISIÓN]** Se conserva el rol `CLIENTE` para el cliente final; sus permisos concretos quedan pendientes de definición.
+- **[DECISIÓN]** El rol `CLIENTE` se habilita en la feature 2 para reservas y cancelaciones propias; los detalles de su cuenta se especifican en ese ciclo.
 
 ### Features siguientes (ciclos separados de Spec Kit)
 
 1. **[DECISIÓN] Núcleo multi-tenant con paridad de dominio:** API REST para clientes, servicios, membresías, pedidos, pagos y cálculo de vigencia y vencimientos; alta de gimnasio y primer administrador. Sin pantallas y sin importación de datos. Incluye el seed inicial con membresías y precios ficticios. El listado de próximos vencimientos queda para la feature 2.
-2. **[DECISIÓN] Reservas de clases con cupo y listado de próximos vencimientos:**
+2. **[DECISIÓN] Reservas de clases con cupo y listado de próximos vencimientos (siete días):**
    - Clase = disciplina + día + hora + cupo.
    - Reserva solo con membresía vigente; exigir además pago completo es configurable por gimnasio.
    - Nunca más reservas que el cupo, incluso con pedidos simultáneos.
    - Sin dos clases solapadas el mismo día para un cliente.
-   - Cancelación hasta N horas antes (N configurable por gimnasio; valor inicial propuesto: 2).
+   - Cancelación hasta N horas antes (N configurable por gimnasio; valor inicial: 2).
 3. **[DECISIÓN] Interfaz web:** pantallas con Thymeleaf + HTMX y branding por gimnasio, sin frontend JavaScript separado.
 4. **[DECISIÓN] Demo pública:** datos ficticios y deploy.
 
@@ -127,7 +134,5 @@ Cobros online, facturación fiscal, control de acceso físico (molinetes), app m
 
 ## 8. Preguntas abiertas (resolver en `/speckit.clarify`)
 
-- ¿Qué permisos concretos tendrá el rol `CLIENTE` y en qué feature se habilita su cuenta?
+- ¿Cómo se vincula la cuenta `CLIENTE` con su registro de cliente en la feature 2?
 - Para reservas (feature 2), ¿la membresía debe cubrir la fecha de la clase, además de estar vigente al reservar? ¿Qué pasa con reservas futuras si una anulación de pago deja deuda y el gimnasio exige pago completo?
-- ¿Qué ventana usa el listado de próximos vencimientos de la feature 2? La referencia inicial propone siete días; falta confirmar el intervalo y si es configurable.
-- ¿Cuál es el valor inicial de la política de cancelación de reservas? Se propusieron dos horas, sin confirmar todavía.

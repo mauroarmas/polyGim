@@ -1,7 +1,7 @@
 # PLAN_DE_TRABAJO.md — PolyGym
 
 > **Para quién:** el agente de código y el autor. **Cómo se usa:** es la fuente de verdad de *producto* (qué se construye, en qué orden y cuándo está terminado). Spec Kit genera sus propios `spec.md`, `plan.md` y `tasks.md` por feature: deben ser coherentes con este documento. Si hay contradicción, se frena y se consulta al autor; no se resuelve en silencio.
-> **Relacionados:** `legacy/DOMINIO.md` (dominio y reglas heredadas), `legacy/schema.sql` (esquema viejo, solo referencia), `original/` (código viejo, solo referencia).
+> **Relacionados:** `polygim-api/legacy/DOMINIO.md` (dominio y reglas heredadas), `polygim-api/legacy/schema.sql` (esquema viejo, solo referencia), `original/` (código viejo, solo referencia).
 
 ## 1. Visión
 
@@ -38,13 +38,23 @@ La validación concreta de `@TenantId` (versión, comportamiento con consultas n
 | Pedido | En la feature 1, un pedido = un detalle (una membresía). Varias disciplinas = pedidos separados |
 | Duración | Explícita en la membresía (`duracion` + `unidad`: DIAS, SEMANAS, MESES). Vencimiento = inicio + cantidad × duración |
 | Inicio de vigencia | Fecha de compra (por defecto hoy). Renovación: continúa desde el vencimiento anterior si sigue vigente |
-| Precio | El detalle congela el precio unitario al comprar |
-| Edición | Un pedido con pagos no se edita |
-| Pagos | Monto > 0. No se borran: ADMIN los anula y queda registro. Si el monto supera la deuda, se guarda solo la deuda y se informa el vuelto |
+| Precio | El precio de la membresía debe ser mayor a cero; no se admiten membresías gratuitas en la feature 1. El detalle congela el precio unitario al registrar la compra. En compras retroactivas se usa el precio vigente al registrarlas, sin reconstruir un catálogo histórico |
+| Historial comercial | Cambiar el precio, nombre o duración del catálogo no modifica precio congelado, total ni vencimiento de compras existentes |
+| Fecha de compra | Por defecto hoy; se permiten fechas pasadas y se rechazan futuras |
+| Selección de renovación | Se elige una compra previa del mismo gimnasio, cliente y membresía; no se selecciona automáticamente por disciplina |
+| Cadena de renovaciones | Cada compra admite una sola renovación; se continúa desde la última compra de la cadena. Si el antecedente ya fue renovado se rechaza, incluso ante solicitudes simultáneas |
+| Cálculo de renovación | La vigencia del antecedente se evalúa respecto de la fecha de compra registrada: si sigue vigente se suma desde su vencimiento; si venció se suma desde esa fecha de compra |
+| Calendario | Semanas de siete días; al sumar meses se conserva el día o se usa el último día válido del mes destino |
+| Edición | Un pedido con pagos registrados no se edita, aunque se hayan anulado. La edición de pedidos sin pagos no se requiere en la feature 1 |
+| Pagos | Monto recibido y aplicado > 0. No se cobra un pedido sin deuda. Si el monto recibido supera la deuda, se guarda solo la deuda y se informa el vuelto |
+| Anulaciones | Solo ADMIN del gimnasio; no se borra el pago original. Se registra quién anuló y cuándo; repetir la anulación no duplica su efecto económico |
+| Consistencia | Cobros simultáneos no superan el total aplicado. Altas, compras, pagos y anulaciones no dejan efectos parciales ante un fallo |
 | DNI | `String`, 7 u 8 dígitos, único por gimnasio |
+| Datos del cliente | DNI, nombre y apellido obligatorios y no vacíos; teléfono, cómo llegó, dirección y localidad opcionales. La ausencia de esos datos opcionales no impide registrar ni vender una membresía |
 | Cantidad máxima | Configurable por gimnasio (los rangos 1-12 meses / 1-3 semanas del legacy no son requisito) |
 | "Cómo llegó" | Catálogo configurable por gimnasio (seed: recomendación, iba pasando, redes sociales, promociones, otro) |
-| Cuentas | Una cuenta pertenece a un solo gimnasio (salvo SUPERADMIN) |
+| Cuentas | Una cuenta pertenece a un solo gimnasio (salvo SUPERADMIN). Se accede con email único global y contraseña, sin indicar gimnasio. La unicidad incluye SUPERADMIN y cuentas deshabilitadas; no se reasigna ni reutiliza el email de otra cuenta |
+| Personal de recepción | ADMIN crea y deshabilita cuentas RECEPCION propias; una cuenta deshabilitada no puede operar aunque tuviera una sesión previa |
 
 **Roles:** `SUPERADMIN` gestiona gimnasios y sus primeros administradores, sin acceso a datos de negocio. `ADMIN` hace todo dentro de su gimnasio. `RECEPCION` opera clientes, pedidos y pagos, sin configurar ni anular pagos. `CLIENTE` aparece en la feature 2.
 
@@ -64,6 +74,8 @@ Un ciclo completo de Spec Kit por feature: `specify → clarify → plan → tas
 - **H1.5** Como ADMIN o RECEPCION, creo un pedido de una membresía para un cliente con total calculado y precio congelado.
 - **H1.6** Como ADMIN o RECEPCION, registro pagos (incluidos parciales) y veo estado de pago y vigencia.
 - **H1.7** Como ADMIN, anulo un pago y el estado se recalcula.
+- **H1.8** Como ADMIN, creo y deshabilito cuentas de RECEPCION de mi gimnasio.
+- **H1.9** Como responsable del producto, dispongo de un seed inicial de Poly con Funcional, Boxeo y Crossfit y membresías y precios ficticios, reemplazables como datos.
 
 **Criterios de aceptación clave**
 - Un usuario de un gimnasio recibe 404 (no 403) al pedir un recurso de otro.
@@ -93,7 +105,7 @@ Panel para ADMIN y RECEPCION (clientes, pedidos, pagos, clases) y vista de reser
 
 ### Feature 4 — Demo pública y deploy
 
-Gimnasio de demostración con datos ficticios que se restablece periódicamente, seed de Poly con membresías de ejemplo, despliegue con Docker Compose en un VPS, README con capturas o GIF, diagrama de multi-tenancy y link a la demo.
+Gimnasio de demostración con datos ficticios que se restablece periódicamente, reutilización del seed inicial incorporado en la feature 1, despliegue con Docker Compose en un VPS, README con capturas o GIF, diagrama de multi-tenancy y link a la demo.
 
 ## 6. Orden de implementación de la feature 1 (rebanadas verticales)
 
@@ -132,7 +144,7 @@ Cada hito termina con tests en verde y un commit convencional. No se avanza con 
 
 ## 9. Cómo trabaja el agente
 
-1. Lee este documento, `legacy/DOMINIO.md` y los artefactos de Spec Kit de la feature en curso antes de escribir código.
+1. Lee este documento, `polygim-api/legacy/DOMINIO.md` y los artefactos de Spec Kit de la feature en curso antes de escribir código.
 2. Trabaja **un hito por vez**, con commits pequeños y convencionales.
 3. Escribe primero los tests de las reglas de negocio; después el código.
 4. Corre los tests antes de dar un hito por terminado y reporta el resultado real.

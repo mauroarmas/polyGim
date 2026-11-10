@@ -12,7 +12,7 @@
 
 # Contexto y artefactos
 
-- Consultar `PLAN_DE_TRABAJO.md`, `polygim-api/legacy/DOMINIO.md` y la constitución
+- Consultar `docs/PLAN_DE_TRABAJO.md`, `polygim-api/legacy/DOMINIO.md` y la constitución
   `.specify/memory/constitution.md` para mantener coherencia con las decisiones acordadas.
 - Presentar spec, plan y tasks para aprobación antes de avanzar de etapa.
 - `original/` es referencia de dominio de solo lectura y no se copia al producto.

@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-10
 
-**Status**: Draft — pendiente de revisión y aprobación del autor
+**Status**: Aprobada en specify el 2026-11-10 — clarify completado; actualización pendiente de revisión del autor
 
 **Input**: Plataforma web (API REST) de gestión de gimnasios aislados entre sí:
 alta de gimnasio y primer administrador, clientes, disciplinas, membresías,
@@ -15,7 +15,7 @@ listado de vencimientos próximos, pantallas web e importación de datos.
 
 **Referencias**: [Constitución 1.0.0](../../.specify/memory/constitution.md),
 [dominio acordado](../../polygim-api/legacy/DOMINIO.md) y
-[plan de trabajo de producto](../../PLAN_DE_TRABAJO.md).
+[plan de trabajo de producto](../../docs/PLAN_DE_TRABAJO.md).
 La paridad es de dominio; las funcionalidades incompletas y los errores del legacy
 no son requisitos. Las decisiones técnicas se desarrollan en la etapa plan.
 
@@ -23,16 +23,25 @@ no son requisitos. Las decisiones técnicas se desarrollan en la etapa plan.
 
 ### Session 2026-11-10
 
+Las tres primeras respuestas se resolvieron durante specify; las cuatro siguientes
+corresponden a la ronda de clarify.
+
 - Q: ¿Cómo se crean las cuentas de recepción en esta feature? → A: ADMIN crea y deshabilita cuentas de RECEPCION dentro de su gimnasio.
 - Q: ¿Qué se considera una renovación? → A: Se elige una compra previa del mismo cliente y de la misma membresía para renovarla.
 - Q: ¿Qué fechas de compra se permiten? → A: Hoy o una fecha pasada; no se permiten fechas futuras.
+- Q: ¿Una compra ya renovada puede volver a ser antecedente? → A: No. Cada compra admite una sola renovación y se continúa desde la última compra de esa cadena; los intentos simultáneos sobre el mismo antecedente no pueden crear dos renovaciones.
+- Q: ¿Cómo se identifican las cuentas al iniciar sesión? → A: Email único en toda la plataforma y contraseña; no se indica gimnasio al ingresar.
+- Q: ¿Qué datos son obligatorios al registrar un cliente? → A: DNI, nombre y apellido; teléfono, canal de llegada, dirección y localidad son opcionales.
+- Q: ¿Se permiten membresías gratuitas en la feature 1? → A: No. El precio debe ser mayor a cero; se rechazan precios cero o negativos.
 - Directiva Git: `main` es producción, `dev` integra desarrollo y cada spec se trabaja en una rama creada a partir de `dev`.
 
 ## User Scenarios & Testing *(mandatory)*
 
 Cada historia se verifica con datos propios de prueba, sin depender de ejecutar
 previamente otras historias. Las pruebas de integración incorporan al menos dos
-gimnasios para hacer observable cualquier pérdida de aislamiento.
+gimnasios para hacer observable cualquier pérdida de aislamiento. Antes de construir
+los demás casos de negocio se DEBE implementar y probar el aislamiento automático
+con identidades autorizadas; este requisito bloquea el avance si falla.
 
 ### User Story 1 - Habilitar un gimnasio y su administrador (Priority: P1)
 
@@ -63,13 +72,15 @@ operaciones permitidas y prohibidas para cada rol, incluyendo identificadores aj
 
 **Acceptance Scenarios**:
 
-1. **Given** una cuenta habilitada de un gimnasio, **When** se autentica, **Then** opera con el rol y el gimnasio asignados a esa cuenta.
+1. **Given** una cuenta habilitada de un gimnasio, **When** ingresa su email y contraseña sin indicar gimnasio, **Then** se autentica y opera con el rol y el gimnasio asignados a esa cuenta.
 2. **Given** un ADMIN del gimnasio A, **When** crea o deshabilita una cuenta RECEPCION, **Then** afecta únicamente una cuenta de A; una cuenta deshabilitada no puede realizar operaciones protegidas, aunque hubiera iniciado sesión antes.
 3. **Given** un usuario de A, **When** consulta o modifica por identificador un recurso de B, **Then** recibe una respuesta de recurso inexistente (404), sin datos ni confirmación de existencia del recurso ajeno.
 4. **Given** un usuario de A, **When** intenta crear una compra con un cliente o una membresía de B, o un pago para una compra de B, **Then** se rechaza sin crear relaciones entre gimnasios.
 5. **Given** RECEPCION de A, **When** intenta configurar A, gestionar cuentas o anular un pago, **Then** recibe una denegación de permisos (403).
 6. **Given** una solicitud sin identidad válida o sin gimnasio autorizado para operar el negocio, **When** intenta una operación protegida, **Then** se rechaza sin devolver datos de negocio.
 7. **Given** un usuario de A, **When** intenta cambiar el gimnasio declarado en una solicitud o en los datos de una entidad, **Then** no consigue operar como B ni transferir datos entre gimnasios.
+8. **Given** un email ya utilizado por una cuenta de cualquier gimnasio o de SUPERADMIN, **When** se intenta crear otra cuenta con ese email, **Then** se rechaza sin crear, reasignar ni modificar la cuenta existente; la respuesta no revela a qué gimnasio pertenece.
+9. **Given** credenciales incorrectas o una cuenta deshabilitada, **When** se intenta iniciar sesión, **Then** se rechaza el acceso sin exponer información de otros gimnasios.
 
 ### User Story 3 - Registrar y mantener clientes (Priority: P1)
 
@@ -89,6 +100,8 @@ la unicidad de su DNI dentro del gimnasio y su independencia de otro gimnasio.
 4. **Given** un DNI ya registrado en A, **When** se intenta crear otro cliente con ese DNI o editar otro para duplicarlo en A, **Then** se rechaza sin sobrescribir al cliente existente.
 5. **Given** un DNI con letras o con longitud distinta de siete u ocho dígitos, **When** se registra o edita, **Then** se informa el error sin guardar el cambio.
 6. **Given** un canal de llegada o una localidad de otro gimnasio, **When** se intenta asignarlo a un cliente de A, **Then** se rechaza la asociación.
+7. **Given** DNI válido, nombre y apellido no vacíos, **When** se registra un cliente sin teléfono, canal de llegada, dirección ni localidad, **Then** se acepta el alta y se puede registrar una compra para ese cliente.
+8. **Given** falta de DNI o nombre o apellido vacío, **When** se solicita el alta, **Then** se informa el dato obligatorio faltante y no se crea el cliente.
 
 ### User Story 4 - Configurar la oferta de cada gimnasio (Priority: P1)
 
@@ -107,6 +120,7 @@ cada uno puede vender sus propios planes y aplicar su propia cantidad máxima.
 3. **Given** un ADMIN, **When** configura los canales de llegada o la cantidad máxima por compra, **Then** se aplican a nuevas operaciones de su gimnasio sin modificar otros gimnasios.
 4. **Given** RECEPCION, **When** consulta disciplinas, membresías, localidades y canales propios necesarios para operar, **Then** puede utilizarlos; cuando intenta configurarlos, recibe una denegación.
 5. **Given** una compra existente, **When** se actualiza el precio o duración de su membresía en el catálogo, **Then** no cambian su precio congelado, total ni vencimiento ya calculado.
+6. **Given** un precio cero o negativo, **When** ADMIN intenta crear o modificar una membresía, **Then** se rechaza el cambio y se conserva el catálogo anterior.
 
 ### User Story 5 - Comprar o renovar una membresía (Priority: P1)
 
@@ -130,6 +144,8 @@ verificar sus importes y renovaciones, y consultar su estado sin registrar pagos
 8. **Given** una cantidad cero, negativa o superior al máximo configurado, **When** se solicita la compra, **Then** se rechaza sin guardar el pedido.
 9. **Given** un cliente que compra dos disciplinas, **When** se registran sus compras, **Then** se crean pedidos separados, cada uno con una sola membresía y su propio vencimiento.
 10. **Given** un pedido con pagos registrados, **When** se intenta editar sus datos comerciales o fechas, **Then** se rechaza y se conserva su historial.
+11. **Given** una compra que ya tiene una renovación, **When** se intenta renovarla otra vez, **Then** se rechaza y se debe elegir la última compra de la cadena; la compra original y su renovación se conservan.
+12. **Given** dos solicitudes simultáneas para renovar el mismo antecedente, **When** se procesan, **Then** como máximo una crea la renovación y la otra se rechaza sin crear un pedido adicional.
 
 ### User Story 6 - Registrar cobros y consultar la deuda (Priority: P1)
 
@@ -187,13 +203,13 @@ inicial y verificar que un segundo gimnasio puede tener una oferta diferente.
 
 ### Edge Cases
 
-- Mismo DNI en distintos gimnasios; duplicación en el mismo gimnasio al crear y al editar.
+- Mismo DNI en distintos gimnasios; duplicación en el mismo gimnasio al crear y al editar; alta mínima con solo DNI, nombre y apellido, y rechazo de datos obligatorios faltantes.
 - Identificadores ajenos en consultas individuales, listados y relaciones entre entidades.
-- Solicitudes sin identidad o sin tenant válido y cuentas de recepción deshabilitadas con acceso previo.
+- Solicitudes sin identidad o sin tenant válido, credenciales incorrectas, email duplicado entre gimnasios o con SUPERADMIN y cuentas deshabilitadas con acceso previo.
 - Cantidad cero, negativa, superior al máximo o intento de enviar varios detalles en un pedido.
-- Cambio de nombre de una membresía y actualización de catálogo con compras históricas existentes.
+- Cambio de nombre de una membresía, actualización de catálogo con compras históricas existentes y rechazo de precios cero o negativos al crear o modificar membresías.
 - Compra con fecha pasada, intento de fecha futura y consulta de vigencia en el día exacto del vencimiento.
-- Renovación de compra vigente o vencida, y referencia de otro cliente o membresía.
+- Renovación de compra vigente o vencida, referencia de otro cliente o membresía, antecedente ya renovado y dos renovaciones simultáneas sobre el mismo antecedente.
 - Duraciones en días, semanas y meses; cierre de mes y año bisiesto. La suma de meses usa el último día válido cuando el mes destino no contiene el día original.
 - Pago exacto, parcial, superior a la deuda, sin deuda, cero o negativo; pagos simultáneos.
 - Anulación repetida y anulación del último pago que completó el total; el pago original no se elimina.
@@ -205,15 +221,15 @@ inicial y verificar que un segundo gimnasio puede tener una oferta diferente.
 ### Functional Requirements
 
 - **FR-001**: El sistema DEBE permitir a SUPERADMIN dar de alta un gimnasio con nombre, logo y color primario y crear su primer ADMIN en una operación completa o sin efectos parciales.
-- **FR-002**: El sistema DEBE autenticar a las cuentas habilitadas antes de permitir operaciones protegidas y reconocer su rol y gimnasio autorizado.
+- **FR-002**: El sistema DEBE autenticar a las cuentas habilitadas antes de permitir operaciones protegidas y reconocer su rol y gimnasio autorizado. El acceso DEBE usar email único en toda la plataforma y contraseña, sin requerir identificar el gimnasio. Esa unicidad DEBE incluir todas las cuentas, también las deshabilitadas y SUPERADMIN; crear una cuenta con un email ya registrado DEBE rechazarse sin alterar ni revelar la pertenencia de la cuenta existente.
 - **FR-003**: Cada cuenta de gimnasio DEBE pertenecer a uno solo; SUPERADMIN opera a nivel de plataforma sin acceder a datos de negocio.
 - **FR-004**: ADMIN DEBE poder crear y deshabilitar cuentas RECEPCION de su propio gimnasio. RECEPCION no administra cuentas. Deshabilitar una cuenta DEBE impedir nuevas operaciones protegidas con ella.
 - **FR-005**: ADMIN DEBE poder realizar las operaciones de negocio y configuración de su gimnasio. RECEPCION DEBE poder operar clientes, pedidos y pagos y consultar los catálogos necesarios, sin configurar ni anular pagos.
 - **FR-006**: El sistema DEBE impedir lecturas, escrituras y asociaciones entre gimnasios en todas las operaciones; los listados DEBEN contener exclusivamente datos propios y los identificadores enviados no deben cambiar el gimnasio efectivo.
 - **FR-007**: Un recurso de otro gimnasio DEBE responder como inexistente (404); una operación prohibida por el rol sobre datos propios DEBE responder con permiso insuficiente (403), sin cambios de datos.
-- **FR-008**: ADMIN y RECEPCION DEBEN poder registrar, editar, listar y consultar clientes propios con DNI, nombre, apellido, teléfono, canal de llegada, dirección, localidad y fecha de ingreso, conservando su relación con compras anteriores.
+- **FR-008**: ADMIN y RECEPCION DEBEN poder registrar, editar, listar y consultar clientes propios con DNI, nombre, apellido, teléfono, canal de llegada, dirección, localidad y fecha de ingreso, conservando su relación con compras anteriores. DNI, nombre y apellido DEBEN ser obligatorios y no vacíos; teléfono, canal de llegada, dirección y localidad DEBEN ser opcionales. Los datos opcionales proporcionados DEBEN cumplir las validaciones y el aislamiento correspondientes; su ausencia no impide el alta ni la compra.
 - **FR-009**: El DNI DEBE contener siete u ocho dígitos, conservarse sin interpretación numérica y ser único por gimnasio, tanto en altas como en ediciones. La identidad interna del cliente DEBE ser independiente de su DNI.
-- **FR-010**: ADMIN DEBE poder mantener el catálogo de disciplinas y sus membresías, con nombre, precio, duración positiva y unidad DIAS, SEMANAS o MESES.
+- **FR-010**: ADMIN DEBE poder mantener el catálogo de disciplinas y sus membresías, con nombre, precio mayor a cero, duración positiva y unidad DIAS, SEMANAS o MESES. Las altas y modificaciones con precio cero o negativo DEBEN rechazarse; no se incluyen membresías gratuitas en esta feature.
 - **FR-011**: ADMIN DEBE poder configurar el catálogo de canales de llegada, las localidades utilizadas por sus clientes y la cantidad máxima permitida por compra en su gimnasio.
 - **FR-012**: Los clientes, cuentas, direcciones, localidades, canales, disciplinas, membresías, pedidos y pagos del negocio DEBEN mantener pertenencia consistente al mismo gimnasio en sus relaciones.
 - **FR-013**: ADMIN y RECEPCION DEBEN poder crear pedidos para clientes propios usando una membresía propia, con exactamente un detalle y una cantidad entera positiva que no exceda el máximo configurado.
@@ -221,7 +237,7 @@ inicial y verificar que un segundo gimnasio puede tener una oferta diferente.
 - **FR-015**: El detalle DEBE conservar el precio unitario de compra. Los cambios posteriores del catálogo NO DEBEN alterar ese precio, el total ni las fechas calculadas de compras anteriores.
 - **FR-016**: La fecha de compra DEBE ser hoy por defecto; se DEBEN aceptar fechas pasadas explícitas y rechazar fechas futuras. Para una compra retroactiva se utiliza el precio vigente al registrarla, sin reconstruir precios históricos del catálogo.
 - **FR-017**: La duración contratada DEBE calcularse como cantidad por duración explícita de la membresía, en su unidad configurada, sin depender de su nombre.
-- **FR-018**: Una compra nueva DEBE calcular su vencimiento desde su fecha de compra. Al renovar, se DEBE elegir una compra previa del mismo gimnasio, cliente y membresía; si está vigente respecto de la fecha de compra registrada, la base del cálculo es su vencimiento anterior; si ya venció, la base es la fecha de compra registrada.
+- **FR-018**: Una compra nueva DEBE calcular su vencimiento desde su fecha de compra. Al renovar, se DEBE elegir una compra previa del mismo gimnasio, cliente y membresía; si está vigente respecto de la fecha de compra registrada, la base del cálculo es su vencimiento anterior; si ya venció, la base es la fecha de compra registrada. Cada compra DEBE tener como máximo una renovación; se continúa desde la última compra de su cadena. Si el antecedente ya fue renovado, se DEBE rechazar el intento, incluso bajo solicitudes simultáneas, sin crear otro pedido.
 - **FR-019**: La suma de meses DEBE conservar el día cuando exista en el mes destino y usar su último día válido en caso contrario. Sumar semanas equivale a sumar períodos de siete días.
 - **FR-020**: Para compras ya realizadas, el día de vencimiento DEBE estar incluido: la vigencia es VIGENTE hasta ese día y VENCIDA desde el siguiente. La fecha usada para evaluar la vigencia DEBE ser consistente en todas las consultas de una operación.
 - **FR-021**: El estado de pago DEBE ser PENDIENTE si hay deuda y PAGADO si está saldado. La deuda DEBE calcularse como total menos suma de pagos aplicados no anulados.
@@ -239,7 +255,7 @@ inicial y verificar que un segundo gimnasio puede tener una oferta diferente.
 
 ### Constitutional Requirements *(mandatory)*
 
-- **CR-001**: Ninguna operación DEBE exponer ni asociar datos ajenos. La aceptación DEBE demostrarlo con al menos dos gimnasios, incluyendo búsquedas por identificador, listados, altas, modificaciones y relaciones.
+- **CR-001**: El aislamiento automático DEBE ser lo primero que se construye y se prueba, antes del resto de los casos de negocio. Ninguna operación DEBE exponer ni asociar datos ajenos. La aceptación DEBE demostrarlo con al menos dos gimnasios, incluyendo búsquedas por identificador, listados, altas, modificaciones y relaciones.
 - **CR-002**: La matriz de permisos DEBE verificarse para SUPERADMIN, ADMIN y RECEPCION, incluyendo ausencia de identidad válida, cuentas deshabilitadas y superadmin sin acceso al negocio.
 - **CR-003**: La oferta, cantidades máximas y canales DEBEN ser configurables por gimnasio; el seed inicial NO DEBE determinar las reglas del producto.
 - **CR-004**: Los importes DEBEN conservar exactitud decimal de dos posiciones en cálculo, consulta y persistencia. Los precios congelados y el historial NO DEBEN reescribirse por cambios del catálogo.
@@ -249,13 +265,13 @@ inicial y verificar que un segundo gimnasio puede tener una oferta diferente.
 ### Key Entities *(include if feature involves data)*
 
 - **Gimnasio**: Tenant del producto; nombre, logo, color primario y configuración propia.
-- **Cuenta de usuario**: Identidad autenticable, condición habilitada/deshabilitada y rol; pertenece a un gimnasio salvo SUPERADMIN.
-- **Cliente**: Identidad propia, DNI único en su gimnasio, nombre, apellido, teléfono, fecha de ingreso, canal de llegada y dirección con localidad. No implica una cuenta de acceso del cliente final.
+- **Cuenta de usuario**: Identidad autenticable mediante email único en toda la plataforma y contraseña, condición habilitada/deshabilitada y rol; pertenece a un gimnasio salvo SUPERADMIN. El email no se reutiliza para otra cuenta al deshabilitarla.
+- **Cliente**: Identidad propia, DNI único en su gimnasio, nombre y apellido obligatorios; teléfono, canal de llegada, dirección y localidad opcionales, y fecha de ingreso. No implica una cuenta de acceso del cliente final.
 - **Canal de llegada**: Opción del catálogo configurable del gimnasio utilizada para registrar cómo llegó un cliente.
 - **Dirección y localidad**: Datos de ubicación vinculados con el cliente, con pertenencia consistente al gimnasio.
 - **Disciplina**: Servicio definido por el gimnasio, sin lista de nombres fija.
-- **Membresía**: Plan de una disciplina con precio, duración y unidad explícitas.
-- **Pedido y detalle único**: Compra de una membresía por un cliente, con cantidad, precio unitario congelado, total, fechas y, cuando se renueva, compra anterior elegida.
+- **Membresía**: Plan de una disciplina con precio mayor a cero, duración positiva y unidad explícita.
+- **Pedido y detalle único**: Compra de una membresía por un cliente, con cantidad, precio unitario congelado, total, fechas y, cuando se renueva, compra anterior elegida; cada compra admite como máximo una renovación y forma una cadena sin bifurcaciones.
 - **Pago**: Importe positivo aplicado a una compra y condición de anulado o no anulado; el vuelto no forma parte del importe aplicado.
 - **Registro de anulación**: Evidencia de qué pago se anuló, quién realizó la operación y cuándo; preserva el movimiento original.
 - **Estado de pago, deuda y vigencia**: Resultados calculados a partir de importes, pagos no anulados y fechas; no son estados intercambiables.

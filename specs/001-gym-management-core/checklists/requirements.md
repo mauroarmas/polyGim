@@ -39,4 +39,4 @@
 - Trazabilidad de aceptación: FR-001 → US1; FR-002–FR-007 → US1/US2; FR-008–FR-009 → US3; FR-010–FR-012 → US3/US4/US2; FR-013–FR-020 → US5; FR-021–FR-025 → US6; FR-026–FR-027 → US7; FR-028 → US5 y Edge Cases; FR-029 → US5/US6/US7; FR-030 → US1/US6 y Edge Cases; FR-031 → US8; FR-032 → SC-008.
 - Los controles constitucionales CR-001–CR-006 tienen escenarios de aislamiento, permisos, configuración, precisión, errores y verificación aplicables; sus mecanismos se definirán en plan.
 - No se agregan reservas, listado de próximos vencimientos, pantallas, importación ni implementación de otras features.
-- La spec permanece Draft hasta aprobación del autor. La etapa siguiente del flujo es clarify; no se generaron plan ni tasks.
+- La spec fue aprobada por el autor el 2026-11-10 y la ronda de clarify está en curso; no se generaron plan ni tasks.
