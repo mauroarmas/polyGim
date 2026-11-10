@@ -66,6 +66,11 @@ class TenantScopeTest {
                     java.util.List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
             SecurityContextHolder.getContext().setAuthentication(auth);
             assertThatCode(() -> new TenantGuard().requireBusiness()).doesNotThrowAnyException();
+            assertThatCode(() -> new TenantGuard().requireAdmin()).doesNotThrowAnyException();
+            var receptionist = new UsernamePasswordAuthenticationToken(new CurrentAccountPrincipal(UUID.randomUUID(), gym, "test@example.org"), null,
+                    java.util.List.of(new SimpleGrantedAuthority("ROLE_RECEPCION")));
+            SecurityContextHolder.getContext().setAuthentication(receptionist);
+            assertThatThrownBy(() -> new TenantGuard().requireAdmin()).isInstanceOf(RuntimeException.class);
             var foreign = new UsernamePasswordAuthenticationToken(new CurrentAccountPrincipal(UUID.randomUUID(), UUID.randomUUID(), "test@example.org"), null,
                     java.util.List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
             SecurityContextHolder.getContext().setAuthentication(foreign);

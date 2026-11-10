@@ -22,7 +22,7 @@ class PagoServiceTest {
         when(order.getTotal()).thenReturn(new BigDecimal("200.50"));
         when(orders.lock(id)).thenReturn(Optional.of(order));
         when(payments.sumValid(id)).thenReturn(new BigDecimal("50.25"));
-        var service = new PagoService(orders, payments, executor, Clock.systemUTC());
+        var service = new PagoService(orders, payments, mock(com.gymplatform.repository.AnulacionRepository.class), executor, Clock.systemUTC());
         org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(
                 new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
                         new com.gymplatform.security.CurrentAccountPrincipal(UUID.randomUUID(), UUID.randomUUID(), "user@example.org"), null,

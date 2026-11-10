@@ -23,13 +23,7 @@ public class PagoRepository {
     private final TenantGuard guard;
     public PagoRepository(TenantGuard guard) { this.guard = guard; }
     public void persist(Pago payment) { guard.requireBusiness(); entityManager.persist(payment); }
-    public void persistAnnulment(AnulacionPago annulment) { guard.requireAdmin(); entityManager.persist(annulment); }
     public Optional<Pago> find(UUID id) { guard.requireBusiness(); return Optional.ofNullable(entityManager.find(Pago.class, id)); }
-    public Optional<AnulacionPago> findAnnulment(UUID payment) {
-        guard.requireBusiness();
-        return entityManager.createQuery("select a from AnulacionPago a where a.pagoId = :payment", AnulacionPago.class)
-                .setParameter("payment", payment).getResultStream().findFirst();
-    }
     public BigDecimal sumValid(UUID orderId) {
         guard.requireBusiness();
         BigDecimal sum = entityManager.createQuery("select sum(p.montoAplicado) from Pago p where p.pedidoId = :id and not exists "

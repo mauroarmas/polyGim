@@ -207,15 +207,15 @@ originales de la spec y permite verificarlas con fixtures independientes.
 
 ### Tests for US7 — obligatorios
 
-- [ ] T072 [P] [US7] Escribir `polygim-api/src/test/java/com/gymplatform/service/AnulacionServiceTest.java` para permiso ADMIN, deuda recalculada, evidencia inmutable, repetición idempotente y fechas/vigencia sin cambios. Referencia: FR-026/FR-027/FR-022. Depende de: T071.
-- [ ] T073 [P] [US7] Escribir `polygim-api/src/test/java/com/gymplatform/integration/AnulacionApiIT.java` para PUT sin body, 201 inicial/200 repetido con mismo registro, 403 de recepción, 404 ajeno, actor de servidor y pedido no editable aun con todos sus pagos anulados. Referencia: FR-026–FR-029. Depende de: T071.
+- [X] T072 [P] [US7] Escribir `polygim-api/src/test/java/com/gymplatform/service/AnulacionServiceTest.java` para permiso ADMIN, deuda recalculada, evidencia inmutable, repetición idempotente y fechas/vigencia sin cambios. Referencia: FR-026/FR-027/FR-022. Depende de: T071.
+- [X] T073 [P] [US7] Escribir `polygim-api/src/test/java/com/gymplatform/integration/AnulacionApiIT.java` para PUT sin body, 201 inicial/200 repetido con mismo registro, 403 de recepción, 404 ajeno, actor de servidor y pedido no editable aun con todos sus pagos anulados. Referencia: FR-026–FR-029. Depende de: T071.
 
 ### Implementation for US7
 
-- [ ] T074 [US7] Implementar `polygim-api/src/main/java/com/gymplatform/repository/AnulacionRepository.java` y `polygim-api/src/main/java/com/gymplatform/service/AnulacionService.java`: cargar pago propio, bloquear primero pedido padre como en el cobro, crear como máximo una evidencia y recalcular saldo sin borrar ni reactivar. Referencia: FR-026/FR-027/FR-030. Depende de: T072, T073.
-- [ ] T075 [US7] Crear `polygim-api/src/main/java/com/gymplatform/controller/AnulacionController.java` y `polygim-api/src/main/java/com/gymplatform/controller/dto/AnulacionDtos.java`, y extender `polygim-api/src/main/java/com/gymplatform/controller/dto/PagoDtos.java` con estado/evidencia de anulación sin exponer datos de otros usuarios. Referencia: FR-026/FR-029; contracts anulaciones. Depende de: T074.
-- [ ] T076 [US7] Ampliar `polygim-api/src/test/java/com/gymplatform/integration/PagoConcurrencyIT.java` con dos anulaciones simultáneas y anulación/cobro sobre el mismo pedido; verificar lock común, una evidencia y saldo consistente sin restaurar flags manuales. Referencia: FR-027/FR-030. Depende de: T075.
-- [ ] T077 [US7] Cerrar M6 con `polygim-api/pom.xml`, incluyendo el circuito completo de `specs/001-gym-management-core/quickstart.md`, y registrar resultados en `docs/PLAN_DE_TRABAJO.md` sin afirmar cobertura no medida. Referencia: SC-005/SC-006. Depende de: T076.
+- [X] T074 [US7] Implementar `polygim-api/src/main/java/com/gymplatform/repository/AnulacionRepository.java` y `polygim-api/src/main/java/com/gymplatform/service/AnulacionService.java`: cargar pago propio, bloquear primero pedido padre como en el cobro, crear como máximo una evidencia y recalcular saldo sin borrar ni reactivar. Referencia: FR-026/FR-027/FR-030. Depende de: T072, T073.
+- [X] T075 [US7] Crear `polygim-api/src/main/java/com/gymplatform/controller/AnulacionController.java` y `polygim-api/src/main/java/com/gymplatform/controller/dto/AnulacionDtos.java`, y extender `polygim-api/src/main/java/com/gymplatform/controller/dto/PagoDtos.java` con estado/evidencia de anulación sin exponer datos de otros usuarios. Referencia: FR-026/FR-029; contracts anulaciones. Depende de: T074.
+- [X] T076 [US7] Ampliar `polygim-api/src/test/java/com/gymplatform/integration/PagoConcurrencyIT.java` con dos anulaciones simultáneas y anulación/cobro sobre el mismo pedido; verificar lock común, una evidencia y saldo consistente sin restaurar flags manuales. Referencia: FR-027/FR-030. Depende de: T075.
+- [X] T077 [US7] Cerrar M6 con `polygim-api/pom.xml`, incluyendo el circuito completo de `specs/001-gym-management-core/quickstart.md`, y registrar resultados en `docs/PLAN_DE_TRABAJO.md` sin afirmar cobertura no medida. Referencia: SC-005/SC-006. Depende de: T076.
 
 ## Phase 10: US8 — Datos iniciales ficticios (P2, M7)
 

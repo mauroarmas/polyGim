@@ -4,6 +4,7 @@ import com.gymplatform.controller.dto.PageResponse;
 import com.gymplatform.controller.dto.PagoDtos;
 import com.gymplatform.model.Pago;
 import com.gymplatform.repository.PagoRepository;
+import com.gymplatform.repository.AnulacionRepository;
 import com.gymplatform.repository.PedidoRepository;
 import com.gymplatform.security.CurrentAccountPrincipal;
 import com.gymplatform.service.policy.PagoPolicy;
@@ -20,16 +21,18 @@ public class PagoService {
     private final PedidoRepository orders;
     private final PagoRepository payments;
     private final TenantBusinessExecutor executor;
+    private final AnulacionRepository annulments;
     private final Clock clock;
-    public PagoService(PedidoRepository orders, PagoRepository payments, TenantBusinessExecutor executor, Clock clock) {
-        this.orders = orders; this.payments = payments; this.executor = executor; this.clock = clock;
+    public PagoService(PedidoRepository orders, PagoRepository payments, AnulacionRepository annulments, TenantBusinessExecutor executor, Clock clock) {
+        this.orders = orders; this.payments = payments; this.annulments = annulments; this.executor = executor; this.clock = clock;
     }
     public PagoDtos.Result charge(UUID orderId, BigDecimal received) {
         return executor.business(() -> {
             var order = orders.lock(orderId).orElseThrow(NoSuchElementException::new);
             var result = PagoPolicy.apply(order.getTotal(), payments.sumValid(orderId), received);
             var principal = (CurrentAccountPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            var payment = new Pago(UUID.randomUUID(), orderId, result.aplicado(), principal.accountId(), clock.instant());
+            var payment = new Pago(UUID.randomUUID(), orderId, result.aplicado(), principal.accountId(),
+                    clock.instant().truncatedTo(java.time.temporal.ChronoUnit.MICROS));
             payments.persist(payment);
             return new PagoDtos.Result(PagoDtos.payment(payment, null), result.vuelto().toPlainString(),
                     result.deudaRestante().toPlainString(), result.estadoPago());
@@ -38,7 +41,7 @@ public class PagoService {
     public PagoDtos.Payment get(UUID id) {
         return executor.business(() -> {
             var payment = payments.find(id).orElseThrow(NoSuchElementException::new);
-            return PagoDtos.payment(payment, payments.findAnnulment(id).orElse(null));
+            return PagoDtos.payment(payment, annulments.findByPayment(id).orElse(null));
         });
     }
     public PageResponse<PagoDtos.Payment> list(UUID orderId, Integer page, Integer size) {
