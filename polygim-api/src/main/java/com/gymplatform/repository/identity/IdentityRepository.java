@@ -7,4 +7,5 @@ public interface IdentityRepository {
     Optional<CuentaAcceso> findById(UUID id);
     void persist(CuentaAcceso account);
     boolean superadminExists();
+    Optional<CuentaAcceso> findFirstEnabledSuperadmin();
 }

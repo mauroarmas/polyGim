@@ -23,3 +23,23 @@ utilizan las credenciales del sistema legacy.
 Cada POST de compra o pago aceptado registra una operación nueva. Si se pierde la
 respuesta, consultá el historial antes de decidir si corresponde volver a enviarlo;
 el cliente no debe reintentar automáticamente un cobro de resultado desconocido.
+
+## Datos de demostración locales
+
+Copiá `.env.example` a `.env` y completá las variables de base, JWT y bootstrap con
+valores propios. Para cargar los ejemplos ficticios, configurá también
+`SEED_DEMO_ENABLED=true`, `SEED_ADMIN_EMAIL` y `SEED_ADMIN_PASSWORD`.
+El administrador inicial y el superadmin se crean solo si no existen; en reinicios
+el seed requiere las mismas credenciales del administrador y no las sobrescribe.
+
+```bash
+set -a
+. ./.env
+set +a
+docker compose up -d db
+cd polygim-api
+./mvnw spring-boot:run -Dspring-boot.run.profiles=demo,local-docs
+```
+
+Los ejemplos son datos de prueba, no una importación del sistema anterior. La guía
+del circuito completo está en `specs/001-gym-management-core/quickstart.md`.

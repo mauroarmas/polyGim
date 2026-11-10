@@ -225,14 +225,14 @@ originales de la spec y permite verificarlas con fixtures independientes.
 
 ### Tests for US8 — obligatorios
 
-- [ ] T078 [P] [US8] Escribir `polygim-api/src/test/java/com/gymplatform/seed/DemoSeedLoaderTest.java` y `polygim-api/src/test/java/com/gymplatform/integration/DemoSeedIT.java` con fixtures genéricas para opt-in, ids estables, credenciales desde entorno, idempotencia, rollback y no sobrescritura; los nombres de tests no mencionan al primer gimnasio. Referencia: FR-031; CR-003; US8. Depende de: T077.
+- [X] T078 [P] [US8] Escribir `polygim-api/src/test/java/com/gymplatform/seed/DemoSeedLoaderTest.java` y `polygim-api/src/test/java/com/gymplatform/integration/DemoSeedIT.java` con fixtures genéricas para opt-in, ids estables, credenciales desde entorno, idempotencia, rollback y no sobrescritura; los nombres de tests no mencionan al primer gimnasio. Referencia: FR-031; CR-003; US8. Depende de: T077.
 
 ### Implementation for US8
 
-- [ ] T079 [P] [US8] Definir `polygim-api/src/main/resources/seed/gimnasios-demo.yml` con el tenant inicial acordado, las tres disciplinas y una membresía ficticia positiva por disciplina, incluidos precio 100.25/duración 2 SEMANAS del quickstart; canales y configuración son datos, sin passwords ni tokens. Referencia: FR-031; research R10. Depende de: T077.
-- [ ] T080 [US8] Implementar `polygim-api/src/main/java/com/gymplatform/seed/DemoSeedLoader.java` y `polygim-api/src/main/java/com/gymplatform/seed/SeedDefinition.java` como cargador genérico del formato, usando servicios/scopes autorizados y claves estables; no ramificar por nombres ni añadir bypass de tenant. Referencia: FR-031; CR-001/CR-003. Depende de: T078, T079.
-- [ ] T081 [US8] Integrar activación demo/SEED_DEMO_ENABLED y credenciales por entorno en `polygim-api/src/main/resources/application.yml`, `polygim-api/src/main/java/com/gymplatform/seed/DemoSeedConfiguration.java` y `.env.example`, preservando bootstrap existente y sin cambiar hashes en reinicios. Referencia: research R10; Constitución V. Depende de: T080.
-- [ ] T082 [US8] Ejecutar validación del seed y segundo gimnasio con `polygim-api/pom.xml`, actualizar instrucciones reales de demostración en `README.md` y registrar avance parcial M7 en `docs/PLAN_DE_TRABAJO.md`. Referencia: SC-007/SC-008. Depende de: T081.
+- [X] T079 [P] [US8] Definir `polygim-api/src/main/resources/seed/gimnasios-demo.yml` con el tenant inicial acordado, las tres disciplinas y una membresía ficticia positiva por disciplina, incluidos precio 100.25/duración 2 SEMANAS del quickstart; canales y configuración son datos, sin passwords ni tokens. Referencia: FR-031; research R10. Depende de: T077.
+- [X] T080 [US8] Implementar `polygim-api/src/main/java/com/gymplatform/seed/DemoSeedLoader.java` y `polygim-api/src/main/java/com/gymplatform/seed/SeedDefinition.java` como cargador genérico del formato, usando servicios/scopes autorizados y claves estables; no ramificar por nombres ni añadir bypass de tenant. Referencia: FR-031; CR-001/CR-003. Depende de: T078, T079.
+- [X] T081 [US8] Integrar activación demo/SEED_DEMO_ENABLED y credenciales por entorno en `polygim-api/src/main/resources/application.yml`, `polygim-api/src/main/java/com/gymplatform/seed/DemoSeedConfiguration.java` y `.env.example`, preservando bootstrap existente y sin cambiar hashes en reinicios. Referencia: research R10; Constitución V. Depende de: T080.
+- [X] T082 [US8] Ejecutar validación del seed y segundo gimnasio con `polygim-api/pom.xml`, actualizar instrucciones reales de demostración en `README.md` y registrar avance parcial M7 en `docs/PLAN_DE_TRABAJO.md`. Referencia: SC-007/SC-008. Depende de: T081.
 
 ## Phase 11: Polish & Cross-Cutting Concerns — Cierre M7
 

@@ -31,4 +31,9 @@ class JpaIdentityRepository implements IdentityRepository {
         return entityManager.createQuery("select count(a) from CuentaAcceso a where a.rol = :role", Long.class)
                 .setParameter("role", "SUPERADMIN").getSingleResult() > 0;
     }
+    @Override public Optional<CuentaAcceso> findFirstEnabledSuperadmin() {
+        requireIdentityScope();
+        return entityManager.createQuery("select a from CuentaAcceso a where a.rol = :role and a.habilitada = true order by a.createdAt, a.id", CuentaAcceso.class)
+                .setParameter("role", "SUPERADMIN").setMaxResults(1).getResultStream().findFirst();
+    }
 }

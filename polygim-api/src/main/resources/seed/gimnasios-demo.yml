@@ -1,0 +1,36 @@
+# Datos ficticios de demostración. Precios y duraciones se ajustarán con el gimnasio.
+gimnasios:
+  - id: 10000000-0000-4000-8000-000000000001
+    adminId: 20000000-0000-4000-8000-000000000001
+    nombre: Poly
+    logoUrl: https://example.org/logo.png
+    colorPrimario: '#2655A4'
+    disciplinas:
+      - { id: 30000000-0000-4000-8000-000000000001, nombre: Funcional }
+      - { id: 30000000-0000-4000-8000-000000000002, nombre: Boxeo }
+      - { id: 30000000-0000-4000-8000-000000000003, nombre: Crossfit }
+    canales:
+      - { id: 40000000-0000-4000-8000-000000000001, nombre: recomendación }
+      - { id: 40000000-0000-4000-8000-000000000002, nombre: iba pasando }
+      - { id: 40000000-0000-4000-8000-000000000003, nombre: redes sociales }
+      - { id: 40000000-0000-4000-8000-000000000004, nombre: promociones }
+      - { id: 40000000-0000-4000-8000-000000000005, nombre: otro }
+    membresias:
+      - id: 50000000-0000-4000-8000-000000000001
+        disciplinaId: 30000000-0000-4000-8000-000000000001
+        nombre: Plan de ejemplo 1
+        precio: '100.25'
+        duracion: 2
+        unidadDuracion: SEMANAS
+      - id: 50000000-0000-4000-8000-000000000002
+        disciplinaId: 30000000-0000-4000-8000-000000000002
+        nombre: Plan de ejemplo 2
+        precio: '120.00'
+        duracion: 1
+        unidadDuracion: MESES
+      - id: 50000000-0000-4000-8000-000000000003
+        disciplinaId: 30000000-0000-4000-8000-000000000003
+        nombre: Plan de ejemplo 3
+        precio: '140.00'
+        duracion: 1
+        unidadDuracion: MESES

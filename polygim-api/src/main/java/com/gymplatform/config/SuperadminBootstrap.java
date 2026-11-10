@@ -10,8 +10,11 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.Ordered;
 
 @Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class SuperadminBootstrap implements ApplicationRunner {
     private final IdentityScopeExecutor scopes;
     private final IdentityRepository accounts;
