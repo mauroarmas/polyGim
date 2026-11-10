@@ -5,7 +5,7 @@
 **Input**: Spec aprobada tras clarify, constitución 1.0.0 y
 [plan de producto](../../docs/PLAN_DE_TRABAJO.md).
 
-**Status**: Propuesta técnica pendiente de aprobación. No habilita implementación.
+**Status**: Aprobado por el autor el 2026-11-10. Generación de tasks autorizada; implementación pendiente de aprobación de tasks.md.
 
 ## Summary
 
