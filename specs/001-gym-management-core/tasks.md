@@ -90,14 +90,14 @@ originales de la spec y permite verificarlas con fixtures independientes.
 
 ### Tests for US1 — obligatorios
 
-- [ ] T027 [P] [US1] Escribir `polygim-api/src/test/java/com/gymplatform/service/GimnasioServiceTest.java` para creación atómica, máximo inicial de entorno, normalización y fallo en cada parte; usar el ejecutor de aprovisionamiento validado en M1. Referencia: FR-001; US1. Depende de: T026.
-- [ ] T028 [P] [US1] Escribir `polygim-api/src/test/java/com/gymplatform/integration/GimnasioApiIT.java` para los tres endpoints plataforma, rollback real sin huérfanos, colisión de email, 403 de ADMIN/RECEPCION y SUPERADMIN sin acceso a recursos del gimnasio. Referencia: FR-001/FR-003/FR-007; US1. Depende de: T026.
+- [X] T027 [P] [US1] Escribir `polygim-api/src/test/java/com/gymplatform/service/GimnasioServiceTest.java` para creación atómica, máximo inicial de entorno, normalización y fallo en cada parte; usar el ejecutor de aprovisionamiento validado en M1. Referencia: FR-001; US1. Depende de: T026.
+- [X] T028 [P] [US1] Escribir `polygim-api/src/test/java/com/gymplatform/integration/GimnasioApiIT.java` para los tres endpoints plataforma, rollback real sin huérfanos, colisión de email, 403 de ADMIN/RECEPCION y SUPERADMIN sin acceso a recursos del gimnasio. Referencia: FR-001/FR-003/FR-007; US1. Depende de: T026.
 
 ### Implementation for US1
 
-- [ ] T029 [US1] Implementar `polygim-api/src/main/java/com/gymplatform/repository/GimnasioRepository.java` con persist/lectura/paginación de metadatos globales y `polygim-api/src/main/java/com/gymplatform/service/GimnasioService.java` que crea gimnasio, CuentaAcceso, UsuarioGimnasio y configuración en una transacción del ejecutor; no habilitar consultas globales de negocio. Referencia: FR-001; research R4. Depende de: T027, T028, T026.
-- [ ] T030 [US1] Crear `polygim-api/src/main/java/com/gymplatform/controller/PlataformaGimnasioController.java` y `polygim-api/src/main/java/com/gymplatform/controller/dto/GimnasioDtos.java` para POST/GET colección y GET por ID con logoUrl/color y administradorInicial; respuestas no contienen password/hash. Referencia: FR-001/FR-003; contracts plataforma. Depende de: T029.
-- [ ] T031 [US1] Ejecutar pruebas de US1 y regresión de M1 mediante `polygim-api/pom.xml`, contrastar respuestas con `specs/001-gym-management-core/contracts/openapi.yaml` y registrar avance parcial M2 en `docs/PLAN_DE_TRABAJO.md`. Referencia: US1; SC-002. Depende de: T030.
+- [X] T029 [US1] Implementar `polygim-api/src/main/java/com/gymplatform/repository/GimnasioRepository.java` con persist/lectura/paginación de metadatos globales y `polygim-api/src/main/java/com/gymplatform/service/GimnasioService.java` que crea gimnasio, CuentaAcceso, UsuarioGimnasio y configuración en una transacción del ejecutor; no habilitar consultas globales de negocio. Referencia: FR-001; research R4. Depende de: T027, T028, T026.
+- [X] T030 [US1] Crear `polygim-api/src/main/java/com/gymplatform/controller/PlataformaGimnasioController.java` y `polygim-api/src/main/java/com/gymplatform/controller/dto/GimnasioDtos.java` para POST/GET colección y GET por ID con logoUrl/color y administradorInicial; respuestas no contienen password/hash. Referencia: FR-001/FR-003; contracts plataforma. Depende de: T029.
+- [X] T031 [US1] Ejecutar pruebas de US1 y regresión de M1 mediante `polygim-api/pom.xml`, contrastar respuestas con `specs/001-gym-management-core/contracts/openapi.yaml` y registrar avance parcial M2 en `docs/PLAN_DE_TRABAJO.md`. Referencia: US1; SC-002. Depende de: T030.
 
 ## Phase 4: US2 — Operar con roles y recepción (P1, completar M2)
 

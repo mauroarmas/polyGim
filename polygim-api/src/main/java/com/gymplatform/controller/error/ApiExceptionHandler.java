@@ -17,6 +17,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.beans.TypeMismatchException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -68,6 +70,22 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> invalidArgument(IllegalArgumentException ex, WebRequest request) {
+        return error(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "Solicitud inválida", "Revisá los datos enviados.", request);
+    }
+
+    @ExceptionHandler(java.util.NoSuchElementException.class)
+    public ResponseEntity<Object> notFound(java.util.NoSuchElementException ex, WebRequest request) {
+        return error(HttpStatus.NOT_FOUND, "RESOURCE_NOT_FOUND", "Recurso no encontrado", "No se encontró el recurso solicitado.", request);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Object> conflict(DataIntegrityViolationException ex, WebRequest request) {
+        return error(HttpStatus.CONFLICT, "CONFLICT", "Conflicto", "La operación entra en conflicto con datos existentes.", request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
+                                                         HttpStatusCode status, WebRequest request) {
         return error(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "Solicitud inválida", "Revisá los datos enviados.", request);
     }
 

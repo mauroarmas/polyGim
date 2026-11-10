@@ -21,6 +21,9 @@ server:
   error:
     include-message: never
     include-stacktrace: never
+logging:
+  level:
+    org.hibernate.engine.jdbc.spi.SqlExceptionHelper: OFF
 springdoc:
   api-docs:
     enabled: false

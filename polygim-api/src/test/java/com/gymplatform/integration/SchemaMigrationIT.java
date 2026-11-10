@@ -14,17 +14,19 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class SchemaMigrationIT extends PostgresIntegrationSupport {
     @Test
     void migratesFromBaselineToTenantIdentity() throws Exception {
+        String schema = "migration_" + UUID.randomUUID().toString().replace("-", "");
         var initial = Flyway.configure().dataSource(DATABASE.getJdbcUrl(), DATABASE.getUsername(), DATABASE.getPassword())
-                .target(MigrationVersion.fromVersion("1")).load();
+                .schemas(schema).target(MigrationVersion.fromVersion("1")).load();
         initial.migrate();
         assertThat(initial.info().current().getVersion().toString()).isEqualTo("1");
 
-        var current = Flyway.configure().dataSource(DATABASE.getJdbcUrl(), DATABASE.getUsername(), DATABASE.getPassword()).load();
+        var current = Flyway.configure().dataSource(DATABASE.getJdbcUrl(), DATABASE.getUsername(), DATABASE.getPassword()).schemas(schema).load();
         current.migrate();
         assertThat(current.info().current().getVersion().toString()).isEqualTo("2");
 
         UUID gymA = UUID.randomUUID(), gymB = UUID.randomUUID(), account = UUID.randomUUID();
         try (var connection = DriverManager.getConnection(DATABASE.getJdbcUrl(), DATABASE.getUsername(), DATABASE.getPassword())) {
+            connection.setSchema(schema);
             try (var statement = connection.prepareStatement(
                     "insert into gimnasio (id,nombre,logo_url,color_primario,created_at,updated_at,version) values (?,?,'https://example.org/logo','#123456',now(),now(),0)")) {
                 for (UUID gym : new UUID[] {gymA, gymB}) {

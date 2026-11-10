@@ -4,22 +4,20 @@ import java.util.UUID;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-@Testcontainers
 public abstract class PostgresIntegrationSupport {
     protected static final String JWT_KEY = randomKey();
     private static final DockerImageName POSTGRES = DockerImageName.parse(
             "postgres:17.11@sha256:ff87138949ad9a46f32ff23bd6852b52ce024a13dffe9b4087be98292cdd3b4f")
             .asCompatibleSubstituteFor("postgres");
 
-    @Container
     protected static final PostgreSQLContainer<?> DATABASE = new PostgreSQLContainer<>(POSTGRES)
             .withDatabaseName("gym_test")
             .withUsername("test_" + UUID.randomUUID().toString().replace("-", ""))
             .withPassword(UUID.randomUUID().toString());
+
+    static { DATABASE.start(); }
 
     @DynamicPropertySource
     static void databaseProperties(DynamicPropertyRegistry registry) {
