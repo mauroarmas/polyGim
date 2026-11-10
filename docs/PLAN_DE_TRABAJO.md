@@ -170,7 +170,7 @@ Completar al cerrar cada hito.
 |---|---|---|---|---|
 | M0 | Base local verificada; CI remoto pendiente | 4 unitarios de contrato HTTP, 0 fallos (`clean verify`) | Sin clases de negocio aún; no corresponde informar porcentaje | Java 21, Wrapper, imagen app y PostgreSQL con healthcheck verificados; workflow creado, no ejecutado en GitHub |
 | M1 | Gate local aprobado | 18 unitarios y 13 de integración, 0 fallos (`clean verify`); regresión adicional de 10 pruebas HTTP de seguridad | 85,11% de líneas actuales de servicio/modelo (40/47) | PostgreSQL 17.11/Testcontainers, Flyway V1→V2, aislamiento A/B por ID/list/count y repositorio, restricciones tenant, JWT y cuenta deshabilitada; CI remoto pendiente |
-| M2 | Parcial: US1 aprobada; recepción pendiente | 21 unitarios y 18 de integración, 0 fallos (`clean verify`) | 93,85% de líneas actuales de servicio/modelo (61/65) | Alta/consulta de gimnasio y primer ADMIN; rollback ante email duplicado y sin exponer el email en logs; falta US2 y CI remoto |
+| M2 | Gate local aprobado | 26 unitarios y 22 de integración, 0 fallos (`clean verify`) | 95,95% de líneas actuales de servicio/modelo (71/74) | Alta atómica de gimnasio y primer ADMIN; recepción propia, revocación inmediata, IDs ajenos y permisos probados; CI remoto pendiente |
 | M3 | ☐ | | | |
 | M4 | ☐ | | | |
 | M5 | ☐ | | | |

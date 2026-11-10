@@ -23,6 +23,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -139,6 +140,45 @@ class SecurityIsolationIT extends PostgresIntegrationSupport {
         mvc.perform(get("/api/v1/clientes").header("Authorization", "Bearer " + jwt))
                 .andExpect(status().isForbidden())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON));
+    }
+
+    @Test
+    void requestCannotForceGymOrRoleAndTenantContextDoesNotLeakAcrossRequests() throws Exception {
+        UUID gymA = UUID.randomUUID(), gymB = UUID.randomUUID(), accountA = UUID.randomUUID(), accountB = UUID.randomUUID();
+        provision(gymA, accountA); provision(gymB, accountB);
+        String tokenA = signedToken(accountA, Instant.now().plusSeconds(600));
+        String tokenB = signedToken(accountB, Instant.now().plusSeconds(600));
+        String credentials = "\"email\":\"" + UUID.randomUUID() + "@example.org\",\"password\":\"" + UUID.randomUUID() + "\"";
+        for (String extra : new String[] {"\"gimnasioId\":\"" + gymB + "\"", "\"rol\":\"ADMIN\""}) {
+            mvc.perform(post("/api/v1/usuarios-recepcion").header("Authorization", "Bearer " + tokenA)
+                            .contentType(MediaType.APPLICATION_JSON).content("{" + credentials + "," + extra + "}"))
+                    .andExpect(status().isBadRequest());
+        }
+        for (var pair : new String[][] {{tokenA, gymA.toString()}, {tokenB, gymB.toString()}, {tokenA, gymA.toString()}}) {
+            mvc.perform(get("/api/v1/auth/me").header("Authorization", "Bearer " + pair[0]))
+                    .andExpect(status().isOk()).andExpect(jsonPath("$.gimnasioId").value(pair[1]));
+        }
+    }
+
+    @Test
+    void permissionsAreCheckedBeforeLookingUpAReceptionist() throws Exception {
+        UUID gymA = UUID.randomUUID(), gymB = UUID.randomUUID(), accountA = UUID.randomUUID(), accountB = UUID.randomUUID();
+        provision(gymA, accountA); provision(gymB, accountB);
+        String tokenA = signedToken(accountA, Instant.now().plusSeconds(600));
+        String tokenB = signedToken(accountB, Instant.now().plusSeconds(600));
+        String body = "{\"email\":\"" + UUID.randomUUID() + "@example.org\",\"password\":\"" + UUID.randomUUID() + "\"}";
+        var result = mvc.perform(post("/api/v1/usuarios-recepcion").header("Authorization", "Bearer " + tokenA)
+                        .contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isCreated()).andReturn();
+        UUID reception = UUID.fromString(new com.fasterxml.jackson.databind.ObjectMapper().readTree(result.getResponse().getContentAsString()).path("id").asText());
+        mvc.perform(put("/api/v1/usuarios-recepcion/" + reception + "/deshabilitacion"))
+                .andExpect(status().isUnauthorized());
+        mvc.perform(put("/api/v1/usuarios-recepcion/" + reception + "/deshabilitacion").header("Authorization", "Bearer " + tokenB))
+                .andExpect(status().isNotFound()).andExpect(jsonPath("$.code").value("RESOURCE_NOT_FOUND"));
+        mvc.perform(put("/api/v1/usuarios-recepcion/" + UUID.randomUUID() + "/deshabilitacion").header("Authorization", "Bearer " + tokenB))
+                .andExpect(status().isNotFound()).andExpect(jsonPath("$.code").value("RESOURCE_NOT_FOUND"));
+        String receptionToken = signedToken(reception, Instant.now().plusSeconds(600));
+        mvc.perform(put("/api/v1/usuarios-recepcion/" + UUID.randomUUID() + "/deshabilitacion").header("Authorization", "Bearer " + receptionToken))
+                .andExpect(status().isForbidden());
     }
 
     private String provision(UUID gym, UUID account) {

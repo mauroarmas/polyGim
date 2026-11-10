@@ -107,15 +107,15 @@ originales de la spec y permite verificarlas con fixtures independientes.
 
 ### Tests for US2 — obligatorios
 
-- [ ] T032 [P] [US2] Escribir `polygim-api/src/test/java/com/gymplatform/service/ReceptionServiceTest.java` para alta/disabled, vínculo tenant primero, unicidad global del email y rol fijo RECEPCION, sin reactivación ni liberación de email. Referencia: FR-002/FR-004/FR-005. Depende de: T031.
-- [ ] T033 [P] [US2] Escribir `polygim-api/src/test/java/com/gymplatform/integration/ReceptionApiIT.java` para alta y PUT de deshabilitación repetido, ID ajeno/no RECEPCION→404, llamadas de RECEPCION→403 y acceso con JWT después de deshabilitar→401. Referencia: FR-004/FR-007; US2. Depende de: T031.
+- [X] T032 [P] [US2] Escribir `polygim-api/src/test/java/com/gymplatform/service/ReceptionServiceTest.java` para alta/disabled, vínculo tenant primero, unicidad global del email y rol fijo RECEPCION, sin reactivación ni liberación de email. Referencia: FR-002/FR-004/FR-005. Depende de: T031.
+- [X] T033 [P] [US2] Escribir `polygim-api/src/test/java/com/gymplatform/integration/ReceptionApiIT.java` para alta y PUT de deshabilitación repetido, ID ajeno/no RECEPCION→404, llamadas de RECEPCION→403 y acceso con JWT después de deshabilitar→401. Referencia: FR-004/FR-007; US2. Depende de: T031.
 
 ### Implementation for US2
 
-- [ ] T034 [US2] Implementar `polygim-api/src/main/java/com/gymplatform/repository/UsuarioGimnasioRepository.java` y `polygim-api/src/main/java/com/gymplatform/service/ReceptionService.java`: resolver usuario propio por @TenantId antes de tocar la identidad global, crear cuenta/vínculo atómicamente y deshabilitar sin borrar. Referencia: FR-004/FR-006/FR-012. Depende de: T032, T033.
-- [ ] T035 [US2] Crear `polygim-api/src/main/java/com/gymplatform/controller/ReceptionController.java` y `polygim-api/src/main/java/com/gymplatform/controller/dto/ReceptionDtos.java` para POST usuarios-recepcion y PUT deshabilitacion sin campos rol/tenant aceptados; respetar respuestas genéricas y la matriz del contrato. Referencia: FR-004/FR-005; contracts recepción. Depende de: T034.
-- [ ] T036 [US2] Ampliar `polygim-api/src/test/java/com/gymplatform/integration/SecurityIsolationIT.java` con los endpoints reales de US1/US2, manipulación de tenant/rol en DTOs, limpieza entre solicitudes y precedencia 401/403/404 sin revelar existencia ajena. Referencia: FR-002–FR-007; CR-002/CR-005. Depende de: T035.
-- [ ] T037 [US2] Cerrar M2 ejecutando `polygim-api/pom.xml` y registrar en `docs/PLAN_DE_TRABAJO.md` que alta de gimnasio y recepción funcionan sin alterar main/dev; no avanzar con regresiones de M1. Referencia: SC-001/SC-002. Depende de: T036.
+- [X] T034 [US2] Implementar `polygim-api/src/main/java/com/gymplatform/repository/UsuarioGimnasioRepository.java` y `polygim-api/src/main/java/com/gymplatform/service/ReceptionService.java`: resolver usuario propio por @TenantId antes de tocar la identidad global, crear cuenta/vínculo atómicamente y deshabilitar sin borrar. Referencia: FR-004/FR-006/FR-012. Depende de: T032, T033.
+- [X] T035 [US2] Crear `polygim-api/src/main/java/com/gymplatform/controller/ReceptionController.java` y `polygim-api/src/main/java/com/gymplatform/controller/dto/ReceptionDtos.java` para POST usuarios-recepcion y PUT deshabilitacion sin campos rol/tenant aceptados; respetar respuestas genéricas y la matriz del contrato. Referencia: FR-004/FR-005; contracts recepción. Depende de: T034.
+- [X] T036 [US2] Ampliar `polygim-api/src/test/java/com/gymplatform/integration/SecurityIsolationIT.java` con los endpoints reales de US1/US2, manipulación de tenant/rol en DTOs, limpieza entre solicitudes y precedencia 401/403/404 sin revelar existencia ajena. Referencia: FR-002–FR-007; CR-002/CR-005. Depende de: T035.
+- [X] T037 [US2] Cerrar M2 ejecutando `polygim-api/pom.xml` y registrar en `docs/PLAN_DE_TRABAJO.md` que alta de gimnasio y recepción funcionan sin alterar main/dev; no avanzar con regresiones de M1. Referencia: SC-001/SC-002. Depende de: T036.
 
 ## Phase 5: US4 — Configurar la oferta (P1, M3)
 

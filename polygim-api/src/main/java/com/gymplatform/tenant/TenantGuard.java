@@ -17,4 +17,10 @@ public class TenantGuard {
             throw new AccessDeniedException("Acceso denegado");
         }
     }
+    public void requireAdmin() {
+        requireBusiness();
+        if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN")))
+            throw new AccessDeniedException("Acceso denegado");
+    }
 }
