@@ -99,6 +99,23 @@ class SecurityIsolationIT extends PostgresIntegrationSupport {
     }
 
     @Test
+    void signedTokenWithoutExpirationIsRejected() throws Exception {
+        UUID account = UUID.randomUUID();
+        provision(UUID.randomUUID(), account);
+        String claims = "{\"sub\":\"" + account + "\",\"iss\":\"test-issuer\",\"aud\":[\"test-audience\"]}";
+        mvc.perform(get("/api/v1/auth/me").header("Authorization", "Bearer " + sign(claims)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void signedTokenWithoutSubjectIsRejected() throws Exception {
+        String claims = "{\"iss\":\"test-issuer\",\"aud\":[\"test-audience\"],\"exp\":"
+                + Instant.now().plusSeconds(600).getEpochSecond() + "}";
+        mvc.perform(get("/api/v1/auth/me").header("Authorization", "Bearer " + sign(claims)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void unknownResourceUsesProblemNotFoundForAuthenticatedGymUser() throws Exception {
         UUID gym = UUID.randomUUID(), account = UUID.randomUUID();
         provision(gym, account);
@@ -142,10 +159,14 @@ class SecurityIsolationIT extends PostgresIntegrationSupport {
     }
 
     private String signedToken(UUID subject, Instant expires, String issuer, String audience) throws Exception {
-        var encoder = Base64.getUrlEncoder().withoutPadding();
-        String header = encoder.encodeToString("{\"alg\":\"HS256\",\"typ\":\"JWT\"}".getBytes(StandardCharsets.UTF_8));
         String claims = "{\"sub\":\"" + subject + "\",\"iss\":\"" + issuer + "\",\"aud\":[\"" + audience + "\"],\"iat\":"
                 + expires.minusSeconds(900).getEpochSecond() + ",\"exp\":" + expires.getEpochSecond() + "}";
+        return sign(claims);
+    }
+
+    private String sign(String claims) throws Exception {
+        var encoder = Base64.getUrlEncoder().withoutPadding();
+        String header = encoder.encodeToString("{\"alg\":\"HS256\",\"typ\":\"JWT\"}".getBytes(StandardCharsets.UTF_8));
         String payload = encoder.encodeToString(claims.getBytes(StandardCharsets.UTF_8));
         var mac = Mac.getInstance("HmacSHA256");
         mac.init(new SecretKeySpec(Base64.getDecoder().decode(JWT_KEY), "HmacSHA256"));

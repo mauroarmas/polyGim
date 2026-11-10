@@ -19,6 +19,7 @@ public class CurrentAccountAuthenticationConverter implements Converter<Jwt, Abs
     }
     @Override public AbstractAuthenticationToken convert(Jwt jwt) {
         try {
+            if (jwt.getSubject() == null) throw new IllegalArgumentException("Sujeto ausente");
             UUID id = UUID.fromString(jwt.getSubject());
             return scopes.execute(() -> {
                 var account = identity.requireEnabled(id);

@@ -40,10 +40,13 @@ public class SecurityConfig {
         byte[] bytes = Base64.getDecoder().decode(key);
         if (bytes.length < 32 || issuer.isBlank() || audience.isBlank()) throw new IllegalArgumentException("Configuración JWT inválida");
         var decoder = NimbusJwtDecoder.withSecretKey(new SecretKeySpec(bytes, "HmacSHA256")).macAlgorithm(MacAlgorithm.HS256).build();
-        OAuth2TokenValidator<Jwt> audienceValidator = jwt -> jwt.getAudience().contains(audience)
+        OAuth2TokenValidator<Jwt> audienceValidator = jwt -> jwt.getAudience() != null && jwt.getAudience().contains(audience)
                 ? OAuth2TokenValidatorResult.success()
                 : OAuth2TokenValidatorResult.failure(new OAuth2Error("invalid_token"));
-        decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(JwtValidators.createDefaultWithIssuer(issuer), audienceValidator));
+        OAuth2TokenValidator<Jwt> expirationRequired = jwt -> jwt.getExpiresAt() != null
+                ? OAuth2TokenValidatorResult.success()
+                : OAuth2TokenValidatorResult.failure(new OAuth2Error("invalid_token"));
+        decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(JwtValidators.createDefaultWithIssuer(issuer), audienceValidator, expirationRequired));
         return decoder;
     }
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity http, IdentityService identity, IdentityScopeExecutor scopes,
