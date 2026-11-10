@@ -142,8 +142,9 @@ Cada hito termina con tests en verde y un commit convencional. No se avanza con 
 - [x] Spec, plan y tasks de Spec Kit coherentes con este documento
 - [x] Dato real para el CV anotado (cantidad de tests, cobertura)
 
-Los criterios marcados corresponden a la feature 1 y su validación local. La ejecución
-del workflow en GitHub sigue pendiente: no hay remoto configurado ni se hizo push.
+Los criterios marcados corresponden a la feature 1 y su validación local. GitHub
+Actions intentó ejecutar el workflow, pero no inició el job por un problema de
+facturación de la cuenta; el resultado de CI sigue pendiente de esa resolución.
 
 ## 9. Cómo trabaja el agente
 
@@ -178,7 +179,7 @@ Completar al cerrar cada hito.
 | M4 | Gate local aprobado | 34 unitarios y 27 de integración, 0 fallos (`clean verify`) | 97,57% de líneas actuales de servicio/modelo (201/206) | V4; alta y edición de clientes, DNI textual único por gimnasio, opcionales y referencias aisladas; CI remoto pendiente |
 | M5 | Gate local aprobado; saldos completos pendientes de M6 | 39 unitarios y 31 de integración, 0 fallos (`clean verify`) | 97,99% de líneas actuales de servicio/modelo (292/298) | V5; snapshots y renovaciones concurrentes verificadas; todavía no hay pagos y la deuda inicial es el total; CI remoto pendiente |
 | M6 | Gate local aprobado | 44 unitarios y 38 de integración, 0 fallos (`clean verify`) | 98,33% de líneas actuales de servicio/modelo (354/360) | Cobro parcial/exceso, anulación idempotente, deuda y concurrencia comprobados; reproducción manual del quickstart y CI remoto pendientes de M7 |
-| M7 | Cierre local aprobado; CI remoto pendiente | 45 unitarios y 45 de integración, 0 fallos ni omitidos (`clean verify`) | 97,89% de líneas (602/615) en 56 clases del alcance de JaCoCo | Seed opt-in, aislamiento, aceptación, 36 operaciones OpenAPI y quickstart real verificados; workflow aún no ejecutado en GitHub |
+| M7 | Cierre local aprobado; CI bloqueado por facturación | 45 unitarios y 45 de integración, 0 fallos ni omitidos (`clean verify`) | 97,89% de líneas (602/615) en 56 clases del alcance de JaCoCo | Seed opt-in, aislamiento, aceptación, 36 operaciones OpenAPI y quickstart con ambos servicios en Compose verificados; GitHub no inició el job por facturación |
 
 **Evidencia de M7 (2026-11-10):** JaCoCo incluye servicios, modelo, seed,
 resolución de tenant, seguridad y bootstrap de superadmin. Una ejecución aislada

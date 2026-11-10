@@ -1,15 +1,17 @@
 # Quickstart de validación — Feature 1
 
 **Estado:** guía de ejecución local. El 2026-11-10 se reprodujo el circuito de
-arranque, seed, compra, cobros, anulación, aislamiento y reinicio contra una base
-PostgreSQL temporal. Las pruebas automatizadas complementan esa comprobación manual.
+arranque de la aplicación y PostgreSQL en Compose, seed, compra, cobros, anulación,
+renovación, roles, aislamiento y reinicio contra una base temporal. Las pruebas
+automatizadas complementan esa comprobación manual.
 
 Referencias: [plan](plan.md), [modelo](data-model.md), [REST](contracts/api.md),
 [OpenAPI](contracts/openapi.yaml) y [criterios SC-001–SC-008](spec.md#measurable-outcomes).
 
 ## Prerrequisitos
 
-- Java 21 seleccionado en JAVA_HOME/PATH, curl y jq. Maven lo proveerá el Wrapper 3.9.11.
+- curl, jq y Docker Compose. Java 21 solo es necesario para ejecutar la suite Maven
+  en el host; el Wrapper 3.9.11 provee Maven y la imagen compila con Java 21.
 - Docker operativo y accesible por el usuario, incluido el arranque de contenedores
   de pruebas. Testcontainers 1.21.4 conserva el BOM y contempla Docker 29; no configurar
   DOCKER_API_VERSION como solución automática.
@@ -23,7 +25,8 @@ java -version
 docker info
 ```
 
-Resultado requerido: Java 21 y daemon accesible. No ejecutar pruebas con un JDK inferior.
+Resultado requerido para la suite en el host: Java 21 y daemon accesible. No ejecutar
+pruebas Maven con un JDK inferior; Compose no necesita Java instalado en el host.
 
 ## Configuración local
 
@@ -42,6 +45,8 @@ valores; no versionarlo, imprimirlo en logs ni copiar credenciales del legacy.
 | BOOTSTRAP_SUPERADMIN_EMAIL, BOOTSTRAP_SUPERADMIN_PASSWORD | Crear la primera cuenta global si no existe |
 | SEED_DEMO_ENABLED | Opt-in del seed ficticio, false fuera de la demostración |
 | SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD | Administrador inicial de los datos de demostración |
+| SPRING_PROFILES_ACTIVE | `demo,local-docs` para seed y documentación local en Compose |
+| APP_PORT | Puerto publicado por Compose, 8080 por defecto |
 
 Email y contraseñas se suministran por entorno. Contraseñas nuevas: política definida
 en el contrato. El seed no cambia hashes ni reactiva cuentas existentes al reiniciar.
@@ -50,10 +55,13 @@ La imagen PostgreSQL será 17.11 fijada por digest, igual en Compose y tests.
 ```bash
 cp .env.example .env
 # Completar .env en un editor local; usar sintaxis compatible con export de shell.
+# Para este circuito: SPRING_PROFILES_ACTIVE=demo,local-docs y SEED_DEMO_ENABLED=true.
 set -a
 . ./.env
 set +a
-docker compose up -d db
+docker compose up -d --build
+docker compose ps
+docker compose logs -f app
 ```
 
 No ejecutar `docker compose down -v` sobre una base que se desee conservar.
@@ -89,11 +97,8 @@ No se considera aprobado M1 por desactivar o saltar estos tests.
 
 ## Arranque de demostración local
 
-Con configuración y migraciones completas, arrancar en una terminal:
-
-```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=demo,local-docs
-```
+La aplicación y PostgreSQL ya se ejecutan en contenedores. Esperar en los logs a que
+la aplicación haya terminado de iniciar; Ctrl+C sale del seguimiento sin detenerla.
 
 El arranque aplica Flyway y valida el esquema, sin DDL de Hibernate. El perfil demo
 requiere SEED_DEMO_ENABLED=true. El seed crea Poly con Funcional, Boxeo y Crossfit y
@@ -108,7 +113,7 @@ En otra terminal, cargar el mismo entorno local y configurar la URL:
 set -a
 . ./.env
 set +a
-BASE_URL=http://localhost:8080/api/v1
+BASE_URL=http://localhost:${APP_PORT:-8080}/api/v1
 ADMIN_TOKEN=$(jq -n --arg email "$SEED_ADMIN_EMAIL" --arg password "$SEED_ADMIN_PASSWORD" '{email:$email,password:$password}' |
   curl --fail-with-body -sS "$BASE_URL/auth/login" -H 'Content-Type: application/json' --data-binary @- |
   jq -er '.accessToken')
@@ -166,12 +171,19 @@ curl --fail-with-body -sS "$BASE_URL/pedidos/$ORDER_ID"   -H "Authorization: Bea
 curl --fail-with-body -sS "$BASE_URL/pedidos/$ORDER_ID/pagos"   -H "Authorization: Bearer $ADMIN_TOKEN" | jq .
 ```
 
-Esperado: deuda 150.25/PENDIENTE, ambos pagos visibles, el segundo ANULADO con actor
-ADMIN y timestamp. Repetir PUT devuelve 200 con la misma evidencia y no suma deuda.
+Esperado: la primera anulación devuelve 201; deuda 150.25/PENDIENTE, ambos pagos
+visibles, el segundo ANULADO con actor ADMIN y timestamp. Repetir PUT devuelve 200
+con la misma evidencia y no suma deuda.
 
 ### 5. Renovación y calendario
 
-Crear otro pedido con los mismos cliente/membresía/cantidad y pedidoAnteriorId=ORDER_ID.
+```bash
+jq -n --arg cliente "$CLIENT_ID" --arg membresia "$MEMBERSHIP_ID" --arg anterior "$ORDER_ID" \
+  '{clienteId:$cliente,membresiaId:$membresia,cantidad:2,pedidoAnteriorId:$anterior}' |
+  curl --fail-with-body -sS "$BASE_URL/pedidos" -H "Authorization: Bearer $ADMIN_TOKEN" \
+    -H 'Content-Type: application/json' --data-binary @- | jq .
+```
+
 Si el antecedente está vigente a la fecha comercial, su vencimiento es la base.
 Intentar de nuevo desde ese mismo antecedente debe dar 409; continuar desde el
 sucesor. Las pruebas fijan Clock para validar 2026-11-10 + 6 semanas = 2026-12-22,
@@ -180,9 +192,47 @@ La renovación conserva las compras anteriores y no depende de cuánto se pagó.
 
 ## Aislamiento y permisos
 
-Estas comprobaciones se ejecutan con dos gimnasios por las pruebas y pueden repetirse
-por API después de crearlos con SUPERADMIN. Login de SUPERADMIN usa sus variables de
-bootstrap; no puede consultar negocio ni actuar como tenant root.
+Para probar un segundo gimnasio y recepción manualmente, elegí credenciales ficticias
+distintas de las ya usadas y guardalas solo en variables de la terminal. El correo de
+cada cuenta es globalmente único; para repetir el flujo usá otros correos.
+
+```bash
+read -r -p 'Email del admin del segundo gimnasio: ' ADMIN_B_EMAIL
+read -r -s -p 'Contraseña del admin del segundo gimnasio: ' ADMIN_B_PASSWORD; printf '\n'
+read -r -p 'Email de recepción: ' RECEPCION_EMAIL
+read -r -s -p 'Contraseña de recepción: ' RECEPCION_PASSWORD; printf '\n'
+SUPER_TOKEN=$(jq -n --arg email "$BOOTSTRAP_SUPERADMIN_EMAIL" --arg password "$BOOTSTRAP_SUPERADMIN_PASSWORD" '{email:$email,password:$password}' |
+  curl --fail-with-body -sS "$BASE_URL/auth/login" -H 'Content-Type: application/json' --data-binary @- | jq -er '.accessToken')
+jq -n --arg email "$ADMIN_B_EMAIL" --arg password "$ADMIN_B_PASSWORD" \
+  '{nombre:"Gimnasio de prueba B",logoUrl:"https://example.org/logo.png",colorPrimario:"#335577",administradorInicial:{email:$email,password:$password}}' |
+  curl --fail-with-body -sS "$BASE_URL/plataforma/gimnasios" -H "Authorization: Bearer $SUPER_TOKEN" \
+    -H 'Content-Type: application/json' --data-binary @- | jq .
+ADMIN_B_TOKEN=$(jq -n --arg email "$ADMIN_B_EMAIL" --arg password "$ADMIN_B_PASSWORD" '{email:$email,password:$password}' |
+  curl --fail-with-body -sS "$BASE_URL/auth/login" -H 'Content-Type: application/json' --data-binary @- | jq -er '.accessToken')
+RECEPCION_ID=$(jq -n --arg email "$RECEPCION_EMAIL" --arg password "$RECEPCION_PASSWORD" '{email:$email,password:$password}' |
+  curl --fail-with-body -sS "$BASE_URL/usuarios-recepcion" -H "Authorization: Bearer $ADMIN_TOKEN" \
+    -H 'Content-Type: application/json' --data-binary @- | jq -er '.id')
+RECEPCION_TOKEN=$(jq -n --arg email "$RECEPCION_EMAIL" --arg password "$RECEPCION_PASSWORD" '{email:$email,password:$password}' |
+  curl --fail-with-body -sS "$BASE_URL/auth/login" -H 'Content-Type: application/json' --data-binary @- | jq -er '.accessToken')
+```
+
+Comprobá los códigos sin mostrar tokens. El segundo gimnasio recibe 404 al consultar
+el cliente del primero; recepción recibe 403 al intentar anular; superadmin recibe
+403 al consultar clientes. Por último deshabilitá recepción y verificá que su token
+existente devuelve 401. La anulación ya realizada antes sigue en el historial.
+
+```bash
+curl -sS -o /dev/null -w 'Cliente ajeno: %{http_code}\n' "$BASE_URL/clientes/$CLIENT_ID" -H "Authorization: Bearer $ADMIN_B_TOKEN"
+curl -sS -o /dev/null -w 'Anulación por recepción: %{http_code}\n' -X PUT "$BASE_URL/pagos/$LAST_PAYMENT_ID/anulacion" -H "Authorization: Bearer $RECEPCION_TOKEN"
+curl -sS -o /dev/null -w 'Negocio por superadmin: %{http_code}\n' "$BASE_URL/clientes" -H "Authorization: Bearer $SUPER_TOKEN"
+curl --fail-with-body -sS -X PUT "$BASE_URL/usuarios-recepcion/$RECEPCION_ID/deshabilitacion" -H "Authorization: Bearer $ADMIN_TOKEN" | jq .
+curl -sS -o /dev/null -w 'Recepción deshabilitada: %{http_code}\n' "$BASE_URL/auth/me" -H "Authorization: Bearer $RECEPCION_TOKEN"
+```
+
+Para explorar disciplinas, canales, membresías, configuración, edición de clientes y
+los demás casos, usá Swagger en `http://localhost:${APP_PORT:-8080}/swagger-ui/index.html`
+con el token correspondiente. Las pruebas automatizadas cubren además los siguientes
+casos y son necesarias para validar concurrencia y aislamiento:
 
 | Escenario | Resultado esperado |
 |---|---|

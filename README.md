@@ -24,25 +24,27 @@ Cada POST de compra o pago aceptado registra una operación nueva. Si se pierde 
 respuesta, consultá el historial antes de decidir si corresponde volver a enviarlo;
 el cliente no debe reintentar automáticamente un cobro de resultado desconocido.
 
-## Datos de demostración locales
+## Levantar la aplicación con Docker Compose
 
 Copiá `.env.example` a `.env` y completá las variables de base, JWT y bootstrap con
-valores propios. Para cargar los ejemplos ficticios, configurá también
-`SEED_DEMO_ENABLED=true`, `SEED_ADMIN_EMAIL` y `SEED_ADMIN_PASSWORD`.
+valores propios. Generá una clave JWT aleatoria de al menos 256 bits, por ejemplo con
+`openssl rand -base64 32`. Para cargar los ejemplos ficticios, configurá también
+`SPRING_PROFILES_ACTIVE=demo,local-docs`, `SEED_DEMO_ENABLED=true`, `SEED_ADMIN_EMAIL`
+y `SEED_ADMIN_PASSWORD`. Las contraseñas de las cuentas deben tener al menos 12 caracteres.
 El administrador inicial y el superadmin se crean solo si no existen; en reinicios
 el seed requiere las mismas credenciales del administrador y no las sobrescribe.
 
 ```bash
-set -a
-. ./.env
-set +a
-docker compose up -d db
-cd polygim-api
-./mvnw spring-boot:run -Dspring-boot.run.profiles=demo,local-docs
+docker compose up -d --build
+docker compose ps
+docker compose logs -f app
 ```
 
-Los ejemplos son datos de prueba, no una importación del sistema anterior. La guía
-del circuito completo está en `specs/001-gym-management-core/quickstart.md`.
+La aplicación escucha en `http://localhost:8080` (ajustable con `APP_PORT`); Compose
+espera a que PostgreSQL esté disponible y Flyway aplica las migraciones al arrancar.
+`docker compose down` detiene los servicios y conserva la base en su volumen. Los
+ejemplos son datos de prueba, no una importación del sistema anterior. La guía del
+circuito completo está en `specs/001-gym-management-core/quickstart.md`.
 
 Con un token de ADMIN o RECEPCION en `ADMIN_TOKEN`, una consulta de ejemplo es:
 
