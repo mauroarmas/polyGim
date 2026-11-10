@@ -26,6 +26,7 @@ class SchemaMigrationIT extends PostgresIntegrationSupport {
         assertThat(current.info().current().getVersion().toString()).isEqualTo("2");
 
         UUID gymA = UUID.randomUUID(), gymB = UUID.randomUUID(), account = UUID.randomUUID();
+        UUID previous = UUID.randomUUID();
         try (var connection = DriverManager.getConnection(DATABASE.getJdbcUrl(), DATABASE.getUsername(), DATABASE.getPassword())) {
             connection.setSchema(schema);
             try (var statement = connection.prepareStatement(
@@ -106,11 +107,37 @@ class SchemaMigrationIT extends PostgresIntegrationSupport {
             try (var statement = connection.prepareStatement("select id from cliente where gimnasio_id = ?")) {
                 statement.setObject(1, gymA); try (var result = statement.executeQuery()) { result.next(); client = result.getObject(1, UUID.class); }
             }
-            UUID previous = UUID.randomUUID();
             try (var statement = connection.prepareStatement("insert into pedido (id,gimnasio_id,cliente_id,membresia_id,cantidad,precio_unitario,duracion_membresia,unidad_duracion,total,fecha_compra,fecha_base_vencimiento,fecha_vencimiento,pedido_anterior_id,registrado_por_id,created_at) values (?,?,?,?,1,1.00,1,'DIAS',1.00,current_date,current_date,current_date+1,?,?,now())")) {
                 statement.setObject(1, previous); statement.setObject(2, gymA); statement.setObject(3, client); statement.setObject(4, membership);
                 statement.setObject(5, null); statement.setObject(6, account); statement.executeUpdate();
                 statement.setObject(1, UUID.randomUUID()); statement.setObject(5, previous); statement.executeUpdate();
+                statement.setObject(1, UUID.randomUUID());
+                assertThatThrownBy(statement::executeUpdate).isInstanceOf(SQLException.class);
+            }
+        }
+        var payments = Flyway.configure().dataSource(DATABASE.getJdbcUrl(), DATABASE.getUsername(), DATABASE.getPassword())
+                .schemas(schema).target("6").load();
+        payments.migrate();
+        assertThat(payments.info().current().getVersion().toString()).isEqualTo("6");
+        try (var connection = DriverManager.getConnection(DATABASE.getJdbcUrl(), DATABASE.getUsername(), DATABASE.getPassword())) {
+            connection.setSchema(schema);
+            UUID foreignActor = UUID.randomUUID(), payment = UUID.randomUUID();
+            try (var statement = connection.prepareStatement("insert into cuenta_acceso (id,email,password_hash,rol,habilitada,gimnasio_id,created_at,updated_at,version) values (?,?,?,'ADMIN',true,?,now(),now(),0)")) {
+                statement.setObject(1, foreignActor); statement.setString(2, foreignActor + "@example.org");
+                statement.setString(3, UUID.randomUUID().toString()); statement.setObject(4, gymB); statement.executeUpdate();
+            }
+            try (var statement = connection.prepareStatement("insert into usuario_gimnasio (id,gimnasio_id,created_at) values (?,?,now())")) {
+                statement.setObject(1, foreignActor); statement.setObject(2, gymB); statement.executeUpdate();
+            }
+            try (var statement = connection.prepareStatement("insert into pago (id,gimnasio_id,pedido_id,monto_aplicado,registrado_por_id,created_at) values (?,?,?,1.00,?,now())")) {
+                statement.setObject(1, payment); statement.setObject(2, gymA); statement.setObject(3, previous); statement.setObject(4, foreignActor);
+                assertThatThrownBy(statement::executeUpdate).isInstanceOf(SQLException.class);
+                statement.setObject(4, account); statement.executeUpdate();
+            }
+            try (var statement = connection.prepareStatement("insert into anulacion_pago (id,gimnasio_id,pago_id,anulado_por_id,created_at) values (?,?,?,?,now())")) {
+                statement.setObject(1, UUID.randomUUID()); statement.setObject(2, gymA); statement.setObject(3, payment); statement.setObject(4, foreignActor);
+                assertThatThrownBy(statement::executeUpdate).isInstanceOf(SQLException.class);
+                statement.setObject(4, account); statement.executeUpdate();
                 statement.setObject(1, UUID.randomUUID());
                 assertThatThrownBy(statement::executeUpdate).isInstanceOf(SQLException.class);
             }

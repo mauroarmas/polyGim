@@ -174,5 +174,5 @@ Completar al cerrar cada hito.
 | M3 | Gate local aprobado | 31 unitarios y 24 de integración, 0 fallos (`clean verify`) | 97,32% de líneas actuales de servicio/modelo (145/149) | V3; catálogos, membresías y máximo por gimnasio; aislamiento, permisos y dinero canónico probados; CI remoto pendiente |
 | M4 | Gate local aprobado | 34 unitarios y 27 de integración, 0 fallos (`clean verify`) | 97,57% de líneas actuales de servicio/modelo (201/206) | V4; alta y edición de clientes, DNI textual único por gimnasio, opcionales y referencias aisladas; CI remoto pendiente |
 | M5 | Gate local aprobado; saldos completos pendientes de M6 | 39 unitarios y 31 de integración, 0 fallos (`clean verify`) | 97,99% de líneas actuales de servicio/modelo (292/298) | V5; snapshots y renovaciones concurrentes verificadas; todavía no hay pagos y la deuda inicial es el total; CI remoto pendiente |
-| M6 | ☐ | | | |
+| M6 | Parcial: cobros verificados; anulación pendiente | 42 unitarios y 35 de integración, 0 fallos (`clean verify`) | 95,94% de líneas actuales de servicio/modelo (331/345) | V6; pagos parciales, exceso/vuelto, deuda real y cobros concurrentes probados; falta US7 y CI remoto |
 | M7 | ☐ | | | |

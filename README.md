@@ -19,3 +19,7 @@ El desarrollo y sus verificaciones se registran en `docs/PLAN_DE_TRABAJO.md`.
 La configuración sensible se suministra mediante variables de entorno. Partí de
 `.env.example` para preparar tu entorno local; `.env` está excluido de Git. No se
 utilizan las credenciales del sistema legacy.
+
+Cada POST de compra o pago aceptado registra una operación nueva. Si se pierde la
+respuesta, consultá el historial antes de decidir si corresponde volver a enviarlo;
+el cliente no debe reintentar automáticamente un cobro de resultado desconocido.

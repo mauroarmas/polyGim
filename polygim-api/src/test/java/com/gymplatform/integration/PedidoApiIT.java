@@ -49,4 +49,17 @@ class PedidoApiIT extends OrderApiSupport {
         }
         mvc.perform(get("/api/v1/pedidos?clienteId=" + clientB).header("Authorization", "Bearer " + adminA)).andExpect(status().isNotFound());
     }
+    @Test void payingAnExpiredPurchaseDoesNotChangeItsValidityOrPermitEditing() throws Exception {
+        UUID order = create("pedidos", adminA, Map.of("clienteId", clientA, "membresiaId", membershipA, "cantidad", 1, "fechaCompra", "2020-01-01"));
+        var before = mvc.perform(get("/api/v1/pedidos/" + order).header("Authorization", "Bearer " + adminA))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.vigencia").value("VENCIDA")).andReturn();
+        String expiry = mapper.readTree(before.getResponse().getContentAsString()).path("fechaVencimiento").asText();
+        mvc.perform(post("/api/v1/pedidos/" + order + "/pagos").header("Authorization", "Bearer " + adminA)
+                        .contentType(MediaType.APPLICATION_JSON).content(json(Map.of("montoRecibido", "100.25"))))
+                .andExpect(status().isCreated());
+        mvc.perform(get("/api/v1/pedidos/" + order).header("Authorization", "Bearer " + adminA)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.vigencia").value("VENCIDA")).andExpect(jsonPath("$.estadoPago").value("PAGADO"))
+                .andExpect(jsonPath("$.fechaVencimiento").value(expiry));
+        mvc.perform(put("/api/v1/pedidos/" + order).header("Authorization", "Bearer " + adminA)).andExpect(status().isMethodNotAllowed());
+    }
 }
