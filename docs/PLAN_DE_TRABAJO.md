@@ -168,7 +168,7 @@ Completar al cerrar cada hito.
 
 | Hito | Estado | Tests | Cobertura | Notas |
 |---|---|---|---|---|
-| M0 | ☐ | | | |
+| M0 | Base local verificada; CI remoto pendiente | 4 unitarios de contrato HTTP, 0 fallos (`clean verify`) | Sin clases de negocio aún; no corresponde informar porcentaje | Java 21, Wrapper, imagen app y PostgreSQL con healthcheck verificados; workflow creado, no ejecutado en GitHub |
 | M1 | ☐ | | | |
 | M2 | ☐ | | | |
 | M3 | ☐ | | | |

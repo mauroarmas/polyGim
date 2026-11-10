@@ -8,3 +8,13 @@
 
 # Artefactos de compilación Maven.
 target/
+*.class
+*.jar
+.gradle/
+build/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp

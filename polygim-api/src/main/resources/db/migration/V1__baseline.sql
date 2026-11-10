@@ -1,0 +1,1 @@
+-- Inicio de la historia de migraciones. Las tablas se agregan en versiones posteriores.

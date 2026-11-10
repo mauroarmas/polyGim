@@ -1,7 +1,7 @@
 # Tasks: Núcleo de gestión multi-gimnasio
 
 **Feature**: `001-gym-management-core` | **Created**: 2026-11-10
-**Status**: Propuesta pendiente de aprobación del autor. Ninguna tarea ejecutada.
+**Status**: Aprobada por el autor; implementación en curso. Las casillas registran el trabajo realizado.
 
 **Input**: [Spec](spec.md), [plan aprobado](plan.md), [research](research.md),
 [data model](data-model.md), [contrato REST](contracts/api.md),
@@ -48,16 +48,16 @@ originales de la spec y permite verificarlas con fixtures independientes.
 
 **Independent Test / Checkpoint**: Java 21 + Wrapper; PostgreSQL local inicia; build y tests básicos verdes. Todavía no existen casos de negocio tenant.
 
-- [ ] T001 Preparar Java 21 para este proyecto, generar Maven Wrapper 3.9.11 en `polygim-api/mvnw`, `polygim-api/mvnw.cmd` y `polygim-api/.mvn/wrapper/maven-wrapper.properties`, y documentar selección de JDK y verificaciones en `README.md`; no cambiar globalmente el JDK de otros proyectos. Referencia: Constitución I; research R1/R10.
-- [ ] T002 Crear `polygim-api/pom.xml` con parent Boot 3.5.16, dependencias y plugins del plan, Java release 21, Surefire/Failsafe y JaCoCo 0.8.16; integrar cobertura unitaria/IT y gate LINE ≥0.80 del conjunto de lógica de negocio, sin excluir reglas para alcanzar el umbral. Referencia: Constitución VI; research R1/R9. Depende de: T001.
-- [ ] T003 Crear `polygim-api/src/main/java/com/gymplatform/GymManagementApplication.java` y `polygim-api/src/main/resources/application.yml` con variables del quickstart, `ddl-auto=validate`, OSIV/L2/query cache desactivados y arranque cerrado sin credenciales de seguridad autogeneradas en logs. Referencia: Constitución I/V/VIII. Depende de: T002.
-- [ ] T004 [P] Definir `.env.example` con las variables de `quickstart.md`, valores no sensibles y secretos vacíos; comprobar exclusiones en `.gitignore` y documentar que no se usan credenciales del legacy. Referencia: Constitución V. Depende de: T002.
-- [ ] T005 Crear `compose.yaml` con PostgreSQL 17.11 fijado al digest de research R1, healthcheck, volumen local y variables de entorno; la base de tests será independiente de esta base. Referencia: research R1/R10. Depende de: T003, T004.
-- [ ] T006 [P] Escribir tests de errores/DTO estrictos en `polygim-api/src/test/java/com/gymplatform/controller/ProblemContractTest.java`: validación, JSON desconocido, métodos/formato no admitidos y 500 genérico con campos RFC 7807, sin secretos ni stack traces. Referencia: CR-005. Depende de: T002.
-- [ ] T007 Implementar `polygim-api/src/main/java/com/gymplatform/controller/error/ApiExceptionHandler.java` y `polygim-api/src/main/java/com/gymplatform/controller/error/ProblemFactory.java` para los contratos anteriores, con code y errores de campos y sin mensajes internos de SQL/constraints. Referencia: CR-005. Depende de: T003, T006.
-- [ ] T008 Crear `polygim-api/src/main/resources/db/migration/V1__baseline.sql` como migración inicial sin tablas de negocio y sin DDL manual/automático; mantener la configuración de Flyway en `polygim-api/src/main/resources/application.yml`. Referencia: Constitución VIII; data-model Migraciones. Depende de: T003.
-- [ ] T009 Crear `polygim-api/Dockerfile` multistage Java 21 y `polygim-api/.dockerignore`, integrar servicio app en `compose.yaml` sin secretos de build y sin copiar `original/`; el build de imagen no sustituye verify con Testcontainers. Referencia: plan M0. Depende de: T002, T003, T004, T005.
-- [ ] T010 Crear `.github/workflows/verify.yml` con Java 21, Wrapper, Docker disponible, `clean verify` y publicación de reportes sin secretos; ejecutar el cierre de M0 según `README.md` y registrar resultados reales en `docs/PLAN_DE_TRABAJO.md`. Referencia: Constitución VI; plan M0. Depende de: T005, T007, T008, T009.
+- [X] T001 Preparar Java 21 para este proyecto, generar Maven Wrapper 3.9.11 en `polygim-api/mvnw`, `polygim-api/mvnw.cmd` y `polygim-api/.mvn/wrapper/maven-wrapper.properties`, y documentar selección de JDK y verificaciones en `README.md`; no cambiar globalmente el JDK de otros proyectos. Referencia: Constitución I; research R1/R10.
+- [X] T002 Crear `polygim-api/pom.xml` con parent Boot 3.5.16, dependencias y plugins del plan, Java release 21, Surefire/Failsafe y JaCoCo 0.8.16; integrar cobertura unitaria/IT y gate LINE ≥0.80 del conjunto de lógica de negocio, sin excluir reglas para alcanzar el umbral. Referencia: Constitución VI; research R1/R9. Depende de: T001.
+- [X] T003 Crear `polygim-api/src/main/java/com/gymplatform/GymManagementApplication.java` y `polygim-api/src/main/resources/application.yml` con variables del quickstart, `ddl-auto=validate`, OSIV/L2/query cache desactivados y arranque cerrado sin credenciales de seguridad autogeneradas en logs. Referencia: Constitución I/V/VIII. Depende de: T002.
+- [X] T004 [P] Definir `.env.example` con las variables de `quickstart.md`, valores no sensibles y secretos vacíos; comprobar exclusiones en `.gitignore` y documentar que no se usan credenciales del legacy. Referencia: Constitución V. Depende de: T002.
+- [X] T005 Crear `compose.yaml` con PostgreSQL 17.11 fijado al digest de research R1, healthcheck, volumen local y variables de entorno; la base de tests será independiente de esta base. Referencia: research R1/R10. Depende de: T003, T004.
+- [X] T006 [P] Escribir tests de errores/DTO estrictos en `polygim-api/src/test/java/com/gymplatform/controller/ProblemContractTest.java`: validación, JSON desconocido, métodos/formato no admitidos y 500 genérico con campos RFC 7807, sin secretos ni stack traces. Referencia: CR-005. Depende de: T002.
+- [X] T007 Implementar `polygim-api/src/main/java/com/gymplatform/controller/error/ApiExceptionHandler.java` y `polygim-api/src/main/java/com/gymplatform/controller/error/ProblemFactory.java` para los contratos anteriores, con code y errores de campos y sin mensajes internos de SQL/constraints. Referencia: CR-005. Depende de: T003, T006.
+- [X] T008 Crear `polygim-api/src/main/resources/db/migration/V1__baseline.sql` como migración inicial sin tablas de negocio y sin DDL manual/automático; mantener la configuración de Flyway en `polygim-api/src/main/resources/application.yml`. Referencia: Constitución VIII; data-model Migraciones. Depende de: T003.
+- [X] T009 Crear `polygim-api/Dockerfile` multistage Java 21 y `polygim-api/.dockerignore`, integrar servicio app en `compose.yaml` sin secretos de build y sin copiar `original/`; el build de imagen no sustituye verify con Testcontainers. Referencia: plan M0. Depende de: T002, T003, T004, T005.
+- [X] T010 Crear `.github/workflows/verify.yml` con Java 21, Wrapper, Docker disponible, `clean verify` y publicación de reportes sin secretos; ejecutar el cierre de M0 según `README.md` y registrar resultados reales en `docs/PLAN_DE_TRABAJO.md`. Referencia: Constitución VI; plan M0. Depende de: T005, T007, T008, T009.
 
 ## Phase 2: Foundational — M1, aislamiento primero
 
@@ -318,7 +318,7 @@ historias completas en paralelo mientras dependen del checkpoint anterior.
 | US8 | 5 | Seed opt-in crea oferta de ejemplo y ADMIN desde entorno; otro gimnasio puede tener oferta distinta; reiniciar no duplica ni sobrescribe compras, pagos o credenciales. |
 
 **Total**: 89 tareas; 33 compartidas/de cierre y 56 asociadas a historias.
-**Paralelizables marcadas**: 25. Todas permanecen sin ejecutar.
+**Paralelizables marcadas**: 25. El progreso se indica en las casillas de cada fase.
 
 | Requisitos | Cobertura de tareas |
 |---|---|

@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        cache:
+          use_second_level_cache: false
+          use_query_cache: false
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+  flyway:
+    enabled: true
+server:
+  error:
+    include-message: never
+    include-stacktrace: never
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+app:
+  security:
+    jwt-secret-base64: ${JWT_SECRET_BASE64}
+    jwt-issuer: ${JWT_ISSUER}
+    jwt-audience: ${JWT_AUDIENCE}
+    jwt-ttl: ${JWT_TTL:PT15M}
+  time-zone: ${APP_TIME_ZONE}
+  default-gym-max-quantity: ${DEFAULT_GYM_MAX_QUANTITY}
+  bootstrap:
+    superadmin-email: ${BOOTSTRAP_SUPERADMIN_EMAIL:}
+    superadmin-password: ${BOOTSTRAP_SUPERADMIN_PASSWORD:}
+  seed:
+    enabled: ${SEED_DEMO_ENABLED:false}
+    admin-email: ${SEED_ADMIN_EMAIL:}
+    admin-password: ${SEED_ADMIN_PASSWORD:}
