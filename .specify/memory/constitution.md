@@ -1,6 +1,8 @@
 <!--
 Sync Impact Report
-Version change: plantilla sin versión → 1.0.0 (propuesta inicial, pendiente de aprobación).
+Version change: plantilla sin versión → 1.0.0 (adopción inicial).
+Ratificación: 2026-11-10, al solicitar el usuario avanzar a la spec 1.
+No cambian los principios ni la versión al completar la ratificación.
 Modified principles: los cinco bloques genéricos se reemplazan por:
   I. Arquitectura en capas y simplicidad
   II. Aislamiento multi-tenant obligatorio
@@ -26,8 +28,7 @@ Consistency propagation:
   ✅ added: .gitignore (legacy local, archivos de entorno y compilación).
   ✅ reviewed: restantes skills speckit instaladas; sin cambios necesarios.
   ✅ reviewed: polygim-api/legacy/DOMINIO.md; decisiones compatibles.
-Deferred: TODO(RATIFICATION_DATE): completar al aprobar esta constitución.
-  La fecha de última enmienda corresponde a la preparación del documento.
+Deferred: ninguno. Fecha de ratificación completada con la aprobación para avanzar.
 -->
 
 # Constitución de la plataforma de gestión de gimnasios
@@ -206,6 +207,6 @@ incompatible; MINOR para agregar principios o ampliar obligaciones; PATCH para
 aclaraciones que no cambien obligaciones. La versión 1.0.0 corresponde a la primera
 constitución propuesta, no a una enmienda de una versión ratificada anterior.
 
-**Estado**: Propuesta pendiente de aprobación del usuario.
+**Estado**: Ratificada por el usuario al solicitar avanzar a la spec 1 el 2026-11-10.
 
-**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): completar al aprobar | **Last Amended**: 2026-11-10
+**Version**: 1.0.0 | **Ratified**: 2026-11-10 | **Last Amended**: 2026-11-10

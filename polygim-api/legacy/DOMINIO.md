@@ -88,6 +88,8 @@ Las reglas siguientes son decisiones para la versión nueva; reemplazan los comp
 - **[DECISIÓN]** La cantidad máxima es configurable por gimnasio. Los rangos legacy de 1–12 meses y 1–3 semanas no son requisitos del producto.
 - **[DECISIÓN]** El detalle congela el precio unitario vigente al comprar. Su subtotal es `cantidad × precio unitario congelado`; en la feature 1, el total del pedido coincide con ese subtotal. Los cambios de precio del catálogo no modifican compras anteriores.
 - **[DECISIÓN]** La vigencia comienza en la fecha de compra, por defecto hoy. Si se renueva una membresía que sigue vigente, la renovación continúa desde el vencimiento anterior. El día de vencimiento está incluido en la vigencia.
+- **[DECISIÓN]** En la feature 1 se permiten fechas de compra de hoy o pasadas; se rechazan fechas futuras.
+- **[DECISIÓN]** Para renovar se elige una compra previa del mismo cliente y de la misma membresía, dentro del mismo gimnasio; no se elige automáticamente por disciplina.
 - **[DECISIÓN]** Pago y vigencia son conceptos separados: estado de pago `PENDIENTE` o `PAGADO`; vigencia `VIGENTE` o `VENCIDA`, calculada por fecha. `VENCIDO` no es un estado de pago. Un pago parcial no altera la vigencia; la deuda se rastrea aparte.
 
 ### Pagos y conservación del historial
@@ -100,6 +102,7 @@ Las reglas siguientes son decisiones para la versión nueva; reemplazan los comp
 
 - **[DECISIÓN]** Cada cuenta pertenece a un solo gimnasio, excepto `SUPERADMIN`, que opera a nivel de plataforma.
 - **[DECISIÓN] ADMIN:** puede realizar todas las operaciones de su gimnasio, incluidas configuración y anulación de pagos.
+- **[DECISIÓN]** En la feature 1, ADMIN crea y deshabilita cuentas RECEPCION de su gimnasio.
 - **[DECISIÓN] RECEPCION:** gestiona clientes, pedidos y pagos de su gimnasio; no accede a configuración ni realiza anulaciones.
 - **[DECISIÓN] SUPERADMIN:** gestiona gimnasios y sus primeros administradores, sin acceso a datos de negocio de los gimnasios.
 - **[DECISIÓN]** Se conserva el rol `CLIENTE` para el cliente final; sus permisos concretos quedan pendientes de definición.
