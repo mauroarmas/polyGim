@@ -1,0 +1,2174 @@
+openapi: 3.0.3
+info:
+  title: API de gestión multi-gimnasio
+  version: 1.0.0
+  description: Contrato propuesto de la feature 1. No implica implementación ni pruebas ejecutadas. Tenant
+    de identidad vigente, nunca de parámetros del cliente. Errores RFC 7807.
+servers:
+- url: http://localhost:8080
+  description: Entorno local futuro
+security:
+- bearerAuth: []
+paths:
+  /api/v1/auth/login:
+    post:
+      operationId: login
+      summary: Autenticarse con email global y contraseña
+      tags:
+      - auth
+      x-roles:
+      - SUPERADMIN
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+  /api/v1/auth/me:
+    get:
+      operationId: currentUser
+      summary: Consultar identidad vigente propia
+      tags:
+      - auth
+      x-roles:
+      - SUPERADMIN
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+  /api/v1/plataforma/gimnasios:
+    post:
+      operationId: createGym
+      summary: Crear gimnasio, configuración y primer ADMIN atómicamente
+      tags:
+      - plataforma
+      x-roles:
+      - SUPERADMIN
+      responses:
+        '201':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GymCreated'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GymCreateRequest'
+    get:
+      operationId: listGyms
+      summary: Listar solo metadatos administrativos
+      tags:
+      - plataforma
+      x-roles:
+      - SUPERADMIN
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GymPage'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+  /api/v1/plataforma/gimnasios/{id}:
+    get:
+      operationId: getGym
+      summary: Consultar metadatos de un gimnasio
+      tags:
+      - plataforma
+      x-roles:
+      - SUPERADMIN
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gym'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+  /api/v1/usuarios-recepcion:
+    post:
+      operationId: createReception
+      summary: Crear recepción dentro del propio gimnasio
+      tags:
+      - usuarios-recepcion
+      x-roles:
+      - ADMIN
+      responses:
+        '201':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewAccountRequest'
+  /api/v1/usuarios-recepcion/{id}/deshabilitacion:
+    put:
+      operationId: disableReception
+      summary: Deshabilitar recepción propia sin liberar el email
+      tags:
+      - usuarios-recepcion
+      x-roles:
+      - ADMIN
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      description: Sin body. Idempotente. Cuentas ajenas o que no sean RECEPCION devuelven 404.
+      parameters:
+      - $ref: '#/components/parameters/id'
+  /api/v1/disciplinas:
+    get:
+      operationId: listDisciplines
+      summary: Listar disciplinas propios
+      tags:
+      - disciplinas
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogPage'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+    post:
+      operationId: createDiscipline
+      summary: Crear disciplinas en el gimnasio
+      tags:
+      - disciplinas
+      x-roles:
+      - ADMIN
+      responses:
+        '201':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogItem'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogWrite'
+  /api/v1/disciplinas/{id}:
+    get:
+      operationId: getDiscipline
+      summary: Consultar disciplinas propio
+      tags:
+      - disciplinas
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogItem'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+    put:
+      operationId: updateDiscipline
+      summary: Actualizar disciplinas propio
+      tags:
+      - disciplinas
+      x-roles:
+      - ADMIN
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogItem'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogWrite'
+  /api/v1/canales-llegada:
+    get:
+      operationId: listArrivalChannels
+      summary: Listar canales-llegada propios
+      tags:
+      - canales-llegada
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogPage'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+    post:
+      operationId: createArrivalChannel
+      summary: Crear canales-llegada en el gimnasio
+      tags:
+      - canales-llegada
+      x-roles:
+      - ADMIN
+      responses:
+        '201':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogItem'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogWrite'
+  /api/v1/canales-llegada/{id}:
+    get:
+      operationId: getArrivalChannel
+      summary: Consultar canales-llegada propio
+      tags:
+      - canales-llegada
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogItem'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+    put:
+      operationId: updateArrivalChannel
+      summary: Actualizar canales-llegada propio
+      tags:
+      - canales-llegada
+      x-roles:
+      - ADMIN
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogItem'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogWrite'
+  /api/v1/localidades:
+    get:
+      operationId: listLocalitys
+      summary: Listar localidades propios
+      tags:
+      - localidades
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogPage'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+    post:
+      operationId: createLocality
+      summary: Crear localidades en el gimnasio
+      tags:
+      - localidades
+      x-roles:
+      - ADMIN
+      responses:
+        '201':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogItem'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogWrite'
+  /api/v1/localidades/{id}:
+    get:
+      operationId: getLocality
+      summary: Consultar localidades propio
+      tags:
+      - localidades
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogItem'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+    put:
+      operationId: updateLocality
+      summary: Actualizar localidades propio
+      tags:
+      - localidades
+      x-roles:
+      - ADMIN
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogItem'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogWrite'
+  /api/v1/configuracion:
+    get:
+      operationId: getConfiguration
+      summary: Consultar cantidad máxima de compra propia
+      tags:
+      - configuracion
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      operationId: updateConfiguration
+      summary: Cambiar cantidad máxima de compra propia
+      tags:
+      - configuracion
+      x-roles:
+      - ADMIN
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Configuration'
+  /api/v1/membresias:
+    get:
+      operationId: listMemberships
+      summary: Listar membresías propias
+      tags:
+      - membresias
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipPage'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+      - name: disciplinaId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: createMembership
+      summary: Crear membresía con precio y duración positivos
+      tags:
+      - membresias
+      x-roles:
+      - ADMIN
+      responses:
+        '201':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MembershipCreate'
+  /api/v1/membresias/{id}:
+    get:
+      operationId: getMembership
+      summary: Consultar membresía propia
+      tags:
+      - membresias
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+    put:
+      operationId: updateMembership
+      summary: Modificar catálogo sin alterar compras anteriores
+      tags:
+      - membresias
+      x-roles:
+      - ADMIN
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MembershipUpdate'
+  /api/v1/clientes:
+    get:
+      operationId: listClients
+      summary: Listar clientes propios y filtrar por DNI exacto
+      tags:
+      - clientes
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientPage'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+      - name: dni
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[0-9]{7,8}$
+    post:
+      operationId: createClient
+      summary: Registrar cliente con DNI, nombre y apellido
+      tags:
+      - clientes
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '201':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientWrite'
+  /api/v1/clientes/{id}:
+    get:
+      operationId: getClient
+      summary: Consultar cliente propio
+      tags:
+      - clientes
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+    put:
+      operationId: updateClient
+      summary: Reemplazar datos editables del cliente propio
+      tags:
+      - clientes
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientWrite'
+  /api/v1/pedidos:
+    get:
+      operationId: listOrders
+      summary: Listar compras propias con deuda y vigencia
+      tags:
+      - pedidos
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderPage'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+      - name: clienteId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: createOrder
+      summary: Comprar o renovar una sola membresía
+      tags:
+      - pedidos
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '201':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      description: Crea un sucesor como máximo por antecedente. POST aceptado es una operación nueva;
+        no reintentar automáticamente si se pierde la respuesta.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreate'
+  /api/v1/pedidos/{id}:
+    get:
+      operationId: getOrder
+      summary: Consultar compra propia, snapshots y estado calculado
+      tags:
+      - pedidos
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+  /api/v1/pedidos/{id}/pagos:
+    get:
+      operationId: listOrderPayments
+      summary: Consultar historial propio con anulaciones
+      tags:
+      - pedidos
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentPage'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+    post:
+      operationId: createPayment
+      summary: Registrar aplicado y devolver vuelto por separado
+      tags:
+      - pedidos
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '201':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResult'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      description: 'Bloquea el pedido y recalcula deuda en la transacción. Rechaza deuda cero. No deduplica
+        reintentos de POST: consultar historial si no se recibió respuesta.'
+      parameters:
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCreate'
+  /api/v1/pagos/{id}:
+    get:
+      operationId: getPayment
+      summary: Consultar pago propio y evidencia de anulación
+      tags:
+      - pagos
+      x-roles:
+      - ADMIN
+      - RECEPCION
+      responses:
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+      - $ref: '#/components/parameters/id'
+  /api/v1/pagos/{id}/anulacion:
+    put:
+      operationId: annulPayment
+      summary: Anular un pago propio preservando el movimiento
+      tags:
+      - pagos
+      x-roles:
+      - ADMIN
+      responses:
+        '201':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annulment'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '405':
+          $ref: '#/components/responses/405'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+        '200':
+          description: Operación completada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annulment'
+      description: Sin body. 201 al crear; 200 con la misma evidencia si ya estaba anulado. No cambia
+        la vigencia.
+      parameters:
+      - $ref: '#/components/parameters/id'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    size:
+      name: size
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+  responses:
+    '400':
+      description: Datos inválidos
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    '401':
+      description: Autenticación requerida o inválida
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        WWW-Authenticate:
+          schema:
+            type: string
+          description: Desafío Bearer cuando corresponda.
+    '403':
+      description: Operación no permitida por el rol
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    '404':
+      description: Recurso inexistente o ajeno, sin distinción
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    '409':
+      description: Conflicto de unicidad o estado
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    '405':
+      description: Método no admitido
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    '415':
+      description: Contenido no admitido
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    '500':
+      description: Error interno genérico
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    Money:
+      type: string
+      pattern: ^(0|[1-9][0-9]{0,16})\.[0-9]{2}$
+      description: Decimal exacto canónico de dos posiciones, hasta NUMERIC(19,2).
+      example: '200.50'
+    PositiveMoney:
+      type: string
+      pattern: ^(?!0\.00$)(0|[1-9][0-9]{0,16})\.[0-9]{2}$
+      description: Importe estrictamente positivo; no se redondean entradas.
+      example: '100.25'
+    Role:
+      type: string
+      enum:
+      - SUPERADMIN
+      - ADMIN
+      - RECEPCION
+    DurationUnit:
+      type: string
+      enum:
+      - DIAS
+      - SEMANAS
+      - MESES
+    PaymentState:
+      type: string
+      enum:
+      - PENDIENTE
+      - PAGADO
+    Validity:
+      type: string
+      enum:
+      - VIGENTE
+      - VENCIDA
+    Problem:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+        code:
+          type: string
+          maxLength: 100
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+            required:
+            - field
+            - message
+      required:
+      - type
+      - title
+      - status
+      - detail
+      - instance
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          minLength: 1
+          writeOnly: true
+          maxLength: 72
+      required:
+      - email
+      - password
+    NewAccountRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          minLength: 12
+          writeOnly: true
+          description: Además, máximo 72 bytes UTF-8. Nunca se trunca.
+          maxLength: 72
+      required:
+      - email
+      - password
+    User:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        rol:
+          $ref: '#/components/schemas/Role'
+        habilitada:
+          type: boolean
+        gimnasioId:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - id
+      - email
+      - rol
+      - habilitada
+      - gimnasioId
+    TokenResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+          enum:
+          - Bearer
+        expiresIn:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+        usuario:
+          $ref: '#/components/schemas/User'
+      required:
+      - accessToken
+      - tokenType
+      - expiresIn
+      - usuario
+    GymCreateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+        logoUrl:
+          type: string
+          format: uri
+          pattern: ^https?://
+          maxLength: 2048
+        colorPrimario:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        administradorInicial:
+          $ref: '#/components/schemas/NewAccountRequest'
+      required:
+      - nombre
+      - logoUrl
+      - colorPrimario
+      - administradorInicial
+    Gym:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+        logoUrl:
+          type: string
+          format: uri
+          pattern: ^https?://
+          maxLength: 2048
+        colorPrimario:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+      required:
+      - id
+      - nombre
+      - logoUrl
+      - colorPrimario
+    GymCreated:
+      type: object
+      additionalProperties: false
+      properties:
+        gimnasio:
+          $ref: '#/components/schemas/Gym'
+        administradorInicial:
+          $ref: '#/components/schemas/User'
+      required:
+      - gimnasio
+      - administradorInicial
+    Configuration:
+      type: object
+      additionalProperties: false
+      properties:
+        cantidadMaximaCompra:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+      required:
+      - cantidadMaximaCompra
+    CatalogWrite:
+      type: object
+      additionalProperties: false
+      properties:
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+      required:
+      - nombre
+    CatalogItem:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+      required:
+      - id
+      - nombre
+    MembershipCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        disciplinaId:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+        precio:
+          $ref: '#/components/schemas/PositiveMoney'
+        duracion:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+        unidadDuracion:
+          $ref: '#/components/schemas/DurationUnit'
+      required:
+      - disciplinaId
+      - nombre
+      - precio
+      - duracion
+      - unidadDuracion
+    MembershipUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+        precio:
+          $ref: '#/components/schemas/PositiveMoney'
+        duracion:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+        unidadDuracion:
+          $ref: '#/components/schemas/DurationUnit'
+      required:
+      - nombre
+      - precio
+      - duracion
+      - unidadDuracion
+    Membership:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        disciplinaId:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+        precio:
+          $ref: '#/components/schemas/PositiveMoney'
+        duracion:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+        unidadDuracion:
+          $ref: '#/components/schemas/DurationUnit'
+      required:
+      - id
+      - disciplinaId
+      - nombre
+      - precio
+      - duracion
+      - unidadDuracion
+    ClientWrite:
+      type: object
+      additionalProperties: false
+      properties:
+        dni:
+          type: string
+          pattern: ^[0-9]{7,8}$
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+        apellido:
+          type: string
+          minLength: 1
+          maxLength: 100
+        telefono:
+          type: string
+          nullable: true
+          maxLength: 40
+        canalLlegadaId:
+          type: string
+          format: uuid
+          nullable: true
+        direccion:
+          type: object
+          additionalProperties: false
+          properties:
+            calle:
+              type: string
+              nullable: true
+              maxLength: 160
+            altura:
+              type: string
+              nullable: true
+              maxLength: 20
+          nullable: true
+        localidadId:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - dni
+      - nombre
+      - apellido
+      description: PUT reemplaza todos los campos editables; opcionales omitidos se limpian.
+    Client:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        dni:
+          type: string
+          pattern: ^[0-9]{7,8}$
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+        apellido:
+          type: string
+          minLength: 1
+          maxLength: 100
+        telefono:
+          type: string
+          nullable: true
+          maxLength: 40
+        canalLlegadaId:
+          type: string
+          format: uuid
+          nullable: true
+        direccion:
+          type: object
+          additionalProperties: false
+          properties:
+            calle:
+              type: string
+              nullable: true
+              maxLength: 160
+            altura:
+              type: string
+              nullable: true
+              maxLength: 20
+          nullable: true
+        localidadId:
+          type: string
+          format: uuid
+          nullable: true
+        fechaIngreso:
+          type: string
+          format: date
+      required:
+      - id
+      - dni
+      - nombre
+      - apellido
+      - fechaIngreso
+    OrderCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        clienteId:
+          type: string
+          format: uuid
+        membresiaId:
+          type: string
+          format: uuid
+        cantidad:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+        fechaCompra:
+          type: string
+          format: date
+        pedidoAnteriorId:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - clienteId
+      - membresiaId
+      - cantidad
+      description: 'Sin precio/total/tenant ni lista de detalles. Renovación: antecedente propio, mismo
+        cliente y membresía, cronológicamente previo y sin sucesor.'
+    Order:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        clienteId:
+          type: string
+          format: uuid
+        membresiaId:
+          type: string
+          format: uuid
+        cantidad:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+        precioUnitario:
+          $ref: '#/components/schemas/PositiveMoney'
+        duracionMembresia:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+        unidadDuracion:
+          $ref: '#/components/schemas/DurationUnit'
+        total:
+          $ref: '#/components/schemas/PositiveMoney'
+        fechaCompra:
+          type: string
+          format: date
+        fechaBaseVencimiento:
+          type: string
+          format: date
+        fechaVencimiento:
+          type: string
+          format: date
+        pedidoAnteriorId:
+          type: string
+          format: uuid
+          nullable: true
+        deuda:
+          $ref: '#/components/schemas/Money'
+        estadoPago:
+          $ref: '#/components/schemas/PaymentState'
+        vigencia:
+          $ref: '#/components/schemas/Validity'
+      required:
+      - id
+      - clienteId
+      - membresiaId
+      - cantidad
+      - precioUnitario
+      - duracionMembresia
+      - unidadDuracion
+      - total
+      - fechaCompra
+      - fechaBaseVencimiento
+      - fechaVencimiento
+      - deuda
+      - estadoPago
+      - vigencia
+    PaymentCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        montoRecibido:
+          $ref: '#/components/schemas/PositiveMoney'
+      required:
+      - montoRecibido
+    Annulment:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        pagoId:
+          type: string
+          format: uuid
+        anuladoPorId:
+          type: string
+          format: uuid
+        fechaAnulacion:
+          type: string
+          format: date-time
+      required:
+      - id
+      - pagoId
+      - anuladoPorId
+      - fechaAnulacion
+    Payment:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        pedidoId:
+          type: string
+          format: uuid
+        montoAplicado:
+          $ref: '#/components/schemas/PositiveMoney'
+        estado:
+          type: string
+          enum:
+          - REGISTRADO
+          - ANULADO
+        registradoPorId:
+          type: string
+          format: uuid
+        fechaRegistro:
+          type: string
+          format: date-time
+        anulacion:
+          $ref: '#/components/schemas/Annulment'
+      required:
+      - id
+      - pedidoId
+      - montoAplicado
+      - estado
+      - registradoPorId
+      - fechaRegistro
+    PaymentResult:
+      type: object
+      additionalProperties: false
+      properties:
+        pago:
+          $ref: '#/components/schemas/Payment'
+        vuelto:
+          $ref: '#/components/schemas/Money'
+        deudaRestante:
+          $ref: '#/components/schemas/Money'
+        estadoPago:
+          $ref: '#/components/schemas/PaymentState'
+      required:
+      - pago
+      - vuelto
+      - deudaRestante
+      - estadoPago
+    GymPage:
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gym'
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          minimum: 1
+          maximum: 100
+        totalElements:
+          type: integer
+          format: int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+      required:
+      - content
+      - page
+      - size
+      - totalElements
+      - totalPages
+    CatalogPage:
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogItem'
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          minimum: 1
+          maximum: 100
+        totalElements:
+          type: integer
+          format: int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+      required:
+      - content
+      - page
+      - size
+      - totalElements
+      - totalPages
+    MembershipPage:
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Membership'
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          minimum: 1
+          maximum: 100
+        totalElements:
+          type: integer
+          format: int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+      required:
+      - content
+      - page
+      - size
+      - totalElements
+      - totalPages
+    ClientPage:
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Client'
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          minimum: 1
+          maximum: 100
+        totalElements:
+          type: integer
+          format: int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+      required:
+      - content
+      - page
+      - size
+      - totalElements
+      - totalPages
+    OrderPage:
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          minimum: 1
+          maximum: 100
+        totalElements:
+          type: integer
+          format: int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+      required:
+      - content
+      - page
+      - size
+      - totalElements
+      - totalPages
+    PaymentPage:
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          minimum: 1
+          maximum: 100
+        totalElements:
+          type: integer
+          format: int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+      required:
+      - content
+      - page
+      - size
+      - totalElements
+      - totalPages

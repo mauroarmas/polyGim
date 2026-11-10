@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-10
 
-**Status**: Aprobada en specify el 2026-11-10 — clarify completado; actualización pendiente de revisión del autor
+**Status**: Aprobada tras clarify el 2026-11-10; el autor solicitó iniciar plan
 
 **Input**: Plataforma web (API REST) de gestión de gimnasios aislados entre sí:
 alta de gimnasio y primer administrador, clientes, disciplinas, membresías,
