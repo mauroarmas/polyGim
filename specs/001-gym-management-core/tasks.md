@@ -146,16 +146,16 @@ originales de la spec y permite verificarlas con fixtures independientes.
 
 ### Tests for US3 — obligatorios
 
-- [ ] T047 [P] [US3] Escribir `polygim-api/src/test/java/com/gymplatform/service/ClienteServiceTest.java` para DNI 7/8 dígitos conservado como texto, nombres no vacíos, opcionales ausentes y edición con asociaciones propias sin cambiar ID/fecha de ingreso/tenant. Referencia: FR-008/FR-009; US3. Depende de: T046.
-- [ ] T048 [P] [US3] Escribir `polygim-api/src/test/java/com/gymplatform/integration/ClienteApiIT.java` para POST/PUT/GET/listado y filtro DNI, duplicación en alta/edición propia vs otro tenant, catálogos opcionales ajenos, paginación y errores RFC 7807. Referencia: FR-008/FR-009/FR-012; SC-003. Depende de: T046.
+- [X] T047 [P] [US3] Escribir `polygim-api/src/test/java/com/gymplatform/service/ClienteServiceTest.java` para DNI 7/8 dígitos conservado como texto, nombres no vacíos, opcionales ausentes y edición con asociaciones propias sin cambiar ID/fecha de ingreso/tenant. Referencia: FR-008/FR-009; US3. Depende de: T046.
+- [X] T048 [P] [US3] Escribir `polygim-api/src/test/java/com/gymplatform/integration/ClienteApiIT.java` para POST/PUT/GET/listado y filtro DNI, duplicación en alta/edición propia vs otro tenant, catálogos opcionales ajenos, paginación y errores RFC 7807. Referencia: FR-008/FR-009/FR-012; SC-003. Depende de: T046.
 
 ### Implementation for US3
 
-- [ ] T049 [US3] Crear `polygim-api/src/main/resources/db/migration/V4__tenant_clients.sql` con dirección embebida, DNI tenant único y FKs opcionales compuestas; ampliar `polygim-api/src/test/java/com/gymplatform/integration/SchemaMigrationIT.java` para V3→V4 sin DDL fuera de Flyway. Referencia: FR-009/FR-012. Depende de: T047, T048.
-- [ ] T050 [US3] Crear `polygim-api/src/main/java/com/gymplatform/model/Cliente.java`, `polygim-api/src/main/java/com/gymplatform/model/Direccion.java` y `polygim-api/src/main/java/com/gymplatform/repository/ClienteRepository.java` con @TenantId, @Version, consultas/listados propios y datos opcionales independientes; no usar DNI como PK. Referencia: FR-008/FR-009. Depende de: T049.
-- [ ] T051 [US3] Implementar `polygim-api/src/main/java/com/gymplatform/service/ClienteService.java` y `polygim-api/src/main/java/com/gymplatform/controller/dto/ClienteDtos.java`: alta mínima y reemplazo completo de editables, limpieza de opcionales omitidos en PUT y validación de canales/localidades propios sin inventar valores. Referencia: FR-008/FR-012. Depende de: T050, T047.
-- [ ] T052 [US3] Crear `polygim-api/src/main/java/com/gymplatform/controller/ClienteController.java` con los cuatro endpoints, filtro DNI exacto, autoridad ADMIN/RECEPCION y actor/contexto de servidor; no exponer DELETE. Referencia: FR-008; contracts clientes. Depende de: T051, T048.
-- [ ] T053 [US3] Ejecutar pruebas US3 y regresiones anteriores con `polygim-api/pom.xml`; registrar M4 y evidencia de DNI por tenant en `docs/PLAN_DE_TRABAJO.md`. Referencia: SC-001/SC-003. Depende de: T052.
+- [X] T049 [US3] Crear `polygim-api/src/main/resources/db/migration/V4__tenant_clients.sql` con dirección embebida, DNI tenant único y FKs opcionales compuestas; ampliar `polygim-api/src/test/java/com/gymplatform/integration/SchemaMigrationIT.java` para V3→V4 sin DDL fuera de Flyway. Referencia: FR-009/FR-012. Depende de: T047, T048.
+- [X] T050 [US3] Crear `polygim-api/src/main/java/com/gymplatform/model/Cliente.java`, `polygim-api/src/main/java/com/gymplatform/model/Direccion.java` y `polygim-api/src/main/java/com/gymplatform/repository/ClienteRepository.java` con @TenantId, @Version, consultas/listados propios y datos opcionales independientes; no usar DNI como PK. Referencia: FR-008/FR-009. Depende de: T049.
+- [X] T051 [US3] Implementar `polygim-api/src/main/java/com/gymplatform/service/ClienteService.java` y `polygim-api/src/main/java/com/gymplatform/controller/dto/ClienteDtos.java`: alta mínima y reemplazo completo de editables, limpieza de opcionales omitidos en PUT y validación de canales/localidades propios sin inventar valores. Referencia: FR-008/FR-012. Depende de: T050, T047.
+- [X] T052 [US3] Crear `polygim-api/src/main/java/com/gymplatform/controller/ClienteController.java` con los cuatro endpoints, filtro DNI exacto, autoridad ADMIN/RECEPCION y actor/contexto de servidor; no exponer DELETE. Referencia: FR-008; contracts clientes. Depende de: T051, T048.
+- [X] T053 [US3] Ejecutar pruebas US3 y regresiones anteriores con `polygim-api/pom.xml`; registrar M4 y evidencia de DNI por tenant en `docs/PLAN_DE_TRABAJO.md`. Referencia: SC-001/SC-003. Depende de: T052.
 
 ## Phase 7: US5 — Comprar y renovar (P1, M5)
 

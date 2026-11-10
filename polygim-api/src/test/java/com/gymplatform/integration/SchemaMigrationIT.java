@@ -71,5 +71,24 @@ class SchemaMigrationIT extends PostgresIntegrationSupport {
                 assertThatThrownBy(statement::executeUpdate).isInstanceOf(SQLException.class);
             }
         }
+        var clients = Flyway.configure().dataSource(DATABASE.getJdbcUrl(), DATABASE.getUsername(), DATABASE.getPassword())
+                .schemas(schema).target("4").load();
+        clients.migrate();
+        assertThat(clients.info().current().getVersion().toString()).isEqualTo("4");
+        try (var connection = DriverManager.getConnection(DATABASE.getJdbcUrl(), DATABASE.getUsername(), DATABASE.getPassword())) {
+            connection.setSchema(schema);
+            UUID channel = UUID.randomUUID();
+            try (var statement = connection.prepareStatement("insert into canal_llegada (id,gimnasio_id,nombre,created_at,updated_at,version) values (?,?,'Canal',now(),now(),0)")) {
+                statement.setObject(1, channel); statement.setObject(2, gymA); statement.executeUpdate();
+            }
+            try (var statement = connection.prepareStatement("insert into cliente (id,gimnasio_id,dni,nombre,apellido,canal_llegada_id,fecha_ingreso,created_at,updated_at,version) values (?,?,?,'A','B',?,current_date,now(),now(),0)")) {
+                statement.setObject(1, UUID.randomUUID()); statement.setObject(2, gymA); statement.setString(3, "0123456"); statement.setObject(4, channel); statement.executeUpdate();
+                statement.setObject(1, UUID.randomUUID());
+                assertThatThrownBy(statement::executeUpdate).isInstanceOf(SQLException.class);
+                statement.setObject(2, gymB); statement.setObject(4, null); statement.executeUpdate();
+                statement.setObject(1, UUID.randomUUID()); statement.setString(3, "12345678"); statement.setObject(4, channel);
+                assertThatThrownBy(statement::executeUpdate).isInstanceOf(SQLException.class);
+            }
+        }
     }
 }
