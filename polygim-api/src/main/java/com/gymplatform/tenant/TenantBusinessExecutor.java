@@ -16,4 +16,8 @@ public class TenantBusinessExecutor {
         guard.requireAdmin();
         return transaction.execute(status -> action.get());
     }
+    public <T> T business(Supplier<T> action) {
+        guard.requireBusiness();
+        return transaction.execute(status -> action.get());
+    }
 }

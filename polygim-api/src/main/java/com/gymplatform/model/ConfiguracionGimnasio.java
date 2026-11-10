@@ -20,4 +20,5 @@ public class ConfiguracionGimnasio {
     public ConfiguracionGimnasio(UUID id, int cantidadMaximaCompra) { this.id = id; this.cantidadMaximaCompra = cantidadMaximaCompra; }
     public UUID getGimnasioId() { return gimnasioId; }
     public int getCantidadMaximaCompra() { return cantidadMaximaCompra; }
+    public void setCantidadMaximaCompra(int cantidadMaximaCompra) { this.cantidadMaximaCompra = cantidadMaximaCompra; }
 }

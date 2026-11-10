@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.beans.TypeMismatchException;
 
 @RestControllerAdvice
@@ -78,8 +79,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return error(HttpStatus.NOT_FOUND, "RESOURCE_NOT_FOUND", "Recurso no encontrado", "No se encontró el recurso solicitado.", request);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Object> conflict(DataIntegrityViolationException ex, WebRequest request) {
+    @ExceptionHandler({DataIntegrityViolationException.class, ObjectOptimisticLockingFailureException.class})
+    public ResponseEntity<Object> conflict(RuntimeException ex, WebRequest request) {
         return error(HttpStatus.CONFLICT, "CONFLICT", "Conflicto", "La operación entra en conflicto con datos existentes.", request);
     }
 
