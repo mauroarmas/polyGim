@@ -21,14 +21,14 @@ public class PlataformaGimnasioController {
     private final GimnasioService service;
     public PlataformaGimnasioController(GimnasioService service) { this.service = service; }
     @PostMapping
-    public ResponseEntity<GimnasioDtos.Created> create(@Valid @RequestBody GimnasioDtos.CreateRequest request) {
+    public ResponseEntity<GimnasioDtos.Created> createGym(@Valid @RequestBody GimnasioDtos.CreateRequest request) {
         var created = service.create(request);
         return ResponseEntity.created(URI.create("/api/v1/plataforma/gimnasios/" + created.gimnasio().id())).body(created);
     }
     @GetMapping
-    public PageResponse<GimnasioDtos.Gym> list(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+    public PageResponse<GimnasioDtos.Gym> listGyms(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
         return service.list(page, size);
     }
     @GetMapping("/{id}")
-    public GimnasioDtos.Gym get(@PathVariable UUID id) { return service.find(id); }
+    public GimnasioDtos.Gym getGym(@PathVariable UUID id) { return service.find(id); }
 }

@@ -35,7 +35,7 @@ public class AuthController {
         });
     }
     @GetMapping("/me")
-    public AuthDtos.User me(Authentication authentication) {
+    public AuthDtos.User currentUser(Authentication authentication) {
         var principal = (CurrentAccountPrincipal) authentication.getPrincipal();
         String role = authentication.getAuthorities().iterator().next().getAuthority().substring("ROLE_".length());
         return new AuthDtos.User(principal.accountId(), principal.email(), role, true, principal.gimnasioId());

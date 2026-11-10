@@ -24,5 +24,8 @@ class PagoPolicyTest {
         assertThatThrownBy(() -> PagoPolicy.apply(new BigDecimal("10.00"), new BigDecimal("0.00"), new BigDecimal("0.00"))).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> PagoPolicy.apply(new BigDecimal("10.00"), new BigDecimal("0.00"), new BigDecimal("1.001"))).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> PagoPolicy.apply(new BigDecimal("10.00"), new BigDecimal("11.00"), new BigDecimal("1.00"))).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> PagoPolicy.paymentState(new BigDecimal("-0.01"))).isInstanceOf(IllegalStateException.class);
+        assertThat(PagoPolicy.movementState(false)).isEqualTo("REGISTRADO");
+        assertThat(PagoPolicy.movementState(true)).isEqualTo("ANULADO");
     }
 }

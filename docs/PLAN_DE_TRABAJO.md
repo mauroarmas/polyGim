@@ -132,15 +132,18 @@ Cada hito termina con tests en verde y un commit convencional. No se avanza con 
 
 ## 8. Definición de hecho (por feature)
 
-- [ ] Criterios de aceptación cumplidos y verificados con tests
+- [x] Criterios de aceptación cumplidos y verificados con tests
 - [ ] Tests unitarios e integración en verde en CI
-- [ ] Cobertura ≥ 80% en lógica de negocio
-- [ ] Aislamiento entre tenants probado
-- [ ] OpenAPI actualizado
-- [ ] README actualizado (cómo correr, ejemplo de request/response)
-- [ ] Sin credenciales ni referencias a Poly en el código
-- [ ] Spec, plan y tasks de Spec Kit coherentes con este documento
-- [ ] Dato real para el CV anotado (cantidad de tests, cobertura)
+- [x] Cobertura ≥ 80% en lógica de negocio
+- [x] Aislamiento entre tenants probado
+- [x] OpenAPI actualizado
+- [x] README actualizado (cómo correr, ejemplo de request/response)
+- [x] Sin credenciales ni referencias a Poly en el código
+- [x] Spec, plan y tasks de Spec Kit coherentes con este documento
+- [x] Dato real para el CV anotado (cantidad de tests, cobertura)
+
+Los criterios marcados corresponden a la feature 1 y su validación local. La ejecución
+del workflow en GitHub sigue pendiente: no hay remoto configurado ni se hizo push.
 
 ## 9. Cómo trabaja el agente
 
@@ -175,4 +178,12 @@ Completar al cerrar cada hito.
 | M4 | Gate local aprobado | 34 unitarios y 27 de integración, 0 fallos (`clean verify`) | 97,57% de líneas actuales de servicio/modelo (201/206) | V4; alta y edición de clientes, DNI textual único por gimnasio, opcionales y referencias aisladas; CI remoto pendiente |
 | M5 | Gate local aprobado; saldos completos pendientes de M6 | 39 unitarios y 31 de integración, 0 fallos (`clean verify`) | 97,99% de líneas actuales de servicio/modelo (292/298) | V5; snapshots y renovaciones concurrentes verificadas; todavía no hay pagos y la deuda inicial es el total; CI remoto pendiente |
 | M6 | Gate local aprobado | 44 unitarios y 38 de integración, 0 fallos (`clean verify`) | 98,33% de líneas actuales de servicio/modelo (354/360) | Cobro parcial/exceso, anulación idempotente, deuda y concurrencia comprobados; reproducción manual del quickstart y CI remoto pendientes de M7 |
-| M7 | Parcial: seed validado; cierre pendiente | 4 pruebas de integración específicas de seed y segundo gimnasio, 0 fallos; verify completo pendiente | Pendiente de nueva medición | Seed opt-in, repetición sin sobrescrituras y rollback del lote de catálogos; documentación OpenAPI, aceptación, quickstart y CI remoto pendientes |
+| M7 | Cierre local aprobado; CI remoto pendiente | 45 unitarios y 45 de integración, 0 fallos ni omitidos (`clean verify`) | 97,89% de líneas (602/615) en 56 clases del alcance de JaCoCo | Seed opt-in, aislamiento, aceptación, 36 operaciones OpenAPI y quickstart real verificados; workflow aún no ejecutado en GitHub |
+
+**Evidencia de M7 (2026-11-10):** JaCoCo incluye servicios, modelo, seed,
+resolución de tenant, seguridad y bootstrap de superadmin. Una ejecución aislada
+con código deliberadamente sin cubrir confirmó que el gate falla por debajo del 80%.
+El quickstart se reprodujo con PostgreSQL en Docker, aplicación real, dos gimnasios,
+compra, pagos, anulación y reinicio del seed. En una ejecución local se observaron
+53,2 ms para compra, 65,3 ms para pago parcial, 19,9 ms para pago con excedente y
+26,5 ms para anulación; son mediciones puntuales, no un SLA ni datos de producción.

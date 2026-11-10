@@ -1,8 +1,8 @@
 # Quickstart de validación — Feature 1
 
-**Estado:** guía de los comandos y resultados que deberá permitir la implementación.
-Hoy no existen todavía pom.xml, Wrapper, Compose, migraciones ni endpoints. Los
-comandos siguientes no se ejecutaron durante plan y no prueban una feature terminada.
+**Estado:** guía de ejecución local. El 2026-11-10 se reprodujo el circuito de
+arranque, seed, compra, cobros, anulación, aislamiento y reinicio contra una base
+PostgreSQL temporal. Las pruebas automatizadas complementan esa comprobación manual.
 
 Referencias: [plan](plan.md), [modelo](data-model.md), [REST](contracts/api.md),
 [OpenAPI](contracts/openapi.yaml) y [criterios SC-001–SC-008](spec.md#measurable-outcomes).
@@ -15,9 +15,8 @@ Referencias: [plan](plan.md), [modelo](data-model.md), [REST](contracts/api.md),
   DOCKER_API_VERSION como solución automática.
 - Rama de la spec con implementación aprobada; comandos desde la raíz del repo salvo
   indicación. No se integra ni publica automáticamente en dev/main.
-- El host observado al planificar tiene Java 17 y Docker 29.1.3: Java 17 no satisface
-  este proyecto. Configurar Java 21 antes de ejecutar Maven o usar la imagen Java 21
-  de construcción prevista, sin presentar el build de imagen como prueba de integración.
+- El Java global observado en el equipo es 17: seleccionar Java 21 para este
+  proyecto antes de ejecutar Maven. El build de imagen no sustituye los tests de integración.
 
 ```bash
 java -version
@@ -28,7 +27,7 @@ Resultado requerido: Java 21 y daemon accesible. No ejecutar pruebas con un JDK 
 
 ## Configuración local
 
-M0 entregará .env.example sin secretos reales. Crear .env local y completar sus
+`.env.example` no contiene secretos reales. Crear `.env` local y completar sus
 valores; no versionarlo, imprimirlo en logs ni copiar credenciales del legacy.
 
 | Variable | Uso |
@@ -73,7 +72,7 @@ Flyway desde vacío y actualización, y JaCoCo con al menos 80% de líneas del c
 de lógica de negocio. Consultar reportes Surefire, Failsafe y target/site/jacoco/.
 No se excluye lógica del denominador para alcanzar el porcentaje.
 
-Durante M1, ejecutar primero la clase prevista TenantIsolationIT:
+Para ejecutar específicamente el test de aislamiento:
 
 ```bash
 ./mvnw -Dit.test=TenantIsolationIT verify
@@ -81,8 +80,8 @@ Durante M1, ejecutar primero la clase prevista TenantIsolationIT:
 
 Debe comprobar persist/list/count/find por ID, tenants forzados, asociaciones, scopes
 AUTH/PLATFORM, ausencia de tenant, SUPERADMIN sin negocio, alternancia A/B, limpieza
-tras excepciones y cuenta deshabilitada con token aún válido. Solo después se inicia
-el siguiente hito. Las pruebas posteriores agregan los recursos que todavía no existen en M1.
+tras excepciones. `SecurityIsolationIT` complementa esta prueba con permisos y
+cuentas deshabilitadas; el `verify` completo ejecuta ambas y las pruebas posteriores.
 
 Si Testcontainers falla al localizar Docker, revisar daemon, permisos y reporte antes
 de cambiar versiones. La investigación de compatibilidad está en research.md R10.

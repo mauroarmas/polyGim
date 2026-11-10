@@ -43,3 +43,14 @@ cd polygim-api
 
 Los ejemplos son datos de prueba, no una importación del sistema anterior. La guía
 del circuito completo está en `specs/001-gym-management-core/quickstart.md`.
+
+Con un token de ADMIN o RECEPCION en `ADMIN_TOKEN`, una consulta de ejemplo es:
+
+```bash
+curl -sS http://localhost:8080/api/v1/configuracion \
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+```
+
+Una respuesta posible es `{"cantidadMaximaCompra":12}`. Con el perfil `local-docs`
+activo, la descripción de la API está en `/v3/api-docs` y la interfaz interactiva en
+`/swagger-ui/index.html`.

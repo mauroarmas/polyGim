@@ -20,9 +20,9 @@ public class ReceptionController {
     private final ReceptionService service;
     public ReceptionController(ReceptionService service) { this.service = service; }
     @PostMapping
-    public ResponseEntity<AuthDtos.User> create(@Valid @RequestBody ReceptionDtos.CreateRequest request) {
+    public ResponseEntity<AuthDtos.User> createReception(@Valid @RequestBody ReceptionDtos.CreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request.email(), request.password()));
     }
     @PutMapping("/{id}/deshabilitacion")
-    public AuthDtos.User disable(@PathVariable UUID id) { return service.disable(id); }
+    public AuthDtos.User disableReception(@PathVariable UUID id) { return service.disable(id); }
 }

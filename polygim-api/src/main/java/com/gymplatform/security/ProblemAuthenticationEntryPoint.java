@@ -17,6 +17,7 @@ public class ProblemAuthenticationEntryPoint implements AuthenticationEntryPoint
     public ProblemAuthenticationEntryPoint(ObjectMapper mapper) { this.mapper = mapper; }
     @Override public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
         response.setStatus(401);
+        response.setHeader("WWW-Authenticate", "Bearer");
         response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
         mapper.writeValue(response.getOutputStream(), ProblemFactory.create(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED",
                 "Autenticación requerida", "No se pudo autenticar la solicitud.", request.getRequestURI()));

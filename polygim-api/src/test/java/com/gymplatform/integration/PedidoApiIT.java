@@ -41,6 +41,10 @@ class PedidoApiIT extends OrderApiSupport {
             mvc.perform(post("/api/v1/pedidos").header("Authorization", "Bearer " + adminA).contentType(MediaType.APPLICATION_JSON).content(json(body)))
                     .andExpect(status().isNotFound());
         }
+        UUID foreignOrder = create("pedidos", adminB, Map.of("clienteId", clientB, "membresiaId", membershipB, "cantidad", 1));
+        mvc.perform(post("/api/v1/pedidos").header("Authorization", "Bearer " + adminA).contentType(MediaType.APPLICATION_JSON)
+                        .content(json(Map.of("clienteId", clientA, "membresiaId", membershipA, "cantidad", 1, "pedidoAnteriorId", foreignOrder))))
+                .andExpect(status().isNotFound());
         for (var field : List.of("total", "precioUnitario", "detalles", "gimnasioId")) {
             var body = new java.util.HashMap<String, Object>(Map.of("clienteId", clientA, "membresiaId", membershipA, "cantidad", 1));
             body.put(field, "forzado");

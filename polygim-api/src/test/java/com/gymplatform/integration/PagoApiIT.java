@@ -34,7 +34,9 @@ class PagoApiIT extends OrderApiSupport {
         mvc.perform(get("/api/v1/pedidos/" + order).header("Authorization", "Bearer " + adminA)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.fechaVencimiento").value(expiry)).andExpect(jsonPath("$.estadoPago").value("PAGADO"));
         mvc.perform(get("/api/v1/pedidos/" + order + "/pagos").header("Authorization", "Bearer " + adminA))
-                .andExpect(status().isOk()).andExpect(jsonPath("$.totalElements").value(2));
+                .andExpect(status().isOk()).andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.content.length()", org.hamcrest.Matchers.is(2)))
+                .andExpect(jsonPath("$.content[*].estado", org.hamcrest.Matchers.containsInAnyOrder("REGISTRADO", "REGISTRADO")));
         mvc.perform(get("/api/v1/pagos/" + payment).header("Authorization", "Bearer " + adminA)).andExpect(status().isOk());
         mvc.perform(get("/api/v1/pagos/" + payment).header("Authorization", "Bearer " + adminB)).andExpect(status().isNotFound());
         mvc.perform(post("/api/v1/pedidos/" + order + "/pagos").header("Authorization", "Bearer " + adminB)

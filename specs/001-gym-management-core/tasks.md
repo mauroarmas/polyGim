@@ -1,7 +1,7 @@
 # Tasks: Núcleo de gestión multi-gimnasio
 
 **Feature**: `001-gym-management-core` | **Created**: 2026-11-10
-**Status**: Aprobada por el autor; implementación en curso. Las casillas registran el trabajo realizado.
+**Status**: Aprobada por el autor; implementación y validación local completas. CI remoto pendiente.
 
 **Input**: [Spec](spec.md), [plan aprobado](plan.md), [research](research.md),
 [data model](data-model.md), [contrato REST](contracts/api.md),
@@ -240,13 +240,13 @@ originales de la spec y permite verificarlas con fixtures independientes.
 
 **Independent Test / Checkpoint**: verify/CI verdes, 36 operaciones coherentes con OpenAPI, 80% de líneas de negocio medido y quickstart reproducido; sin funciones de otras features.
 
-- [ ] T083 Configurar springdoc y perfil local-docs en `polygim-api/src/main/java/com/gymplatform/config/OpenApiConfig.java` y `polygim-api/src/main/resources/application.yml`; mantener API docs/UI solo en perfil local según plan y descripciones fieles a DTOs/errores. Referencia: FR-032; plan M7. Depende de: T082.
-- [ ] T084 Escribir `polygim-api/src/test/java/com/gymplatform/integration/OpenApiContractIT.java` para contrastar inventario de 36 operationId, request/response schemas y errores de `specs/001-gym-management-core/contracts/openapi.yaml` con /v3/api-docs, sin exigir igualdad de ejemplos o metadatos generados. Referencia: FR-032; CR-005. Depende de: T083.
-- [ ] T085 Ejecutar la matriz completa de dos tenants/roles en `polygim-api/src/test/java/com/gymplatform/integration/FeatureAcceptanceIT.java`: cuentas, catálogos, clientes, pedidos, pagos/anulaciones, filtros y counts, 401/403/404 y DTOs forzados; cubrir SC-001–SC-008 sin habilitar endpoints de prueba en producción. Referencia: FR-001–FR-032; CR-001/CR-002. Depende de: T084.
-- [ ] T086 Revisar selección real de clases y ejecutar `clean verify` en `polygim-api/pom.xml`, revisar reportes unitarios/Failsafe/JaCoCo, actualización Flyway y CI en `.github/workflows/verify.yml`; comprobar que bajar del 80% bloquea y que no se ha omitido lógica del denominador. Referencia: CR-006; Constitución VI/VIII. Depende de: T085.
-- [ ] T087 Revisar `polygim-api/src/main/`, `.env.example`, `compose.yaml` y `polygim-api/Dockerfile` contra Constitución V y research R2/R10: ausencia de secretos, nombres del primer tenant fuera de datos, SQL nativo/bulk/merge de negocio, root y accesos globales no autorizados. Referencia: Constitución II/III/V. Depende de: T086.
-- [ ] T088 Reproducir y ajustar solo instrucciones a la implementación aprobada en `specs/001-gym-management-core/quickstart.md` y `README.md`; probar arranque, compra/cobro/anulación y seed repetido, sin desplegar demo pública ni borrar volúmenes de datos conservables. Referencia: SC-008; plan M7. Depende de: T087.
-- [ ] T089 Registrar conteo real de tests, cobertura, resultados del gate y latencias observadas sin prometer SLA en `docs/PLAN_DE_TRABAJO.md`; comprobar criterios de hecho y conservar pendientes reales como pendientes, sin mezclar integración a dev/main con el cierre técnico. Referencia: plan M7; sección 8 del producto. Depende de: T088.
+- [X] T083 Configurar springdoc y perfil local-docs en `polygim-api/src/main/java/com/gymplatform/config/OpenApiConfig.java` y `polygim-api/src/main/resources/application.yml`; mantener API docs/UI solo en perfil local según plan y descripciones fieles a DTOs/errores. Referencia: FR-032; plan M7. Depende de: T082.
+- [X] T084 Escribir `polygim-api/src/test/java/com/gymplatform/integration/OpenApiContractIT.java` para contrastar inventario de 36 operationId, request/response schemas y errores de `specs/001-gym-management-core/contracts/openapi.yaml` con /v3/api-docs, sin exigir igualdad de ejemplos o metadatos generados. Referencia: FR-032; CR-005. Depende de: T083.
+- [X] T085 Ejecutar la matriz completa de dos tenants/roles en `polygim-api/src/test/java/com/gymplatform/integration/FeatureAcceptanceIT.java`: cuentas, catálogos, clientes, pedidos, pagos/anulaciones, filtros y counts, 401/403/404 y DTOs forzados; cubrir SC-001–SC-008 sin habilitar endpoints de prueba en producción. Referencia: FR-001–FR-032; CR-001/CR-002. Depende de: T084.
+- [X] T086 Revisar selección real de clases y ejecutar `clean verify` en `polygim-api/pom.xml`, revisar reportes unitarios/Failsafe/JaCoCo, actualización Flyway y CI en `.github/workflows/verify.yml`; comprobar que bajar del 80% bloquea y que no se ha omitido lógica del denominador. Referencia: CR-006; Constitución VI/VIII. Depende de: T085.
+- [X] T087 Revisar `polygim-api/src/main/`, `.env.example`, `compose.yaml` y `polygim-api/Dockerfile` contra Constitución V y research R2/R10: ausencia de secretos, nombres del primer tenant fuera de datos, SQL nativo/bulk/merge de negocio, root y accesos globales no autorizados. Referencia: Constitución II/III/V. Depende de: T086.
+- [X] T088 Reproducir y ajustar solo instrucciones a la implementación aprobada en `specs/001-gym-management-core/quickstart.md` y `README.md`; probar arranque, compra/cobro/anulación y seed repetido, sin desplegar demo pública ni borrar volúmenes de datos conservables. Referencia: SC-008; plan M7. Depende de: T087.
+- [X] T089 Registrar conteo real de tests, cobertura, resultados del gate y latencias observadas sin prometer SLA en `docs/PLAN_DE_TRABAJO.md`; comprobar criterios de hecho y conservar pendientes reales como pendientes, sin mezclar integración a dev/main con el cierre técnico. Referencia: plan M7; sección 8 del producto. Depende de: T088.
 
 ## Dependencies & Execution Order
 
@@ -340,7 +340,6 @@ historias completas en paralelo mientras dependen del checkpoint anterior.
 
 ## Notes
 
-La aprobación de este archivo autoriza iniciar implement; no significa que ninguna
-casilla de implementación, cobertura o aislamiento ya esté cumplida. Los resultados
-se registran únicamente después de ejecutarlos. No hay métricas de producción ni
-código copiado del legacy. La entrega técnica no integra ramas ni despliega el producto.
+Las casillas registran el trabajo ejecutado; la evidencia y el CI remoto pendiente
+figuran en el plan de producto. No hay métricas de producción ni código copiado del
+legacy. La entrega técnica no integra ramas ni despliega el producto.

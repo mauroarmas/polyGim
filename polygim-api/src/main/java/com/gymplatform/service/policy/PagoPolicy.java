@@ -13,7 +13,12 @@ public final class PagoPolicy {
         if (deuda.signum() == 0) throw new BusinessConflictException();
         BigDecimal aplicado = recibido.min(deuda);
         BigDecimal restante = deuda.subtract(aplicado);
-        return new Result(aplicado, recibido.subtract(aplicado), restante, restante.signum() == 0 ? "PAGADO" : "PENDIENTE");
+        return new Result(aplicado, recibido.subtract(aplicado), restante, paymentState(restante));
     }
+    public static String paymentState(BigDecimal debt) {
+        if (!valid(debt) || debt.signum() < 0) throw new IllegalStateException("Deuda inconsistente");
+        return debt.signum() == 0 ? "PAGADO" : "PENDIENTE";
+    }
+    public static String movementState(boolean annulled) { return annulled ? "ANULADO" : "REGISTRADO"; }
     private static boolean valid(BigDecimal value) { return value != null && value.scale() == 2 && value.precision() <= 19; }
 }

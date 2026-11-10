@@ -42,7 +42,9 @@ class AnulacionApiIT extends OrderApiSupport {
         mvc.perform(get("/api/v1/pagos/" + secondPayment).header("Authorization", "Bearer " + adminA)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.estado").value("ANULADO")).andExpect(jsonPath("$.anulacion.id").value(evidence.path("id").asText()));
         mvc.perform(get("/api/v1/pedidos/" + order + "/pagos").header("Authorization", "Bearer " + adminA))
-                .andExpect(status().isOk()).andExpect(jsonPath("$.totalElements").value(2));
+                .andExpect(status().isOk()).andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.content.length()", org.hamcrest.Matchers.is(2)))
+                .andExpect(jsonPath("$.content[*].estado", org.hamcrest.Matchers.containsInAnyOrder("REGISTRADO", "ANULADO")));
         mvc.perform(put("/api/v1/pagos/" + firstPayment + "/anulacion").header("Authorization", "Bearer " + adminA)).andExpect(status().isCreated());
         mvc.perform(put("/api/v1/pedidos/" + order).header("Authorization", "Bearer " + adminA)).andExpect(status().isMethodNotAllowed());
     }

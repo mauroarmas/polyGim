@@ -43,7 +43,11 @@
                     <execution><id>prepare-agent</id><goals><goal>prepare-agent</goal></goals></execution>
                     <execution><id>report</id><phase>verify</phase><goals><goal>report</goal></goals></execution>
                     <execution><id>check</id><phase>verify</phase><goals><goal>check</goal></goals>
-                        <configuration><includes><include>com/gymplatform/service/**</include><include>com/gymplatform/model/**</include></includes>
+                        <configuration><includes>
+                            <include>com/gymplatform/service/**</include><include>com/gymplatform/model/**</include>
+                            <include>com/gymplatform/seed/**</include><include>com/gymplatform/tenant/**</include>
+                            <include>com/gymplatform/security/**</include><include>com/gymplatform/config/SuperadminBootstrap*</include>
+                        </includes>
                             <rules><rule><element>BUNDLE</element>
                             <limits><limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>0.80</minimum></limit></limits>
                         </rule></rules></configuration>

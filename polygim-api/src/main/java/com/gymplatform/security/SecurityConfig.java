@@ -9,6 +9,8 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,15 +51,17 @@ public class SecurityConfig {
         decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(JwtValidators.createDefaultWithIssuer(issuer), audienceValidator, expirationRequired));
         return decoder;
     }
-    @Bean SecurityFilterChain securityFilterChain(HttpSecurity http, IdentityService identity, IdentityScopeExecutor scopes,
+    @Bean SecurityFilterChain securityFilterChain(HttpSecurity http, IdentityService identity, IdentityScopeExecutor scopes, Environment environment,
             ProblemAuthenticationEntryPoint authenticationEntryPoint, ProblemAccessDeniedHandler accessDeniedHandler) throws Exception {
         var converter = new CurrentAccountAuthenticationConverter(scopes, identity);
         http.csrf(csrf -> csrf.disable()).cors(cors -> cors.disable())
                 .httpBasic(basic -> basic.disable()).formLogin(form -> form.disable()).logout(logout -> logout.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+                .authorizeHttpRequests(auth -> {
+                    if (environment.acceptsProfiles(Profiles.of("local-docs")))
+                        auth.requestMatchers("/v3/api-docs/**", "/v3/api-docs", "/swagger-ui/**", "/swagger-ui.html").permitAll();
+                    auth.requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
                         .requestMatchers("/api/v1/plataforma/**").hasRole("SUPERADMIN")
                         .requestMatchers("/api/v1/usuarios-recepcion/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/pagos/*/anulacion").hasRole("ADMIN")
@@ -66,7 +70,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/disciplinas/**", "/api/v1/membresias/**",
                                 "/api/v1/canales-llegada/**", "/api/v1/localidades/**", "/api/v1/configuracion/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/clientes/**", "/api/v1/pedidos/**", "/api/v1/pagos/**").hasAnyRole("ADMIN", "RECEPCION")
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated();
+                })
                 .oauth2ResourceServer(resource -> resource.authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler).jwt(jwt -> jwt.jwtAuthenticationConverter(converter)))
                 .addFilterAfter(new TenantRequestFilter(), BearerTokenAuthenticationFilter.class);

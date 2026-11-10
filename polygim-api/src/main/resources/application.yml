@@ -44,3 +44,14 @@ app:
     enabled: ${SEED_DEMO_ENABLED:false}
     admin-email: ${SEED_ADMIN_EMAIL:}
     admin-password: ${SEED_ADMIN_PASSWORD:}
+---
+spring:
+  config:
+    activate:
+      on-profile: local-docs
+springdoc:
+  api-docs:
+    enabled: true
+    version: OPENAPI_3_0
+  swagger-ui:
+    enabled: true

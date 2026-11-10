@@ -37,6 +37,7 @@ class SecurityIsolationIT extends PostgresIntegrationSupport {
     void anonymousAndMalformedBearerAreRejectedAsProblems() throws Exception {
         mvc.perform(get("/api/v1/auth/me"))
                 .andExpect(status().isUnauthorized())
+                .andExpect(header().string("WWW-Authenticate", "Bearer"))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON));
         mvc.perform(get("/api/v1/auth/me").header("Authorization", "Bearer invalid"))
                 .andExpect(status().isUnauthorized())
@@ -85,6 +86,14 @@ class SecurityIsolationIT extends PostgresIntegrationSupport {
         provision(gym, account);
         mvc.perform(get("/api/v1/auth/me").header("Authorization", "Bearer " + signedToken(account, Instant.now().minusSeconds(120))))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void documentationIsUnavailableWithoutItsExplicitProfile() throws Exception {
+        UUID gym = UUID.randomUUID(), account = UUID.randomUUID();
+        provision(gym, account);
+        mvc.perform(get("/v3/api-docs").header("Authorization", "Bearer " + signedToken(account, Instant.now().plusSeconds(600))))
+                .andExpect(status().isNotFound());
     }
 
     @Test

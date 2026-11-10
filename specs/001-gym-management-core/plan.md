@@ -5,7 +5,7 @@
 **Input**: Spec aprobada tras clarify, constitución 1.0.0 y
 [plan de producto](../../docs/PLAN_DE_TRABAJO.md).
 
-**Status**: Aprobado por el autor el 2026-11-10. Generación de tasks autorizada; implementación pendiente de aprobación de tasks.md.
+**Status**: Aprobado por el autor el 2026-11-10; tasks aprobadas e implementación validada localmente. CI remoto pendiente. Las referencias posteriores al estado previo al desarrollo describen la etapa de planificación.
 
 ## Summary
 
