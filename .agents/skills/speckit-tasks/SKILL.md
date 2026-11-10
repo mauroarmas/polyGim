@@ -78,7 +78,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Phase 1: Setup tasks (project initialization)
    - Phase 2: Foundational tasks (blocking prerequisites for all user stories)
    - Phase 3+: One phase per user story (in priority order from spec.md)
-   - Each phase includes: story goal, independent test criteria, tests (if requested), implementation tasks
+   - Each phase includes: story goal, independent test criteria, constitution-mandated tests, implementation tasks
    - Final Phase: Polish & cross-cutting concerns
    - All tasks must follow the strict checklist format (see Task Generation Rules below)
    - Clear file paths for each task
@@ -139,7 +139,10 @@ The tasks.md should be immediately executable - each task must be specific enoug
 
 **CRITICAL**: Tasks MUST be organized by user story to enable independent implementation and testing.
 
-**Tests are OPTIONAL**: Only generate test tasks if explicitly requested in the feature specification or if user requests TDD approach.
+**Tests are REQUIRED by this project constitution**: Generate unit tests for business logic,
+integration tests for multi-tenant isolation using PostgreSQL/Testcontainers and real Flyway
+migrations, applicable RFC 7807/security contract tests, and a JaCoCo gate for at least 80%
+line coverage of business logic in Maven and CI. Do not omit these because a spec is silent.
 
 ### Checklist Format (REQUIRED)
 
@@ -181,12 +184,12 @@ Every task MUST strictly follow this format:
      - Models needed for that story
      - Services needed for that story
      - Interfaces/UI needed for that story
-     - If tests requested: Tests specific to that story
+     - Constitution-mandated tests specific to that story
    - Mark story dependencies (most stories should be independent)
 
 2. **From Contracts**:
    - Map each interface contract → to the user story it serves
-   - If tests requested: Each interface contract → contract test task [P] before implementation in that story's phase
+   - Each changed HTTP error/security contract → test task [P] before implementation in that story's phase
 
 3. **From Data Model**:
    - Map each entity to the user story(ies) that need it
@@ -203,11 +206,14 @@ Every task MUST strictly follow this format:
 - **Phase 1**: Setup (project initialization)
 - **Phase 2**: Foundational (blocking prerequisites - MUST complete before user stories)
 - **Phase 3+**: User Stories in priority order (P1, P2, P3...)
-  - Within each story: Tests (if requested) → Models → Services → Endpoints → Integration
+  - Within each story: Required tests → Models → Repositories → Services → Endpoints → Integration
   - Each phase should be a complete, independently testable increment
 - **Final Phase**: Polish & Cross-Cutting Concerns
 
 ## Done When
+
+- [ ] Constitution-mandated tests, coverage gate and migration tasks are included as applicable
+- [ ] tasks.md is presented for user approval; implementation is not started automatically
 
 - [ ] tasks.md generated with all phases, task IDs, and file paths
 - [ ] Extension hooks dispatched or skipped according to the rules in Mandatory Post-Execution Hooks above

@@ -18,17 +18,20 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
+**Language/Version**: Java 21
 
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
+**Primary Dependencies**: Spring Boot 3, Spring Data JPA / Hibernate 6, Spring Security,
+springdoc-openapi; Thymeleaf + HTMX cuando la feature incluya pantallas.
+[Documentar versiones concretas compatibles y dependencias adicionales justificadas.]
 
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+**Storage**: PostgreSQL compartido, aislamiento automático por `gimnasio_id`, Flyway.
 
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]
+**Testing**: JUnit 5, Mockito, Testcontainers con PostgreSQL y migraciones reales;
+JaCoCo con mínimo 80% de líneas de lógica de negocio, exigido en Maven y CI.
 
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Target Platform**: Aplicación web Java; Docker Compose para el entorno local.
 
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]
+**Project Type**: Aplicación Spring en capas `controller`, `service`, `repository`.
 
 **Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
 
@@ -40,7 +43,23 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] Constitución, especificación vigente y aclaraciones aprobadas antes de planificar.
+- [ ] Código nuevo dentro de `polygim-api/`, capas separadas y decisiones justificadas.
+- [ ] Tenant resuelto desde identidad autorizada; aislamiento automático en lecturas,
+      escrituras, búsquedas por ID y relaciones; sin acceso global a datos de negocio.
+- [ ] Verificación de `@TenantId` en la versión seleccionada y de toda vía de consulta usada.
+- [ ] Pruebas de integración con dos gimnasios, accesos propios y accesos cruzados denegados.
+- [ ] Negocio configurable por gimnasio; primer tenant solo en seed de datos ficticios.
+- [ ] Reglas del legacy explicadas y reescritas, sin copiar código de `original/`.
+- [ ] Dinero con `BigDecimal`, decimal exacto, escala 2 y redondeo documentado.
+- [ ] Tests unitarios de negocio y JaCoCo ≥80% de líneas de negocio en `mvn verify` y CI.
+- [ ] Errores REST RFC 7807, incluidos seguridad y validación, con pruebas del contrato.
+- [ ] Esquema solo mediante Flyway; sin DDL manual ni generación automática de Hibernate.
+- [ ] Secretos solo por variables de entorno; ejemplos ficticios y sin secretos en Git.
+- [ ] Plan presentado para aprobación antes de generar tareas; commits convencionales.
+
+Para cada control registrar evidencia, tareas previstas o motivo verificable de no
+aplicación. Una violación bloquea el avance; no se dispensa mediante Complexity Tracking.
 
 ## Project Structure
 
@@ -57,47 +76,25 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
+
+<!-- Expandir con el paquete Java concreto y los archivos de la feature.
+     original/ es referencia de dominio de solo lectura. -->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+polygim-api/
+├── pom.xml
+├── legacy/                         # Referencia, no código ejecutable
+└── src/
+    ├── main/
+    │   ├── java/<base-package>/
+    │   │   ├── controller/
+    │   │   ├── service/
+    │   │   ├── repository/
+    │   │   └── [otros paquetes justificados por la feature]
+    │   └── resources/
+    │       ├── db/migration/
+    │       └── [templates y static solo en la feature de interfaz]
+    └── test/java/<base-package>/    # Tests unitarios e integración
 ```
 
 **Structure Decision**: [Document the selected structure and reference the real
@@ -105,9 +102,10 @@ directories captured above]
 
 ## Complexity Tracking
 
-> **Fill ONLY if Constitution Check has violations that must be justified**
+> **Registrar complejidad adicional y alternativas evaluadas. Las violaciones de la
+> constitución bloquean el avance y requieren corregirse o una enmienda aprobada.**
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
+| Added Complexity | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
 | [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| [e.g., additional cache] | [measured need] | [why the simpler approved design is insufficient] |

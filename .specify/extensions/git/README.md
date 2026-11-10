@@ -64,20 +64,25 @@ branch_template: ""
 branch_prefix: ""
 
 # Custom commit message for git init
-init_commit_message: "[Spec Kit] Initial commit"
+init_commit_message: "chore: initialize Spec Kit workspace"
 
-# Auto-commit per command (all disabled by default)
-# Example: enable auto-commit after specify
+# Project auto-commit policy (enabled for configured events)
+# Example: custom message after specify
 auto_commit:
-  default: false
+  default: true
   after_specify:
     enabled: true
-    message: "[Spec Kit] Add specification"
+    message: "docs: add feature specification"
 ```
 
 `{author}` is derived from Git config and sanitized for branch names. `{app}` is derived from the Spec Kit init directory name. Custom templates must not put `{slug}` before `{number}`, and must put `{number}-` at the start of the final path segment so generated names remain valid feature branches. For a monorepo project at `apps/web/.specify/`, a template such as `{author}/{app}/{number}-{slug}` produces branches like `jdoe/web/008-guided-tour`.
 
 For simple namespace-only customization, `branch_prefix` is also accepted as a shorthand and expands to `<branch_prefix>/{number}-{slug}`.
+
+Project commits must follow Conventional Commits (`type(scope): description`, scope optional).
+Auto-commit is enabled for the configured before/after Spec Kit events. The owner authorized
+these commits; a commit never substitutes approval of the constitution, spec, plan or tasks. `original/` and local environment files
+are excluded from the root repository to keep legacy credentials out of its history.
 
 ## Installation
 

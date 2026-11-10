@@ -98,6 +98,26 @@
 - **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
 - **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
+### Constitutional Requirements *(mandatory)*
+
+<!-- Expresar comportamientos verificables; los mecanismos técnicos van en plan.md.
+     La constitución .specify/memory/constitution.md rige todas las features. -->
+
+- **CR-001**: Ningún usuario de un gimnasio puede acceder ni asociar datos de otro.
+  Incluir escenarios de aceptación con dos gimnasios y operaciones por identificador.
+- **CR-002**: Definir los permisos de cada actor, incluido el superadmin sin acceso
+  a datos de negocio, y el comportamiento cuando falta autorización o contexto válido.
+- **CR-003**: Las reglas particulares del gimnasio son configurables. Los datos del
+  primer tenant son seed ficticio; no condicionan el comportamiento del producto.
+- **CR-004**: Los cálculos monetarios preservan precisión decimal y precios históricos.
+- **CR-005**: Los fallos de validación, negocio y seguridad tienen un contrato uniforme
+  y no revelan secretos ni datos ajenos. El plan concreta RFC 7807.
+- **CR-006**: El alcance incluye pruebas unitarias de las reglas e integración del
+  aislamiento; la estrategia de validación satisface el mínimo de cobertura constitucional.
+
+Justificar explícitamente lo no aplicable a la feature. Consultar ambigüedades materiales
+antes de asumir y presentar la especificación para aprobación antes de avanzar.
+
 ### Key Entities *(include if feature involves data)*
 
 - **[Entity 1]**: [What it represents, key attributes without implementation]
@@ -121,8 +141,8 @@
 
 <!--
   ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right assumptions based on reasonable defaults
-  chosen when the feature description did not specify certain details.
+  Registrar solo supuestos confirmados o deducidos de decisiones ya aprobadas.
+  Las ambigüedades materiales se consultan al usuario; no se deciden en silencio.
 -->
 
 - [Assumption about target users, e.g., "Users have stable internet connectivity"]

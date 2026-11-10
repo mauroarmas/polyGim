@@ -146,6 +146,10 @@ You **MUST** consider the user input before proceeding (if not empty).
    - **Task details**: ID, description, file paths, parallel markers [P]
    - **Execution flow**: Order and dependency requirements
 
+Before application code changes, verify user approval of the constitution, current spec.md
+(including clarifications), plan.md and tasks.md. This command does not substitute those
+review gates. Ask for a missing approval only after the relevant artifact is reviewable.
+
 6. Execute implementation following the task plan:
    - **Phase-by-phase execution**: Complete each phase before moving to the next
    - **Respect dependencies**: Run sequential tasks in order, parallel tasks [P] can run together
@@ -155,7 +159,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 7. Implementation execution rules:
    - **Setup first**: Initialize project structure, dependencies, configuration
-   - **Tests before code**: If you need to write tests for contracts, entities, and integration scenarios
+   - **Tests before code**: Execute constitution-mandated business unit tests and tenant isolation integration test tasks; include changed RFC 7807/security contracts
    - **Core development**: Implement models, services, CLI commands, endpoints
    - **Integration work**: Database connections, middleware, logging, external services
    - **Polish and validation**: Unit tests, performance optimization, documentation
@@ -171,7 +175,9 @@ You **MUST** consider the user input before proceeding (if not empty).
 9. Completion validation:
    - Verify all required tasks are completed
    - Check that implemented features match the original specification
-   - Validate that tests pass and coverage meets requirements
+   - Run Maven verification and validate JaCoCo ≥80% line coverage of business logic
+   - Validate cross-tenant denial with PostgreSQL/Testcontainers and real Flyway migrations
+   - Report checks not executed; never claim isolation from mocks alone
    - Confirm the implementation follows the technical plan
 
 Note: This command assumes a complete task breakdown exists in tasks.md. If tasks are incomplete or missing, suggest running `/speckit-tasks` first to regenerate the task list.

@@ -21,52 +21,52 @@ init_commit_message: "chore: initialize Spec Kit workspace"
 # Set "default" to enable for all commands, then override per-command.
 # Each key can be true/false. Message is customizable per-command.
 auto_commit:
-  default: false
+  default: true
   before_clarify:
-    enabled: false
-    message: "[Spec Kit] Save progress before clarification"
+    enabled: true
+    message: "docs: save progress before clarification"
   before_plan:
-    enabled: false
-    message: "[Spec Kit] Save progress before planning"
+    enabled: true
+    message: "docs: save progress before planning"
   before_tasks:
-    enabled: false
-    message: "[Spec Kit] Save progress before task generation"
+    enabled: true
+    message: "docs: save progress before task generation"
   before_implement:
-    enabled: false
-    message: "[Spec Kit] Save progress before implementation"
+    enabled: true
+    message: "docs: save progress before implementation"
   before_checklist:
-    enabled: false
-    message: "[Spec Kit] Save progress before checklist"
+    enabled: true
+    message: "docs: save progress before checklist"
   before_analyze:
-    enabled: false
-    message: "[Spec Kit] Save progress before analysis"
+    enabled: true
+    message: "docs: save progress before analysis"
   before_taskstoissues:
-    enabled: false
-    message: "[Spec Kit] Save progress before issue sync"
+    enabled: true
+    message: "docs: save progress before issue sync"
   after_constitution:
-    enabled: false
-    message: "[Spec Kit] Add project constitution"
+    enabled: true
+    message: "docs: define gym platform constitution"
   after_specify:
-    enabled: false
-    message: "[Spec Kit] Add specification"
+    enabled: true
+    message: "docs: add feature specification"
   after_clarify:
-    enabled: false
-    message: "[Spec Kit] Clarify specification"
+    enabled: true
+    message: "docs: clarify feature specification"
   after_plan:
-    enabled: false
-    message: "[Spec Kit] Add implementation plan"
+    enabled: true
+    message: "docs: add implementation plan"
   after_tasks:
-    enabled: false
-    message: "[Spec Kit] Add tasks"
+    enabled: true
+    message: "docs: add feature tasks"
   after_implement:
-    enabled: false
-    message: "[Spec Kit] Implementation progress"
+    enabled: true
+    message: "chore: record implementation progress"
   after_checklist:
-    enabled: false
-    message: "[Spec Kit] Add checklist"
+    enabled: true
+    message: "docs: add feature checklist"
   after_analyze:
-    enabled: false
-    message: "[Spec Kit] Add analysis report"
+    enabled: true
+    message: "docs: add analysis report"
   after_taskstoissues:
-    enabled: false
-    message: "[Spec Kit] Sync tasks to issues"
+    enabled: true
+    message: "docs: record task issue synchronization"
