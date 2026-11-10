@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.security.authentication.BadCredentialsException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -51,6 +53,22 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers,
                                                                       HttpStatusCode status, WebRequest request) {
         return error(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "UNSUPPORTED_MEDIA_TYPE", "Formato no admitido", "El formato enviado no está admitido.", request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException ex, HttpHeaders headers,
+                                                                    HttpStatusCode status, WebRequest request) {
+        return error(HttpStatus.NOT_FOUND, "RESOURCE_NOT_FOUND", "Recurso no encontrado", "No se encontró el recurso solicitado.", request);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> badCredentials(BadCredentialsException ex, WebRequest request) {
+        return error(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "Autenticación requerida", "No se pudo autenticar la solicitud.", request);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> invalidArgument(IllegalArgumentException ex, WebRequest request) {
+        return error(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "Solicitud inválida", "Revisá los datos enviados.", request);
     }
 
     @ExceptionHandler(Exception.class)

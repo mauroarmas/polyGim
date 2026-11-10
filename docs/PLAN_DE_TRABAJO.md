@@ -169,7 +169,7 @@ Completar al cerrar cada hito.
 | Hito | Estado | Tests | Cobertura | Notas |
 |---|---|---|---|---|
 | M0 | Base local verificada; CI remoto pendiente | 4 unitarios de contrato HTTP, 0 fallos (`clean verify`) | Sin clases de negocio aún; no corresponde informar porcentaje | Java 21, Wrapper, imagen app y PostgreSQL con healthcheck verificados; workflow creado, no ejecutado en GitHub |
-| M1 | ☐ | | | |
+| M1 | Gate local aprobado | 18 unitarios y 13 de integración, 0 fallos (`clean verify`) | 85,11% de líneas actuales de servicio/modelo (40/47) | PostgreSQL 17.11/Testcontainers, Flyway V1→V2, aislamiento A/B por ID/list/count y repositorio, restricciones tenant, seguridad JWT y cuenta deshabilitada; CI remoto pendiente |
 | M2 | ☐ | | | |
 | M3 | ☐ | | | |
 | M4 | ☐ | | | |
