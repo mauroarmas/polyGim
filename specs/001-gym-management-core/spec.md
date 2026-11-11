@@ -287,7 +287,7 @@ inicial y verificar que un segundo gimnasio puede tener una oferta diferente.
 - **SC-005**: El circuito de compra de 200,50, pago de 50,25, recepción de 200,00 con vuelto de 49,75 y anulación del pago aplicado de 150,25 produce deuda final 150,25, historial completo y ninguna diferencia monetaria.
 - **SC-006**: El 100% de los casos de aceptación de vigencia conserva su vencimiento ante pagos y anulaciones, incluye el día de vencimiento y aplica la renovación elegida y las tres unidades de duración sin depender de nombres.
 - **SC-007**: Dos gimnasios pueden operar con distintas disciplinas, planes, canales y cantidades máximas sin modificar el producto para esos nombres o valores.
-- **SC-008**: Los ocho circuitos de usuario pueden demostrarse por operaciones de la API, con datos de ejemplo identificados como ficticios y sin pantallas ni importación del legacy.
+- **SC-008**: Los ocho circuitos de usuario pueden demostrarse por la API y la interfaz funcional, con datos de ejemplo identificados como ficticios y sin importación del legacy.
 
 ## Assumptions
 

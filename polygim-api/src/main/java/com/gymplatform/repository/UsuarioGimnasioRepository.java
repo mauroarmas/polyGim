@@ -24,6 +24,16 @@ public class UsuarioGimnasioRepository {
         return account;
     }
 
+    public org.springframework.data.domain.Page<CuentaAcceso> listReception(org.springframework.data.domain.PageRequest page) {
+        guard.requireAdmin();
+        // Start at the tenant-filtered membership, not at the global identity table.
+        String from = " from UsuarioGimnasio u join CuentaAcceso a on a.id = u.id and a.gimnasioId = u.gimnasioId where a.rol = 'RECEPCION'";
+        var content = entityManager.createQuery("select a" + from + " order by a.email, a.id", CuentaAcceso.class)
+                .setFirstResult(Math.toIntExact(page.getOffset())).setMaxResults(page.getPageSize()).getResultList();
+        long count = entityManager.createQuery("select count(u)" + from, Long.class).getSingleResult();
+        return new org.springframework.data.domain.PageImpl<>(content, page, count);
+    }
+
     public Optional<CuentaAcceso> disableReception(UUID id) {
         guard.requireAdmin();
         if (entityManager.find(UsuarioGimnasio.class, id) == null) return Optional.empty();

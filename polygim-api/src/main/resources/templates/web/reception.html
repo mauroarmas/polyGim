@@ -1,0 +1,80 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Equipo de recepción','recepcion')}"
+>
+  <main>
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">PERSONAL</p>
+        <h1>Equipo de recepción</h1>
+        <p class="muted">
+          Acceso a clientes, compras y cobros. Sin configuración ni anulaciones.
+        </p>
+      </div>
+    </div>
+    <div class="split">
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>Cuentas del gimnasio</h2>
+          <span class="counter" th:text="${listing.totalElements}"></span>
+        </div>
+        <div class="empty compact" th:if="${#lists.isEmpty(listing.content)}">
+          <h3>Todavía no agregaste personal</h3>
+          <p>Creá una cuenta para que tu equipo pueda comenzar a operar.</p>
+        </div>
+        <div class="account-row" th:each="item:${listing.content}">
+          <div>
+            <strong th:text="${item.email}"></strong
+            ><span
+              class="badge"
+              th:classappend="${item.habilitada ? 'VIGENTE' : 'ANULADO'}"
+              th:text="${item.habilitada ? 'HABILITADA' : 'DESHABILITADA'}"
+            ></span>
+          </div>
+          <form
+            th:if="${item.habilitada}"
+            th:action="@{/app/recepcion/{id}/deshabilitar(id=${item.id})}"
+            method="post"
+          >
+            <button class="button secondary small danger-text" type="submit">
+              Deshabilitar
+            </button>
+          </form>
+        </div>
+        <div
+          th:replace="~{web/fragments :: pagination(${listing},'/app/recepcion?page=')}"
+        ></div>
+      </section>
+      <section class="panel padded">
+        <h2>Agregar una cuenta</h2>
+        <form class="stack" th:action="@{/app/recepcion}" method="post">
+          <label
+            >Correo electrónico *<input
+              name="email"
+              type="email"
+              required
+              maxlength="254"
+              autocomplete="off" /></label
+          ><label
+            >Contraseña inicial *<input
+              name="password"
+              type="password"
+              minlength="12"
+              maxlength="72"
+              required
+              autocomplete="new-password"
+            /><small>Entre 12 y 72 caracteres.</small></label
+          >
+          <p class="info">
+            Compartí las credenciales de forma privada. El correo no puede
+            pertenecer a otra cuenta, incluso si está deshabilitada.
+          </p>
+          <button class="button" type="submit">
+            Crear cuenta de recepción
+          </button>
+        </form>
+      </section>
+    </div>
+  </main>
+</html>

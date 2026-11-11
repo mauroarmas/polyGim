@@ -23,6 +23,10 @@ public class ReceptionService {
         String hash = encoder.encode(password);
         return executor.admin(() -> dto(repository.createReception(UUID.randomUUID(), normalized, hash)));
     }
+    public com.gymplatform.controller.dto.PageResponse<AuthDtos.User> list(Integer page, Integer size) {
+        var request = com.gymplatform.controller.dto.PageResponse.request(page, size);
+        return executor.admin(() -> com.gymplatform.controller.dto.PageResponse.of(repository.listReception(request).map(ReceptionService::dto)));
+    }
     public AuthDtos.User disable(UUID id) {
         return executor.admin(() -> dto(repository.disableReception(id).orElseThrow(NoSuchElementException::new)));
     }

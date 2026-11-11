@@ -1,6 +1,6 @@
 # Plataforma de gestión de gimnasios
 
-API multi-gimnasio en construcción. El proyecto nuevo está en `polygim-api/`.
+Plataforma multi-gimnasio con interfaz web y API REST. El proyecto nuevo está en `polygim-api/`.
 
 ## Entorno de desarrollo
 
@@ -56,3 +56,15 @@ curl -sS http://localhost:8080/api/v1/configuracion \
 Una respuesta posible es `{"cantidadMaximaCompra":12}`. Con el perfil `local-docs`
 activo, la descripción de la API está en `/v3/api-docs` y la interfaz interactiva en
 `/swagger-ui/index.html`.
+
+## Interfaz y pruebas funcionales
+
+Abrí `http://localhost:8081` si usás el `.env` local preparado (o el puerto de
+`APP_PORT`). Ingresá con `SEED_ADMIN_EMAIL` y `SEED_ADMIN_PASSWORD` para operar el
+gimnasio de demostración; el superadmin usa las variables de bootstrap. No hay
+credenciales incorporadas a las pantallas.
+
+La [guía funcional](docs/PRUEBAS_FUNCIONALES_FEATURE_1.md) recorre los formularios de
+clientes, compras, pagos, anulaciones, catálogos, recepción y alta de gimnasios.
+La aplicación utiliza Thymeleaf y HTMX local; no requiere un servidor frontend
+adicional. Las sesiones del navegador se cierran al reiniciar la aplicación.

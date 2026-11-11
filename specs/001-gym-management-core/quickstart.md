@@ -8,6 +8,13 @@ automatizadas complementan esa comprobación manual.
 Referencias: [plan](plan.md), [modelo](data-model.md), [REST](contracts/api.md),
 [OpenAPI](contracts/openapi.yaml) y [criterios SC-001–SC-008](spec.md#measurable-outcomes).
 
+## Prueba desde navegador
+
+La feature incluye ahora una interfaz funcional. Con Compose iniciado, abrí
+`http://localhost:${APP_PORT:-8080}` (reemplazá el puerto por el de tu `.env`) y
+seguí la [guía de pruebas funcionales](../../docs/PRUEBAS_FUNCIONALES_FEATURE_1.md).
+Los pasos siguientes conservan el recorrido equivalente por API para verificar contratos.
+
 ## Prerrequisitos
 
 - curl, jq y Docker Compose. Java 21 solo es necesario para ejecutar la suite Maven

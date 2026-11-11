@@ -1,0 +1,69 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Membresías','membresias')}"
+>
+  <main>
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">OFERTA DEL GIMNASIO</p>
+        <h1>Membresías</h1>
+        <p class="muted">Planes, precios y duración para cada disciplina.</p>
+      </div>
+      <a th:if="${admin}" class="button" th:href="@{/app/membresias/nueva}"
+        >+ Crear membresía</a
+      >
+    </div>
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Planes disponibles</h2>
+        <span class="counter" th:text="${listing.totalElements}"></span>
+      </div>
+      <div class="empty" th:if="${#lists.isEmpty(listing.content)}">
+        <span class="empty-icon">◇</span>
+        <h3>Definí tu primera membresía</h3>
+        <p>
+          Configurá una disciplina y después creá un plan con precio y duración.
+        </p>
+        <a
+          th:if="${admin}"
+          class="button secondary"
+          th:href="@{/app/catalogos/disciplinas}"
+          >Configurar disciplinas</a
+        >
+      </div>
+      <div class="table-wrap" th:unless="${#lists.isEmpty(listing.content)}">
+        <table>
+          <thead>
+            <tr>
+              <th>Membresía</th>
+              <th>Disciplina</th>
+              <th>Precio</th>
+              <th>Duración</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="item:${listing.content}">
+              <td><strong th:text="${item.nombre}"></strong></td>
+              <td th:text="${disciplineNames[item.disciplinaId]}"></td>
+              <td class="mono" th:text="${item.precio}"></td>
+              <td th:text="|${item.duracion} ${item.unidadDuracion}|"></td>
+              <td>
+                <a
+                  th:if="${admin}"
+                  class="text-link"
+                  th:href="@{/app/membresias/{id}/editar(id=${item.id})}"
+                  >Editar →</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        th:replace="~{web/fragments :: pagination(${listing},'/app/membresias?page=')}"
+      ></div>
+    </section>
+  </main>
+</html>

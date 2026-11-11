@@ -122,8 +122,8 @@ Cada hito termina con tests en verde y un commit convencional. No se avanza con 
 | **M4** Clientes | CRUD, DNI único por gimnasio, dirección | H1.4 + test de DNI duplicado entre tenants |
 | **M5** Pedidos | Creación con un detalle, precio congelado, total en `BigDecimal`, vigencia calculada | H1.5, tests unitarios del cálculo |
 | **M6** Pagos | Registrar, parcial, exceso con vuelto informado, anular, recálculo de estado | H1.6 y H1.7 con tabla de casos borde |
-| **M8** Interfaz funcional | Sesión web, pantallas por rol y guía de pruebas de la feature 1 | Flujo navegador probado; CSRF, aislamiento y regresión en verde |
 | **M7** Cierre | Seed de Poly, OpenAPI documentado, README, cobertura ≥ 80% | Definición de hecho de la sección 8 |
+| **M8** Interfaz funcional | Sesión web, pantallas por rol y guía de pruebas de la feature 1 | Flujo navegador probado; CSRF, aislamiento y regresión en verde |
 
 ## 7. Estrategia de pruebas
 
@@ -145,7 +145,7 @@ Cada hito termina con tests en verde y un commit convencional. No se avanza con 
 - [x] Sin credenciales ni referencias a Poly en el código
 - [x] Spec, plan y tasks de Spec Kit coherentes con este documento
 - [x] Dato real para el CV anotado (cantidad de tests, cobertura)
-- [ ] Pantallas y flujo funcional de la feature verificados desde navegador
+- [x] Pantallas y flujo funcional de la feature verificados desde navegador
 
 Los criterios marcados corresponden a la feature 1 y su validación local. GitHub
 Actions intentó ejecutar el workflow, pero no inició el job por un problema de
@@ -185,6 +185,7 @@ Completar al cerrar cada hito.
 | M5 | Gate local aprobado; saldos completos pendientes de M6 | 39 unitarios y 31 de integración, 0 fallos (`clean verify`) | 97,99% de líneas actuales de servicio/modelo (292/298) | V5; snapshots y renovaciones concurrentes verificadas; todavía no hay pagos y la deuda inicial es el total; CI remoto pendiente |
 | M6 | Gate local aprobado | 44 unitarios y 38 de integración, 0 fallos (`clean verify`) | 98,33% de líneas actuales de servicio/modelo (354/360) | Cobro parcial/exceso, anulación idempotente, deuda y concurrencia comprobados; reproducción manual del quickstart y CI remoto pendientes de M7 |
 | M7 | Cierre local aprobado; CI bloqueado por facturación | 45 unitarios y 45 de integración, 0 fallos ni omitidos (`clean verify`) | 97,89% de líneas (602/615) en 56 clases del alcance de JaCoCo | Seed opt-in, aislamiento, aceptación, 36 operaciones OpenAPI y quickstart con ambos servicios en Compose verificados; GitHub no inició el job por facturación |
+| M8 | Interfaz funcional validada y ejecutándose en Compose | 49 unitarios y 51 de integración (100 en total), sin fallos ni omitidos | 98,06% de líneas (656/669), 59 clases del alcance de JaCoCo | Chromium: clientes, compra, pagos, vuelto, anulación, renovación, HTMX, catálogos, roles, aislamiento y viewport de 390 px; CI remoto bloqueado por facturación |
 
 **Evidencia de M7 (2026-11-10):** JaCoCo incluye servicios, modelo, seed,
 resolución de tenant, seguridad y bootstrap de superadmin. Una ejecución aislada
@@ -193,3 +194,5 @@ El quickstart se reprodujo con PostgreSQL en Docker, aplicación real, dos gimna
 compra, pagos, anulación y reinicio del seed. En una ejecución local se observaron
 53,2 ms para compra, 65,3 ms para pago parcial, 19,9 ms para pago con excedente y
 26,5 ms para anulación; son mediciones puntuales, no un SLA ni datos de producción.
+
+**Evidencia de M8 (2026-11-10):** `clean verify` completo aprobado después de incorporar la sesión web y sus pruebas. `WebFlowIT` verifica renderizado, CSRF, API sin autenticar mediante la sesión web, identidad vigente frente a datos de sesión obsoletos, revocación inmediata, permisos y aislamiento. El flujo de navegador se ejecutó con base temporal independiente. Se reconstruyó y actualizó solo el servicio `app` de la instalación local; se verificaron login de ambos administradores, cookie HttpOnly/SameSite y conservación de los registros anteriores. Guía: [pruebas funcionales de feature 1](PRUEBAS_FUNCIONALES_FEATURE_1.md).

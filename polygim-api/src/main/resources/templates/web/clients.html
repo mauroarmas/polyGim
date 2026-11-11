@@ -1,0 +1,100 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Clientes','clientes')}"
+>
+  <main>
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">PERSONAS</p>
+        <h1>Clientes</h1>
+        <p class="muted">Encontrá su ficha y continuá la atención.</p>
+      </div>
+      <a class="button" th:href="@{/app/clientes/nuevo}">+ Registrar cliente</a>
+    </div>
+    <form
+      class="search-bar"
+      th:action="@{/app/clientes}"
+      method="get"
+      hx-get="/app/clientes"
+      hx-target="#client-results"
+      hx-swap="outerHTML"
+      hx-trigger="submit, input changed delay:400ms"
+    >
+      <label for="dni-search">Buscar por DNI</label>
+      <div class="inline">
+        <input
+          id="dni-search"
+          type="search"
+          name="dni"
+          inputmode="numeric"
+          maxlength="8"
+          placeholder="Ingresá el DNI completo"
+          th:value="${dni}"
+        /><button class="button secondary" type="submit">Buscar</button
+        ><a th:href="@{/app/clientes}" class="text-link">Limpiar</a>
+      </div>
+    </form>
+    <section id="client-results" class="panel" th:fragment="results">
+      <div class="panel-heading">
+        <h2>Directorio</h2>
+        <span
+          class="counter"
+          th:text="|${listing.totalElements} clientes|"
+        ></span>
+      </div>
+      <div class="empty" th:if="${#lists.isEmpty(listing.content)}">
+        <span class="empty-icon">◎</span>
+        <h3
+          th:text="${incompleteDni ? 'Completá el DNI' : 'No encontramos clientes'}"
+        ></h3>
+        <p
+          th:text="${incompleteDni ? 'Ingresá los 7 u 8 dígitos para buscar.' : 'Podés registrar un cliente nuevo o limpiar la búsqueda.'}"
+        ></p>
+        <a
+          class="button secondary"
+          th:unless="${incompleteDni}"
+          th:href="@{/app/clientes/nuevo}"
+          >Registrar cliente</a
+        >
+      </div>
+      <div class="table-wrap" th:unless="${#lists.isEmpty(listing.content)}">
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>DNI</th>
+              <th>Teléfono</th>
+              <th>Ingreso</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="client:${listing.content}">
+              <td>
+                <strong
+                  th:text="|${client.nombre} ${client.apellido}|"
+                ></strong>
+              </td>
+              <td class="mono" th:text="${client.dni}"></td>
+              <td th:text="${client.telefono ?: '—'}"></td>
+              <td
+                th:text="${#temporals.format(client.fechaIngreso,'dd/MM/yyyy')}"
+              ></td>
+              <td>
+                <a
+                  class="text-link"
+                  th:href="@{/app/clientes/{id}(id=${client.id})}"
+                  >Abrir ficha →</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        th:replace="~{web/fragments :: pagination(${listing},${'/app/clientes?dni=' + dni + '&page='})}"
+      ></div>
+    </section>
+  </main>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Configuración','configuracion')}"
+>
+  <main>
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">TU GIMNASIO</p>
+        <h1>Configuración</h1>
+        <p class="muted">Reglas para las nuevas compras de membresías.</p>
+      </div>
+    </div>
+    <form
+      class="panel form-panel stack"
+      th:action="@{/app/configuracion}"
+      method="post"
+    >
+      <h2>Límite por compra</h2>
+      <label
+        >Cantidad máxima de unidades *<input
+          type="number"
+          name="cantidadMaximaCompra"
+          min="1"
+          required
+          th:value="${configuration.cantidadMaximaCompra}"
+        /><small
+          >Define cuántas unidades de una membresía pueden comprarse en un
+          pedido.</small
+        ></label
+      >
+      <p class="info">
+        El cambio se aplica a nuevas compras. No modifica las que ya se
+        registraron.
+      </p>
+      <div class="form-actions">
+        <button class="button" type="submit">Guardar configuración</button>
+      </div>
+    </form>
+  </main>
+</html>

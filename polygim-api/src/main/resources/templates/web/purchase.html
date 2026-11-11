@@ -1,0 +1,99 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Nueva compra','compras')}"
+>
+  <main>
+    <a class="back-link" th:href="@{/app/clientes/{id}(id=${client.id})}"
+      >← Ficha del cliente</a
+    >
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">MEMBRESÍA</p>
+        <h1
+          th:text="${previous == null ? 'Registrar una compra' : 'Renovar membresía'}"
+        ></h1>
+        <p
+          class="muted"
+          th:text="|Para ${client.nombre} ${client.apellido} · DNI ${client.dni}|"
+        ></p>
+      </div>
+    </div>
+    <div class="empty panel" th:if="${#lists.isEmpty(memberships)}">
+      <h2>No hay membresías disponibles</h2>
+      <p>
+        Un administrador debe crear una membresía antes de registrar compras.
+      </p>
+      <a th:if="${admin}" class="button" th:href="@{/app/membresias/nueva}"
+        >Crear membresía</a
+      >
+    </div>
+    <form
+      th:unless="${#lists.isEmpty(memberships)}"
+      class="panel form-panel"
+      th:action="@{/app/clientes/{id}/comprar(id=${client.id})}"
+      method="post"
+    >
+      <h2>Condiciones de la compra</h2>
+      <p
+        class="info"
+        th:if="${previous != null}"
+        th:text="|Se renueva la compra que vence el ${#temporals.format(previous.fechaVencimiento,'dd/MM/yyyy')}. Si sigue vigente, el nuevo período continúa desde ese vencimiento.|"
+      ></p>
+      <input
+        th:if="${previous != null}"
+        type="hidden"
+        name="pedidoAnteriorId"
+        th:value="${previous.id}"
+      />
+      <div class="stack">
+        <label
+          >Membresía *<select name="membresiaId" required>
+            <option value="" th:if="${previous == null}">
+              Elegí una membresía
+            </option>
+            <option
+              th:each="item:${memberships}"
+              th:if="${previous == null or item.id == previous.membresiaId}"
+              th:value="${item.id}"
+              th:selected="${previous != null}"
+              th:text="|${item.nombre} · ${item.precio} · ${item.duracion} ${item.unidadDuracion}|"
+            ></option></select
+        ></label>
+        <div class="form-grid">
+          <label
+            >Cantidad *<input
+              type="number"
+              name="cantidad"
+              value="1"
+              min="1"
+              th:max="${maximum}"
+              required
+            /><small
+              >Multiplica el precio y la duración de la membresía.</small
+            ></label
+          ><label
+            >Fecha de compra<input
+              type="date"
+              name="fechaCompra"
+              th:value="${today}"
+              th:max="${today}"
+            /><small>Hoy o una fecha anterior.</small></label
+          >
+        </div>
+      </div>
+      <p class="info">
+        Al registrar, se calculan el total y el vencimiento. El precio de esta
+        compra se conserva aunque cambie el catálogo. Podés registrar el pago en
+        el siguiente paso.
+      </p>
+      <div class="form-actions">
+        <a
+          class="button secondary"
+          th:href="@{/app/clientes/{id}(id=${client.id})}"
+          >Cancelar</a
+        ><button class="button" type="submit">Registrar compra →</button>
+      </div>
+    </form>
+  </main>
+</html>

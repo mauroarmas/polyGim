@@ -1,0 +1,84 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Compras y pagos','compras')}"
+>
+  <main>
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">MOVIMIENTOS</p>
+        <h1>Compras y pagos</h1>
+        <p class="muted">
+          Consultá los saldos y la vigencia de cada membresía.
+        </p>
+      </div>
+      <a class="button" th:href="@{/app/clientes}"
+        >Elegir cliente para comprar →</a
+      >
+    </div>
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Todas las compras</h2>
+        <span class="counter" th:text="${listing.totalElements}"></span>
+      </div>
+      <div class="empty" th:if="${#lists.isEmpty(listing.content)}">
+        <span class="empty-icon">▤</span>
+        <h3>Todavía no hay compras</h3>
+        <p>Abrí la ficha de un cliente para registrar su primera membresía.</p>
+        <a class="button secondary" th:href="@{/app/clientes}">Ir a clientes</a>
+      </div>
+      <div class="table-wrap" th:unless="${#lists.isEmpty(listing.content)}">
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente / membresía</th>
+              <th>Total</th>
+              <th>Deuda</th>
+              <th>Pago</th>
+              <th>Vigencia</th>
+              <th>Vence</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="order:${listing.content}">
+              <td>
+                <strong th:text="${clientNames[order.clienteId]}"></strong
+                ><small th:text="${membershipNames[order.membresiaId]}"></small>
+              </td>
+              <td class="mono" th:text="${order.total}"></td>
+              <td class="mono" th:text="${order.deuda}"></td>
+              <td>
+                <span
+                  class="badge"
+                  th:classappend="${order.estadoPago}"
+                  th:text="${order.estadoPago}"
+                ></span>
+              </td>
+              <td>
+                <span
+                  class="badge"
+                  th:classappend="${order.vigencia}"
+                  th:text="${order.vigencia}"
+                ></span>
+              </td>
+              <td
+                th:text="${#temporals.format(order.fechaVencimiento,'dd/MM/yyyy')}"
+              ></td>
+              <td>
+                <a
+                  class="text-link"
+                  th:href="@{/app/pedidos/{id}(id=${order.id})}"
+                  >Ver compra →</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        th:replace="~{web/fragments :: pagination(${listing},'/app/pedidos?page=')}"
+      ></div>
+    </section>
+  </main>
+</html>

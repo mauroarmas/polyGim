@@ -1,0 +1,122 @@
+<!doctype html>
+<html
+  lang="es"
+  xmlns:th="http://www.thymeleaf.org"
+  th:fragment="page(content,title,section)"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="htmx-config"
+      content='{"historyCacheSize":0,"allowEval":false,"allowScriptTags":false}'
+    />
+    <title th:text="${title + ' · Gestión de gimnasio'}">
+      Gestión de gimnasio
+    </title>
+    <link rel="stylesheet" th:href="@{/assets/app.css}" />
+    <script defer th:src="@{/assets/vendor/htmx-2.0.11.min.js}"></script>
+    <script defer th:src="@{/assets/app.js}"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Ir al contenido</a>
+    <aside class="sidebar">
+      <a class="brand" th:href="@{/app}"
+        ><span class="brand-mark">G<span>•</span></span
+        ><span
+          >Gestión<span class="brand-sub">TU GIMNASIO, EN ORDEN</span></span
+        ></a
+      >
+      <span class="nav-label">ESPACIO DE TRABAJO</span>
+      <nav aria-label="Navegación principal">
+        <th:block th:unless="${platform}">
+          <a
+            th:href="@{/app}"
+            th:classappend="${section == 'inicio'} ? 'active'"
+            ><span class="nav-symbol" aria-hidden="true">◫</span> Inicio</a
+          >
+          <a
+            th:href="@{/app/clientes}"
+            th:classappend="${section == 'clientes'} ? 'active'"
+            ><span class="nav-symbol" aria-hidden="true">◎</span> Clientes</a
+          >
+          <a
+            th:href="@{/app/pedidos}"
+            th:classappend="${section == 'compras'} ? 'active'"
+            ><span class="nav-symbol" aria-hidden="true">▤</span> Compras y pagos</a
+          >
+          <a
+            th:href="@{/app/membresias}"
+            th:classappend="${section == 'membresias'} ? 'active'"
+            ><span class="nav-symbol" aria-hidden="true">◇</span> Membresías</a
+          >
+          <th:block th:if="${admin}">
+            <span class="nav-label">ADMINISTRACIÓN</span>
+            <a
+              th:href="@{/app/catalogos/disciplinas}"
+              th:classappend="${section == 'catalogos'} ? 'active'"
+              ><span class="nav-symbol" aria-hidden="true">▦</span> Catálogos</a
+            >
+            <a
+              th:href="@{/app/recepcion}"
+              th:classappend="${section == 'recepcion'} ? 'active'"
+              ><span class="nav-symbol" aria-hidden="true">♧</span> Equipo</a
+            >
+            <a
+              th:href="@{/app/configuracion}"
+              th:classappend="${section == 'configuracion'} ? 'active'"
+              ><span class="nav-symbol" aria-hidden="true">⚙</span> Configuración</a
+            >
+          </th:block>
+        </th:block>
+        <a th:if="${platform}" th:href="@{/app/plataforma}" class="active"
+          ><span class="nav-symbol" aria-hidden="true">▦</span> Gimnasios</a
+        >
+      </nav>
+      <div class="sidebar-bottom">
+        <span class="status-dot"></span> Tu espacio de gestión
+      </div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar">
+        <span
+          class="breadcrumb"
+          th:text="${platform ? 'Administración de la plataforma' : 'Panel de gestión'}"
+          >Panel de gestión</span
+        >
+        <div class="account">
+          <div>
+            <strong th:text="${roleLabel}"></strong
+            ><span th:text="${email}"></span>
+          </div>
+          <form th:action="@{/logout}" method="post">
+            <button
+              class="icon-button"
+              type="submit"
+              title="Cerrar sesión"
+              aria-label="Cerrar sesión"
+            >
+              ↪
+            </button>
+          </form>
+        </div>
+      </header>
+      <div class="content-wrap" id="content">
+        <div
+          class="notice"
+          role="status"
+          th:if="${notice}"
+          th:text="${notice}"
+        ></div>
+        <div id="connection-error" class="alert" role="alert" hidden>
+          No se pudo actualizar la búsqueda. Volvé a intentarlo o recargá la
+          página.
+        </div>
+        <th:block th:replace="${content}"></th:block>
+      </div>
+      <footer class="footer">
+        Gestión de gimnasio <span>Un lugar para organizar el día.</span>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Inicio','inicio')}"
+>
+  <main>
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">VISTA GENERAL</p>
+        <h1>Todo listo para empezar</h1>
+        <p class="muted">
+          Organizá la atención, las membresías y los cobros de tu gimnasio.
+        </p>
+      </div>
+      <a class="button" th:href="@{/app/clientes/nuevo}">+ Registrar cliente</a>
+    </div>
+    <section class="stats">
+      <a class="stat" th:href="@{/app/clientes}"
+        ><span>Clientes registrados <b>◎</b></span
+        ><strong th:text="${clientCount}">0</strong
+        ><small>Ver todos los clientes ↗</small></a
+      ><a class="stat" th:href="@{/app/membresias}"
+        ><span>Membresías disponibles <b>◇</b></span
+        ><strong th:text="${membershipCount}">0</strong
+        ><small>Explorar la oferta ↗</small></a
+      ><a class="stat" th:href="@{/app/pedidos}"
+        ><span>Compras registradas <b>▤</b></span
+        ><strong th:text="${orderCount}">0</strong
+        ><small>Consultar compras y pagos ↗</small></a
+      >
+    </section>
+    <section class="welcome-banner">
+      <div>
+        <span class="eyebrow">LA ATENCIÓN EMPIEZA ACÁ</span>
+        <h2>Un cliente, su próxima meta.</h2>
+        <p>
+          Buscá su ficha para registrar una compra, renovar su membresía o
+          recibir un pago.
+        </p>
+        <a class="button" th:href="@{/app/clientes}">Buscar un cliente →</a>
+      </div>
+      <div class="banner-art" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Directorio de clientes</h2>
+        <a class="text-link" th:href="@{/app/clientes}">Ver todos →</a>
+      </div>
+      <div class="empty" th:if="${#lists.isEmpty(recent)}">
+        <span class="empty-icon">◎</span>
+        <h3>Tu primer cliente empieza aquí</h3>
+        <p>Registralo para venderle una membresía y llevar sus pagos al día.</p>
+        <a class="button secondary" th:href="@{/app/clientes/nuevo}"
+          >Registrar cliente</a
+        >
+      </div>
+      <div class="client-row" th:each="client:${recent}">
+        <span
+          class="avatar"
+          th:text="${#strings.substring(client.nombre,0,1)}"
+        ></span>
+        <div>
+          <strong th:text="|${client.nombre} ${client.apellido}|"></strong
+          ><small th:text="|DNI ${client.dni}|"></small>
+        </div>
+        <a class="text-link" th:href="@{/app/clientes/{id}(id=${client.id})}"
+          >Abrir ficha →</a
+        >
+      </div>
+    </section>
+  </main>
+</html>

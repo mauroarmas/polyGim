@@ -1,0 +1,74 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Catálogos','catalogos')}"
+>
+  <main>
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">CONFIGURACIÓN DEL NEGOCIO</p>
+        <h1>Catálogos</h1>
+        <p class="muted">
+          Adaptá las opciones al funcionamiento de tu gimnasio.
+        </p>
+      </div>
+    </div>
+    <nav class="tabs" aria-label="Catálogos">
+      <a
+        th:href="@{/app/catalogos/disciplinas}"
+        th:classappend="${kind == 'disciplinas'} ? 'selected'"
+        >Disciplinas</a
+      ><a
+        th:href="@{/app/catalogos/canales}"
+        th:classappend="${kind == 'canales'} ? 'selected'"
+        >Cómo llegaron</a
+      ><a
+        th:href="@{/app/catalogos/localidades}"
+        th:classappend="${kind == 'localidades'} ? 'selected'"
+        >Localidades</a
+      >
+    </nav>
+    <div class="split">
+      <section class="panel padded">
+        <h2 th:text="${catalogTitle}"></h2>
+        <p class="muted" th:if="${#lists.isEmpty(listing.content)}">
+          Todavía no hay registros. Agregá el primero.
+        </p>
+        <form
+          class="catalog-row"
+          th:each="item:${listing.content}"
+          th:action="@{/app/catalogos/{kind}/{id}(kind=${kind},id=${item.id})}"
+          method="post"
+        >
+          <label class="grow"
+            ><span class="sr-only">Nombre del registro</span
+            ><input
+              name="nombre"
+              required
+              maxlength="100"
+              th:value="${item.nombre}" /></label
+          ><button type="submit" class="button secondary small">Guardar</button>
+        </form>
+        <div
+          th:replace="~{web/fragments :: pagination(${listing},${'/app/catalogos/' + kind + '?page='})}"
+        ></div>
+      </section>
+      <section class="panel padded">
+        <h2>Agregar un registro</h2>
+        <form
+          class="stack"
+          th:action="@{/app/catalogos/{kind}(kind=${kind})}"
+          method="post"
+        >
+          <label
+            >Nombre *<input
+              name="nombre"
+              required
+              maxlength="100"
+              placeholder="Nombre del nuevo registro" /></label
+          ><button class="button" type="submit">Agregar</button>
+        </form>
+      </section>
+    </div>
+  </main>
+</html>

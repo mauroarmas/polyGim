@@ -80,4 +80,18 @@ class ReceptionServiceTest {
         assertThat(service.disable(id).habilitada()).isFalse();
         assertThat(service.disable(id).habilitada()).isFalse();
     }
+    @Test
+    void directoryUsesAdminScopeAndReturnsOnlyPublicAccountFields() {
+        var repository = mock(UsuarioGimnasioRepository.class);
+        var executor = mock(TenantBusinessExecutor.class);
+        when(executor.admin(any())).thenAnswer(call -> ((Supplier<?>) call.getArgument(0)).get());
+        var account = new CuentaAcceso(UUID.randomUUID(), "staff@example.org", UUID.randomUUID().toString(), "RECEPCION", UUID.randomUUID());
+        when(repository.listReception(any())).thenReturn(new org.springframework.data.domain.PageImpl<>(java.util.List.of(account)));
+        var service = new ReceptionService(repository, executor, PasswordEncoderFactories.createDelegatingPasswordEncoder());
+        var result = service.list(0, 20);
+        assertThat(result.content()).hasSize(1);
+        assertThat(result.content().getFirst().email()).isEqualTo(account.getEmail());
+        verify(executor).admin(any());
+        assertThatThrownBy(() -> service.list(-1, 20)).isInstanceOf(IllegalArgumentException.class);
+    }
 }

@@ -9,6 +9,8 @@ description: "Task list template for gym platform feature implementation"
 **Prerequisites**: Constitución aprobada, spec.md vigente y plan.md aprobados;
 research.md, data-model.md y contracts/ según el alcance.
 
+**Interfaz**: Cada historia incluye su pantalla funcional Thymeleaf + HTMX y pruebas en navegador de su recorrido, errores, permisos y uso móvil; no posponer todo el frontend a otra feature.
+
 **Tests**: OBLIGATORIOS para lógica de negocio y aislamiento multi-tenant conforme a
 `.specify/memory/constitution.md`. Incluir JUnit 5, Mockito cuando corresponda,
 Testcontainers con PostgreSQL y Flyway, y JaCoCo ≥80% de líneas de lógica de negocio.

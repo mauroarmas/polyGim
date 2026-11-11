@@ -1,0 +1,97 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Datos del cliente','clientes')}"
+>
+  <main>
+    <a class="back-link" th:href="@{/app/clientes}">← Clientes</a>
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">FICHA PERSONAL</p>
+        <h1
+          th:text="${client == null ? 'Registrar cliente' : 'Editar cliente'}"
+        ></h1>
+        <p class="muted">
+          Nombre, apellido y DNI son obligatorios. El resto puede completarse
+          después.
+        </p>
+      </div>
+    </div>
+    <form
+      class="panel form-panel"
+      th:action="${client == null ? '/app/clientes' : '/app/clientes/' + client.id + '/editar'}"
+      method="post"
+    >
+      <h2>Datos personales</h2>
+      <div class="form-grid">
+        <label
+          >Nombre *<input
+            name="nombre"
+            required
+            maxlength="100"
+            autocomplete="given-name"
+            th:value="${client?.nombre}" /></label
+        ><label
+          >Apellido *<input
+            name="apellido"
+            required
+            maxlength="100"
+            autocomplete="family-name"
+            th:value="${client?.apellido}" /></label
+        ><label
+          >DNI *<input
+            name="dni"
+            required
+            pattern="[0-9]{7,8}"
+            inputmode="numeric"
+            maxlength="8"
+            th:value="${client?.dni}"
+          /><small>7 u 8 dígitos, sin puntos.</small></label
+        ><label
+          >Teléfono<input
+            name="telefono"
+            type="tel"
+            maxlength="40"
+            th:value="${client?.telefono}" /></label
+        ><label
+          >Cómo llegó<select name="canalLlegadaId">
+            <option value="">Sin especificar</option>
+            <option
+              th:each="item:${channels}"
+              th:value="${item.id}"
+              th:text="${item.nombre}"
+              th:selected="${client != null and item.id == client.canalLlegadaId}"
+            ></option></select
+        ></label>
+      </div>
+      <hr />
+      <h2>Dirección <span class="muted small-text">Opcional</span></h2>
+      <div class="form-grid">
+        <label
+          >Calle<input
+            name="calle"
+            maxlength="160"
+            th:value="${client?.direccion?.calle}" /></label
+        ><label
+          >Altura<input
+            name="altura"
+            maxlength="20"
+            th:value="${client?.direccion?.altura}" /></label
+        ><label
+          >Localidad<select name="localidadId">
+            <option value="">Sin especificar</option>
+            <option
+              th:each="item:${localities}"
+              th:value="${item.id}"
+              th:text="${item.nombre}"
+              th:selected="${client != null and item.id == client.localidadId}"
+            ></option></select
+        ></label>
+      </div>
+      <div class="form-actions">
+        <a class="button secondary" th:href="@{/app/clientes}">Cancelar</a
+        ><button class="button" type="submit">Guardar cliente</button>
+      </div>
+    </form>
+  </main>
+</html>

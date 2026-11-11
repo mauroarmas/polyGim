@@ -41,6 +41,8 @@ JaCoCo con mínimo 80% de líneas de lógica de negocio, exigido en Maven y CI.
 
 ## Constitution Check
 
+- [ ] La feature entrega pantallas Thymeleaf + HTMX junto con sus casos de uso, sesión web protegida y prueba funcional en navegador.
+
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 - [ ] Constitución, especificación vigente y aclaraciones aprobadas antes de planificar.

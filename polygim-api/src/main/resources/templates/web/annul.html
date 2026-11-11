@@ -1,0 +1,38 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Anular pago','compras')}"
+>
+  <main>
+    <a class="back-link" th:href="@{/app/pedidos/{id}(id=${payment.pedidoId})}"
+      >← Volver a la compra</a
+    >
+    <section class="panel form-panel confirmation">
+      <p class="eyebrow">CONFIRMAR ACCIÓN</p>
+      <h1>Anular este pago</h1>
+      <p
+        th:text="|${client.nombre} ${client.apellido} · DNI ${client.dni}|"
+      ></p>
+      <div class="confirmation-amount" th:text="${payment.montoAplicado}"></div>
+      <p>
+        El importe dejará de contar como pagado y se recalculará la deuda. El
+        movimiento original, tu identidad y la fecha de anulación quedarán en el
+        historial. La vigencia no cambia.
+      </p>
+      <form
+        th:action="@{/app/pagos/{id}/anular(id=${payment.id})}"
+        method="post"
+      >
+        <div class="form-actions">
+          <a
+            class="button secondary"
+            th:href="@{/app/pedidos/{id}(id=${payment.pedidoId})}"
+            >Conservar pago</a
+          ><button class="button danger" type="submit">
+            Confirmar anulación
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+</html>

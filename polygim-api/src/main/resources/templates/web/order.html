@@ -1,0 +1,182 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Detalle de compra','compras')}"
+>
+  <main>
+    <a class="back-link" th:href="@{/app/clientes/{id}(id=${client.id})}"
+      >← Ficha del cliente</a
+    >
+    <div class="page-heading">
+      <div>
+        <p
+          class="eyebrow"
+          th:text="|COMPRA · ${#strings.substring(order.id.toString(),0,8)}|"
+        ></p>
+        <h1 th:text="${membership.nombre}"></h1>
+        <p
+          class="muted"
+          th:text="|${client.nombre} ${client.apellido} · DNI ${client.dni}|"
+        ></p>
+      </div>
+      <a
+        class="button secondary"
+        th:href="@{/app/clientes/{id}/comprar(id=${client.id},anterior=${order.id})}"
+        >Renovar membresía →</a
+      >
+    </div>
+    <section class="stats">
+      <div class="stat">
+        <span>Total de la compra</span
+        ><strong class="money" th:text="${order.total}"></strong
+        ><small
+          th:text="|${order.cantidad} × ${order.precioUnitario} · precio al comprar|"
+        ></small>
+      </div>
+      <div class="stat">
+        <span>Saldo pendiente</span
+        ><strong class="money" th:text="${order.deuda}"></strong
+        ><span
+          class="badge"
+          th:classappend="${order.estadoPago}"
+          th:text="${order.estadoPago}"
+        ></span>
+      </div>
+      <div class="stat">
+        <span>Fecha de vencimiento</span
+        ><strong
+          class="date-value"
+          th:text="${#temporals.format(order.fechaVencimiento,'dd/MM/yyyy')}"
+        ></strong
+        ><span
+          class="badge"
+          th:classappend="${order.vigencia}"
+          th:text="${order.vigencia}"
+        ></span>
+      </div>
+    </section>
+    <div class="split">
+      <section class="panel padded">
+        <h2>Registrar un pago</h2>
+        <p class="muted">
+          El pago actualiza el saldo. La vigencia de la membresía no cambia.
+        </p>
+        <form
+          th:if="${order.deuda != '0.00'}"
+          th:action="@{/app/pedidos/{id}/pagos(id=${order.id})}"
+          method="post"
+          class="stack"
+        >
+          <label
+            >Monto recibido *<input
+              type="text"
+              inputmode="decimal"
+              name="montoRecibido"
+              pattern="[0-9]+\.[0-9]{2}"
+              placeholder="0.00"
+              required
+              aria-describedby="money-help"
+            /><small id="money-help"
+              >Usá punto y dos decimales. Ejemplo: 50.25.</small
+            ></label
+          >
+          <p class="info">
+            Si el monto supera el saldo, se aplica solo la deuda y se informa el
+            vuelto.
+          </p>
+          <button class="button" type="submit">Registrar pago</button>
+        </form>
+        <div class="notice" th:if="${order.deuda == '0.00'}">
+          Esta compra está completamente pagada.
+        </div>
+      </section>
+      <section class="panel padded">
+        <h2>Condiciones registradas</h2>
+        <dl class="details">
+          <div>
+            <dt>Fecha de compra</dt>
+            <dd
+              th:text="${#temporals.format(order.fechaCompra,'dd/MM/yyyy')}"
+            ></dd>
+          </div>
+          <div>
+            <dt>Base del vencimiento</dt>
+            <dd
+              th:text="${#temporals.format(order.fechaBaseVencimiento,'dd/MM/yyyy')}"
+            ></dd>
+          </div>
+          <div>
+            <dt>Duración por unidad</dt>
+            <dd
+              th:text="|${order.duracionMembresia} ${order.unidadDuracion}|"
+            ></dd>
+          </div>
+          <div>
+            <dt>Cantidad</dt>
+            <dd th:text="${order.cantidad}"></dd>
+          </div>
+        </dl>
+        <p class="muted small-text">
+          El día de vencimiento está incluido. Cada renovación crea una nueva
+          compra y conserva la anterior.
+        </p>
+      </section>
+    </div>
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Historial de pagos</h2>
+        <span class="counter" th:text="${listing.totalElements}"></span>
+      </div>
+      <div class="empty compact" th:if="${#lists.isEmpty(listing.content)}">
+        <h3>Aún no se registraron pagos</h3>
+        <p>El primer cobro aparecerá aquí con su fecha e importe.</p>
+      </div>
+      <div class="table-wrap" th:unless="${#lists.isEmpty(listing.content)}">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Aplicado</th>
+              <th>Estado</th>
+              <th>Evidencia</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="payment:${listing.content}">
+              <td th:text="${paymentDates[payment.id]}"></td>
+              <td class="mono" th:text="${payment.montoAplicado}"></td>
+              <td>
+                <span
+                  class="badge"
+                  th:classappend="${payment.estado}"
+                  th:text="${payment.estado}"
+                ></span>
+              </td>
+              <td>
+                <small th:text="|Registró: ${payment.registradoPorId}|"></small
+                ><th:block th:if="${payment.anulacion != null}"
+                  ><small
+                    th:text="|Anuló: ${payment.anulacion.anuladoPorId}|"
+                  ></small
+                  ><small th:text="${annulmentDates[payment.id]}"></small
+                ></th:block>
+              </td>
+              <td>
+                <a
+                  class="text-link danger-text"
+                  th:if="${admin and payment.estado == 'REGISTRADO'}"
+                  th:href="@{/app/pagos/{id}/anular(id=${payment.id})}"
+                  >Anular</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        th:replace="~{web/fragments :: pagination(${listing},${'/app/pedidos/' + order.id + '?page='})}"
+      ></div>
+    </section>
+  </main>
+</html>

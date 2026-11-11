@@ -51,7 +51,8 @@ public class SecurityConfig {
         decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(JwtValidators.createDefaultWithIssuer(issuer), audienceValidator, expirationRequired));
         return decoder;
     }
-    @Bean SecurityFilterChain securityFilterChain(HttpSecurity http, IdentityService identity, IdentityScopeExecutor scopes, Environment environment,
+    @Bean @org.springframework.core.annotation.Order(2)
+    SecurityFilterChain securityFilterChain(HttpSecurity http, IdentityService identity, IdentityScopeExecutor scopes, Environment environment,
             ProblemAuthenticationEntryPoint authenticationEntryPoint, ProblemAccessDeniedHandler accessDeniedHandler) throws Exception {
         var converter = new CurrentAccountAuthenticationConverter(scopes, identity);
         http.csrf(csrf -> csrf.disable()).cors(cors -> cors.disable())

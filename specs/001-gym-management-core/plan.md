@@ -16,7 +16,7 @@ FK compuestas y pruebas reales de dos gimnasios cierran las vías de acceso prev
 
 La feature cubre alta de gimnasio/primer ADMIN, acceso, recepción, catálogos, clientes,
 compras de un detalle, renovaciones únicas, pagos parciales y anulaciones conservadas.
-No incluye reservas, próximos vencimientos, pantallas, importación ni deploy público.
+Incluye interfaz funcional; no incluye reservas, próximos vencimientos, importación ni deploy público.
 Las decisiones y alternativas están en [research.md](research.md); el diseño de
 entidades en [data-model.md](data-model.md) y los contratos en [contracts/api.md](contracts/api.md).
 

@@ -1,0 +1,25 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <nav
+      class="pagination"
+      aria-label="Páginas"
+      th:fragment="pagination(data,url)"
+      th:if="${data.totalPages > 1}"
+    >
+      <a
+        class="button secondary small"
+        th:if="${data.page > 0}"
+        th:href="${url + (data.page - 1)}"
+        >← Anterior</a
+      >
+      <span th:text="|Página ${data.page + 1} de ${data.totalPages}|"></span>
+      <a
+        class="button secondary small"
+        th:if="${data.page + 1 < data.totalPages}"
+        th:href="${url + (data.page + 1)}"
+        >Siguiente →</a
+      >
+    </nav>
+  </body>
+</html>

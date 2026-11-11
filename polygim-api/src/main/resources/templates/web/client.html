@@ -1,0 +1,99 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Ficha del cliente','clientes')}"
+>
+  <main>
+    <a class="back-link" th:href="@{/app/clientes}">← Clientes</a>
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">FICHA DEL CLIENTE</p>
+        <h1 th:text="|${client.nombre} ${client.apellido}|"></h1>
+        <p
+          class="muted"
+          th:text="|DNI ${client.dni} · Teléfono ${client.telefono ?: 'sin registrar'}|"
+        ></p>
+      </div>
+      <div class="actions">
+        <a
+          class="button secondary"
+          th:href="@{/app/clientes/{id}/editar(id=${client.id})}"
+          >Editar datos</a
+        ><a
+          class="button"
+          th:href="@{/app/clientes/{id}/comprar(id=${client.id})}"
+          >+ Nueva compra</a
+        >
+      </div>
+    </div>
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Compras y membresías</h2>
+        <span class="counter" th:text="${listing.totalElements}"></span>
+      </div>
+      <div class="empty" th:if="${#lists.isEmpty(listing.content)}">
+        <span class="empty-icon">◇</span>
+        <h3>Todavía no tiene compras</h3>
+        <p>Elegí una membresía para empezar a registrar su actividad.</p>
+        <a
+          class="button"
+          th:href="@{/app/clientes/{id}/comprar(id=${client.id})}"
+          >Registrar primera compra</a
+        >
+      </div>
+      <div class="table-wrap" th:unless="${#lists.isEmpty(listing.content)}">
+        <table>
+          <thead>
+            <tr>
+              <th>Membresía</th>
+              <th>Total</th>
+              <th>Deuda</th>
+              <th>Pago</th>
+              <th>Vigencia</th>
+              <th>Vence</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="order:${listing.content}">
+              <td>
+                <strong
+                  th:text="${membershipNames[order.membresiaId]}"
+                ></strong>
+              </td>
+              <td class="mono" th:text="${order.total}"></td>
+              <td class="mono" th:text="${order.deuda}"></td>
+              <td>
+                <span
+                  class="badge"
+                  th:classappend="${order.estadoPago}"
+                  th:text="${order.estadoPago}"
+                ></span>
+              </td>
+              <td>
+                <span
+                  class="badge"
+                  th:classappend="${order.vigencia}"
+                  th:text="${order.vigencia}"
+                ></span>
+              </td>
+              <td
+                th:text="${#temporals.format(order.fechaVencimiento,'dd/MM/yyyy')}"
+              ></td>
+              <td>
+                <a
+                  class="text-link"
+                  th:href="@{/app/pedidos/{id}(id=${order.id})}"
+                  >Ver compra →</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        th:replace="~{web/fragments :: pagination(${listing},${'/app/clientes/' + client.id + '?page='})}"
+      ></div>
+    </section>
+  </main>
+</html>

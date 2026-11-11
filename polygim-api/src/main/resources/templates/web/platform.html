@@ -1,0 +1,87 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Gimnasios','plataforma')}"
+>
+  <main>
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">PLATAFORMA</p>
+        <h1>Gimnasios</h1>
+        <p class="muted">
+          Administrá las altas y creá el primer acceso de cada gimnasio.
+        </p>
+      </div>
+    </div>
+    <div class="split">
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>Gimnasios registrados</h2>
+          <span class="counter" th:text="${listing.totalElements}"></span>
+        </div>
+        <div class="empty compact" th:if="${#lists.isEmpty(listing.content)}">
+          <h3>Empezá con el primer gimnasio</h3>
+          <p>El alta también crea su cuenta de administración.</p>
+        </div>
+        <div class="client-row" th:each="gym:${listing.content}">
+          <span
+            class="avatar"
+            th:text="${#strings.substring(gym.nombre,0,1)}"
+          ></span>
+          <div>
+            <strong th:text="${gym.nombre}"></strong
+            ><small th:text="${gym.id}"></small>
+          </div>
+        </div>
+        <div
+          th:replace="~{web/fragments :: pagination(${listing},'/app/plataforma?page=')}"
+        ></div>
+      </section>
+      <section class="panel padded">
+        <h2>Dar de alta un gimnasio</h2>
+        <form class="stack" th:action="@{/app/plataforma}" method="post">
+          <label
+            >Nombre *<input name="nombre" required maxlength="100"
+          /></label>
+          <div class="form-grid">
+            <label
+              >URL del logo *<input
+                name="logoUrl"
+                type="url"
+                required
+                maxlength="2048"
+                placeholder="https://..." /></label
+            ><label
+              >Color primario *<input
+                name="colorPrimario"
+                type="color"
+                value="#245c46"
+                required
+            /></label>
+          </div>
+          <hr />
+          <h3>Primer administrador</h3>
+          <label
+            >Correo electrónico *<input
+              name="email"
+              type="email"
+              required
+              maxlength="254"
+              autocomplete="off" /></label
+          ><label
+            >Contraseña inicial *<input
+              name="password"
+              type="password"
+              minlength="12"
+              maxlength="72"
+              required
+              autocomplete="new-password"
+            /><small>Entre 12 y 72 caracteres.</small></label
+          ><button class="button" type="submit">
+            Crear gimnasio y administrador
+          </button>
+        </form>
+      </section>
+    </div>
+  </main>
+</html>

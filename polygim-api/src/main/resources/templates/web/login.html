@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ingresar · Gestión de gimnasio</title>
+    <link rel="stylesheet" th:href="@{/assets/app.css}" />
+  </head>
+  <body class="login-page">
+    <section class="login-story">
+      <a class="brand" href="/"
+        ><span class="brand-mark">G<span>•</span></span
+        ><span>Gestión</span></a
+      >
+      <div>
+        <p class="eyebrow">MÁS TIEMPO PARA TU GIMNASIO</p>
+        <h1>Todo en su lugar.<br />Tu equipo,<br />en movimiento.</h1>
+        <p>
+          Clientes, membresías y cobros.<br />Una mirada clara a cada día de
+          trabajo.
+        </p>
+        <div class="story-lines" aria-hidden="true">
+          <i></i><i></i><i></i><i></i>
+        </div>
+      </div>
+      <span class="login-foot">GESTIÓN SIMPLE · ATENCIÓN CERCANA</span>
+    </section>
+    <main class="login-main">
+      <div class="login-card">
+        <span class="pill">BIENVENIDO</span>
+        <h2>Ingresá a tu espacio</h2>
+        <p class="muted">Usá la cuenta que te asignó tu administrador.</p>
+        <div class="alert" role="alert" th:if="${param.error}">
+          No pudimos ingresar con esos datos. Revisá el correo y la contraseña.
+        </div>
+        <div class="alert" role="alert" th:if="${param.expired}">
+          Tu sesión no está disponible. Volvé a ingresar para continuar.
+        </div>
+        <div class="notice" role="status" th:if="${param.logout}">
+          Cerraste sesión correctamente.
+        </div>
+        <form th:action="@{/login}" method="post" class="stack">
+          <label
+            >Correo electrónico<input
+              type="email"
+              name="username"
+              autocomplete="username"
+              placeholder="tu@correo.com"
+              required
+              autofocus
+              maxlength="254" /></label
+          ><label
+            >Contraseña<input
+              type="password"
+              name="password"
+              autocomplete="current-password"
+              required
+              maxlength="72" /></label
+          ><button class="button full" type="submit">
+            Ingresar <span aria-hidden="true">→</span>
+          </button>
+        </form>
+        <p class="login-help">
+          Si necesitás acceso, contactá al administrador de tu gimnasio.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

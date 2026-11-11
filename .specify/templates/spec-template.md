@@ -115,6 +115,8 @@
 - **CR-006**: El alcance incluye pruebas unitarias de las reglas e integración del
   aislamiento; la estrategia de validación satisface el mínimo de cobertura constitucional.
 
+- **CR-007**: Cada feature incluye sus pantallas operativas y un flujo de prueba funcional reproducible en navegador, con permisos, validaciones y adaptación móvil.
+
 Justificar explícitamente lo no aplicable a la feature. Consultar ambigüedades materiales
 antes de asumir y presentar la especificación para aprobación antes de avanzar.
 

@@ -1,0 +1,88 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{web/layout :: page(~{::main},'Configurar membresía','membresias')}"
+>
+  <main>
+    <a class="back-link" th:href="@{/app/membresias}">← Membresías</a>
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">OFERTA DEL GIMNASIO</p>
+        <h1
+          th:text="${membership == null ? 'Crear membresía' : 'Editar membresía'}"
+        ></h1>
+        <p class="muted">
+          Las compras anteriores mantienen su precio y duración originales.
+        </p>
+      </div>
+    </div>
+    <form
+      class="panel form-panel stack"
+      th:action="${membership == null ? '/app/membresias' : '/app/membresias/' + membership.id + '/editar'}"
+      method="post"
+    >
+      <label
+        >Nombre *<input
+          name="nombre"
+          required
+          maxlength="100"
+          th:value="${membership?.nombre}" /></label
+      ><label th:if="${membership == null}"
+        >Disciplina *<select name="disciplinaId" required>
+          <option value="">Elegí una disciplina</option>
+          <option
+            th:each="item:${disciplines}"
+            th:value="${item.id}"
+            th:text="${item.nombre}"
+          ></option></select
+        ><small th:if="${#lists.isEmpty(disciplines)}"
+          >Primero agregá una disciplina en Catálogos.</small
+        ></label
+      ><label
+        >Precio *<input
+          name="precio"
+          inputmode="decimal"
+          pattern="[0-9]+\.[0-9]{2}"
+          placeholder="100.00"
+          required
+          th:value="${membership?.precio}"
+        /><small>Importe positivo, con punto y dos decimales.</small></label
+      >
+      <div class="form-grid">
+        <label
+          >Duración *<input
+            type="number"
+            name="duracion"
+            required
+            min="1"
+            th:value="${membership == null ? 1 : membership.duracion}" /></label
+        ><label
+          >Unidad *<select name="unidadDuracion" required>
+            <option
+              value="DIAS"
+              th:selected="${membership != null and membership.unidadDuracion == 'DIAS'}"
+            >
+              Días
+            </option>
+            <option
+              value="SEMANAS"
+              th:selected="${membership != null and membership.unidadDuracion == 'SEMANAS'}"
+            >
+              Semanas
+            </option>
+            <option
+              value="MESES"
+              th:selected="${membership != null and membership.unidadDuracion == 'MESES'}"
+            >
+              Meses
+            </option>
+          </select></label
+        >
+      </div>
+      <div class="form-actions">
+        <a class="button secondary" th:href="@{/app/membresias}">Cancelar</a
+        ><button class="button" type="submit">Guardar membresía</button>
+      </div>
+    </form>
+  </main>
+</html>
