@@ -1,4 +1,8 @@
 <!--
+Enmienda 1.1.0 (2026-11-10): el autor autorizó implementar la interfaz del núcleo
+y entregar pantallas junto con cada feature. Se sincronizan plan de producto,
+dominio y artefactos de feature 1; la feature 2 se actualizará en su rama.
+
 Sync Impact Report
 Version change: plantilla sin versión → 1.0.0 (adopción inicial).
 Ratificación: 2026-11-10, al solicitar el usuario avanzar a la spec 1.
@@ -155,7 +159,7 @@ integridad y tenant DEBEN formar parte del diseño y de sus pruebas de integraci
 
 - Persistencia: Spring Data JPA, Hibernate 6, PostgreSQL y Flyway.
 - Seguridad: Spring Security y permisos por rol y gimnasio, conforme al dominio aprobado.
-- Interfaz: Thymeleaf + HTMX, incorporada en la feature de pantallas; sin frontend
+- Interfaz: Thymeleaf + HTMX, entregada junto con cada feature funcional; sin frontend
   JavaScript separado.
 - Herramientas: Maven, Docker Compose, JUnit 5, Mockito, JaCoCo y Testcontainers.
 - Contratos REST documentados con springdoc-openapi y validación automatizada en
@@ -174,8 +178,9 @@ de planificar. Las ambigüedades materiales DEBEN consultarse, no resolverse med
 suposiciones silenciosas.
 
 El orden de features DEBE ser: (1) núcleo multi-tenant con paridad de dominio y API
-REST, (2) reservas con cupo y listado de próximos vencimientos, (3) interfaz web con
-branding por gimnasio y (4) demo pública y deploy. Las decisiones de negocio y
+REST e interfaz funcional, (2) reservas con cupo, listado de próximos vencimientos
+y sus pantallas, (3) branding y mejoras de experiencia y (4) demo pública y deploy.
+Cada feature DEBE incluir un flujo reproducible de prueba desde el navegador. Las decisiones de negocio y
 límites acordados se consultan en `polygim-api/legacy/DOMINIO.md`; este documento no
 reemplaza las especificaciones de cada feature.
 
@@ -209,4 +214,4 @@ constitución propuesta, no a una enmienda de una versión ratificada anterior.
 
 **Estado**: Ratificada por el usuario al solicitar avanzar a la spec 1 el 2026-11-10.
 
-**Version**: 1.0.0 | **Ratified**: 2026-11-10 | **Last Amended**: 2026-11-10
+**Version**: 1.1.0 | **Ratified**: 2026-11-10 | **Last Amended**: 2026-11-10

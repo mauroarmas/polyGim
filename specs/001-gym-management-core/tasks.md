@@ -1,7 +1,7 @@
 # Tasks: Núcleo de gestión multi-gimnasio
 
 **Feature**: `001-gym-management-core` | **Created**: 2026-11-10
-**Status**: Aprobada por el autor; implementación y validación local completas. CI remoto pendiente.
+**Status**: Núcleo validado localmente; ampliación web autorizada en curso. CI remoto pendiente.
 
 **Input**: [Spec](spec.md), [plan aprobado](plan.md), [research](research.md),
 [data model](data-model.md), [contrato REST](contracts/api.md),
@@ -343,3 +343,17 @@ historias completas en paralelo mientras dependen del checkpoint anterior.
 Las casillas registran el trabajo ejecutado; la evidencia y el CI remoto pendiente
 figuran en el plan de producto. No hay métricas de producción ni código copiado del
 legacy. La entrega técnica no integra ramas ni despliega el producto.
+
+## Ampliación autorizada por el autor: M8 — Interfaz funcional
+
+El pedido explícito de implementar la interfaz del núcleo autoriza esta ampliación; no se implementan reservas ni se integran ramas de producción.
+
+- [X] T090 Actualizar roadmap, constitución, dominio y artefactos para entregar pantallas por feature.
+- [ ] T091 Escribir y observar fallar pruebas web de autenticación, CSRF, permisos, sesión revocada, aislamiento y circuito comercial.
+- [ ] T092 Implementar sesión web separada de API JWT, carga de identidad vigente y protección CSRF.
+- [ ] T093 Implementar navegación, login, inicio, clientes y compras con Thymeleaf; búsqueda con HTMX local.
+- [ ] T094 Implementar cobros, vuelto e historial con anulación confirmada para ADMIN.
+- [ ] T095 Implementar catálogos, membresías, recepción, configuración y alta de gimnasios según rol.
+- [ ] T096 Ejecutar verify completo, revisar cobertura, probar pantallas en navegador y errores.
+- [ ] T097 Actualizar guía funcional y levantar la imagen nueva con Compose conservando datos.
+- [ ] T098 Sincronizar la spec de reservas en su rama para incluir pantallas; registrar resultados y commits.

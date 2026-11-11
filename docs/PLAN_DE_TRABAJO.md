@@ -60,11 +60,13 @@ La validación concreta de `@TenantId` (versión, comportamiento con consultas n
 
 ## 5. Roadmap de features
 
+**Decisión del autor (2026-11-10):** cada feature incluye sus pantallas Thymeleaf + HTMX y una guía de prueba funcional desde el navegador. Se amplía ahora la feature 1 para probar clientes, catálogos, compras y pagos sin herramientas de API; la feature 2 incluirá las pantallas de reservas, acceso del cliente y vencimientos. Esta ampliación fue autorizada para implementación directa.
+
 Un ciclo completo de Spec Kit por feature: `specify → clarify → plan → tasks → implement`. No se empieza una feature sin cerrar la anterior (Definición de hecho, sección 8).
 
-### Feature 1 — Núcleo multi-tenant (API REST)
+### Feature 1 — Núcleo multi-tenant con interfaz web
 
-**Objetivo:** un gimnasio puede operar su negocio de membresías y cobros por API, aislado de los demás.
+**Objetivo:** un gimnasio puede operar su negocio de membresías y cobros por API y desde el navegador, aislado de los demás.
 
 **Historias de usuario**
 - **H1.1** Como SUPERADMIN, doy de alta un gimnasio (nombre, logo, color) y su primer ADMIN.
@@ -85,7 +87,7 @@ Un ciclo completo de Spec Kit por feature: `specify → clarify → plan → tas
 - Un pedido con pagos rechaza la edición.
 - Montos ≤ 0 se rechazan con RFC 7807.
 
-**Fuera de alcance:** reservas, listado de vencimientos próximos, pantallas web, importación de datos.
+**Fuera de alcance:** reservas, listado de vencimientos próximos e importación de datos.
 
 ### Feature 2 — Reservas de clases con cupo
 
@@ -99,9 +101,9 @@ Un ciclo completo de Spec Kit por feature: `specify → clarify → plan → tas
 
 **Criterio estrella:** test de concurrencia que lanza varias reservas simultáneas sobre el último lugar y verifica que solo una prospera. La elección de locking (optimista o pesimista) se justifica por escrito en el `plan`.
 
-### Feature 3 — Interfaz web (Thymeleaf + HTMX)
+### Feature 3 — Branding y mejoras de experiencia
 
-Panel para ADMIN y RECEPCION (clientes, pedidos, pagos, clases) y vista de reservas para CLIENTE. Branding por gimnasio (nombre, logo, color primario). Responsive, usable desde el celular en recepción.
+Personalización por gimnasio (nombre, logo, color primario) y mejoras de experiencia sobre las pantallas ya entregadas. La interfaz funcional y adaptable a celular acompaña cada feature desde la primera.
 
 ### Feature 4 — Demo pública y deploy
 
@@ -120,6 +122,7 @@ Cada hito termina con tests en verde y un commit convencional. No se avanza con 
 | **M4** Clientes | CRUD, DNI único por gimnasio, dirección | H1.4 + test de DNI duplicado entre tenants |
 | **M5** Pedidos | Creación con un detalle, precio congelado, total en `BigDecimal`, vigencia calculada | H1.5, tests unitarios del cálculo |
 | **M6** Pagos | Registrar, parcial, exceso con vuelto informado, anular, recálculo de estado | H1.6 y H1.7 con tabla de casos borde |
+| **M8** Interfaz funcional | Sesión web, pantallas por rol y guía de pruebas de la feature 1 | Flujo navegador probado; CSRF, aislamiento y regresión en verde |
 | **M7** Cierre | Seed de Poly, OpenAPI documentado, README, cobertura ≥ 80% | Definición de hecho de la sección 8 |
 
 ## 7. Estrategia de pruebas
@@ -128,6 +131,7 @@ Cada hito termina con tests en verde y un commit convencional. No se avanza con 
 - **Integración (Testcontainers + PostgreSQL real):** aislamiento entre tenants, permisos por rol, migraciones Flyway, constraints.
 - **Concurrencia (feature 2):** reservas simultáneas sobre el último cupo.
 - **Datos de prueba:** al menos dos gimnasios en todo test de integración, para que un fallo de aislamiento sea visible.
+- **Funcionales web:** login, flujos completos, permisos, errores y pantallas en escritorio y celular; documentar los pasos reproducibles por feature.
 - **CI:** build, tests y reporte de cobertura en cada push.
 
 ## 8. Definición de hecho (por feature)
@@ -141,6 +145,7 @@ Cada hito termina con tests en verde y un commit convencional. No se avanza con 
 - [x] Sin credenciales ni referencias a Poly en el código
 - [x] Spec, plan y tasks de Spec Kit coherentes con este documento
 - [x] Dato real para el CV anotado (cantidad de tests, cobertura)
+- [ ] Pantallas y flujo funcional de la feature verificados desde navegador
 
 Los criterios marcados corresponden a la feature 1 y su validación local. GitHub
 Actions intentó ejecutar el workflow, pero no inició el job por un problema de

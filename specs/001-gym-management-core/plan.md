@@ -245,3 +245,13 @@ de los documentos. No se escribió Java, POM, migraciones ni tests del producto;
 ejecutó el gate M1 ni se midió cobertura. Los objetivos siguen pendientes de ejecutar
 tras aprobar plan y tasks. El riesgo de soporte de Boot 3 y el ajuste Java 21 se
 registran en research y quickstart; no se cambia la arquitectura sin aprobación.
+
+## Ampliación autorizada: interfaz funcional
+
+Thymeleaf renderiza páginas en el mismo proceso. HTMX 2.0.11 se sirve localmente, con licencia, para búsqueda incremental; formularios convencionales con POST/redirect/GET conservan compatibilidad y evitan repetir cobros al refrescar. Los controladores de vistas llaman los servicios existentes, sin duplicar reglas.
+
+La API conserva Bearer JWT y su contrato de errores. Las rutas web tienen una cadena de seguridad separada con sesión HttpOnly/SameSite, login y logout por formulario, protección CSRF y renovación del estado de cuenta en cada solicitud. El filtro tenant se aplica después de resolver la identidad web. Se prueban aislamiento, CSRF, revocación y permisos sobre las rutas web. Los errores web ofrecen una página legible, manteniendo el código HTTP; RFC 7807 continúa para API.
+
+Se agrega una consulta de recepción desde el vínculo tenant, paginada y sin acceso global libre a identidades; no requiere migración ni cambia contratos REST. Los selectores recorren las páginas de catálogos para no truncar opciones. La personalización de marca completa sigue en feature 3.
+
+Referencias: [Spring Security 6.5, múltiples cadenas](https://docs.spring.io/spring-security/reference/6.5/servlet/configuration/java.html) y [HTMX](https://htmx.org/docs/).

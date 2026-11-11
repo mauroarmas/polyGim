@@ -116,23 +116,25 @@ Las reglas siguientes son decisiones para la versión nueva; reemplazan los comp
 
 ### Features siguientes (ciclos separados de Spec Kit)
 
-1. **[DECISIÓN] Núcleo multi-tenant con paridad de dominio:** API REST para clientes, servicios, membresías, pedidos, pagos y cálculo de vigencia y vencimientos; alta de gimnasio y primer administrador. Sin pantallas y sin importación de datos. Incluye el seed inicial con membresías y precios ficticios. El listado de próximos vencimientos queda para la feature 2.
+1. **[DECISIÓN] Núcleo multi-tenant con paridad de dominio:** API REST para clientes, servicios, membresías, pedidos, pagos y cálculo de vigencia y vencimientos; alta de gimnasio y primer administrador. Con interfaz funcional y sin importación de datos. Incluye el seed inicial con membresías y precios ficticios. El listado de próximos vencimientos queda para la feature 2.
 2. **[DECISIÓN] Reservas de clases con cupo y listado de próximos vencimientos (siete días):**
    - Clase = disciplina + día + hora + cupo.
    - Reserva solo con membresía vigente; exigir además pago completo es configurable por gimnasio.
    - Nunca más reservas que el cupo, incluso con pedidos simultáneos.
    - Sin dos clases solapadas el mismo día para un cliente.
    - Cancelación hasta N horas antes (N configurable por gimnasio; valor inicial: 2).
-3. **[DECISIÓN] Interfaz web:** pantallas con Thymeleaf + HTMX y branding por gimnasio, sin frontend JavaScript separado.
+3. **[DECISIÓN] Branding y mejoras de experiencia:** las pantallas Thymeleaf + HTMX se entregan junto con cada feature desde la primera; esta etapa profundiza la personalización por gimnasio. Sin frontend JavaScript separado.
 4. **[DECISIÓN] Demo pública:** datos ficticios y deploy.
 
 ## 7. Fuera de alcance por ahora
 
 Cobros online, facturación fiscal, control de acceso físico (molinetes), app móvil nativa, lista de espera.
 
-**[DECISIÓN]** La feature 1 excluye pantallas, importación de datos, reservas y listado de próximos vencimientos; su distribución por features se detalla arriba.
+**[DECISIÓN]** La feature 1 excluye importación de datos, reservas y listado de próximos vencimientos; su distribución por features se detalla arriba.
 
 ## 8. Preguntas abiertas (resolver en `/speckit.clarify`)
 
 - ¿Cómo se vincula la cuenta `CLIENTE` con su registro de cliente en la feature 2?
 - Para reservas (feature 2), ¿la membresía debe cubrir la fecha de la clase, además de estar vigente al reservar? ¿Qué pasa con reservas futuras si una anulación de pago deja deuda y el gimnasio exige pago completo?
+
+**[DECISIÓN 2026-11-10]** Cada feature incluye una interfaz funcional y su flujo de pruebas en navegador. Se amplía la feature 1 existente con pantallas sin cambiar sus reglas de negocio.

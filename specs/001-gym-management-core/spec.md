@@ -11,7 +11,7 @@ alta de gimnasio y primer administrador, clientes, disciplinas, membresías,
 pedidos de una membresía, pagos parciales y anulaciones, estado de pago y vigencia.
 Recepción opera sin configurar ni anular pagos. Poly es el primer gimnasio de seed,
 con Funcional, Boxeo y Crossfit y membresías ficticias. Fuera de alcance: reservas,
-listado de vencimientos próximos, pantallas web e importación de datos.
+listado de vencimientos próximos e importación de datos.
 
 **Referencias**: [Constitución 1.0.0](../../.specify/memory/constitution.md),
 [dominio acordado](../../polygim-api/legacy/DOMINIO.md) y
@@ -251,7 +251,7 @@ inicial y verificar que un segundo gimnasio puede tener una oferta diferente.
 - **FR-029**: ADMIN y RECEPCION DEBEN poder consultar compras propias, filtrarlas por cliente y ver su membresía, cantidad, precio congelado, total, fecha de compra, vencimiento, estado de pago, deuda, vigencia e historial de pagos y anulaciones.
 - **FR-030**: Las operaciones simultáneas y los fallos DEBEN preservar la exactitud de total, pagos, deuda y estado, sin duplicar efectos económicos ni dejar altas o movimientos parciales.
 - **FR-031**: Los datos iniciales DEBEN incluir Poly, Funcional, Boxeo y Crossfit, membresías con precios y duraciones ficticios y los canales de llegada acordados, como datos reemplazables por gimnasio.
-- **FR-032**: Todas las operaciones incluidas DEBEN poder realizarse por API REST; esta feature no requiere pantallas ni cuentas del cliente final.
+- **FR-032**: Todas las operaciones incluidas DEBEN poder realizarse por API REST; esta feature incluye pantallas operativas para el personal y superadmin, pero no cuentas del cliente final.
 
 ### Constitutional Requirements *(mandatory)*
 
@@ -297,7 +297,18 @@ inicial y verificar que un segundo gimnasio puede tener una oferta diferente.
 - Para compras retroactivas, el precio se congela al registrar la compra: no existe un catálogo histórico para reconstruir precios pasados en esta feature.
 - El seed utiliza ejemplos ficticios, no una importación de clientes, precios ni credenciales del sistema anterior. Las pruebas dispondrán además de un segundo gimnasio independiente.
 - El rol CLIENTE y su autoservicio quedan para la feature de reservas; esta feature gestiona registros de clientes y cuentas de personal.
-- No se incluyen reservas, cupos, listado de próximos vencimientos, pantallas web, importación, cobros online, facturación fiscal, molinetes, app móvil, lista de espera ni demo pública o despliegue de producción.
+- No se incluyen reservas, cupos, listado de próximos vencimientos, importación, cobros online, facturación fiscal, molinetes, app móvil, lista de espera ni demo pública o despliegue de producción.
 - No se exige una función para editar pedidos sin pagos, eliminar compras o eliminar pagos. La prohibición de editar pedidos con pagos se mantiene ante cualquier intento de modificación.
 - La evolución de datos, los contratos detallados, las versiones del stack, la cobertura y las herramientas de verificación se desarrollan en el plan conforme a la constitución.
 - La aceptación de esta spec habilita clarify; plan y tasks requieren sus propias revisiones. El trabajo de esta feature permanece en su rama, sin integrar automáticamente en dev ni main.
+
+## Ampliación autorizada: interfaz funcional (2026-11-10)
+
+El autor solicitó implementar ahora la interfaz del núcleo y entregar pantallas con cada feature posterior. Las exclusiones históricas de UI quedan sustituidas por esta ampliación.
+
+- **FR-033**: Los usuarios acceden y cierran sesión desde navegador; cada rol ve y puede ejecutar solo las operaciones permitidas en esta spec. Una cuenta deshabilitada pierde también su sesión web.
+- **FR-034**: ADMIN y RECEPCION pueden listar, buscar por DNI, registrar y editar clientes; abrir sus compras, comprar una membresía o renovar un antecedente elegido, cobrar, ver vuelto, deuda, vigencia e historial. ADMIN puede anular pagos con confirmación.
+- **FR-035**: ADMIN dispone de formularios de disciplinas, membresías, canales, localidades, cantidad máxima y cuentas de recepción. SUPERADMIN dispone de listado y alta de gimnasios con primer administrador.
+- **FR-036**: Los formularios muestran validaciones, errores y confirmaciones comprensibles; los listados vacíos ofrecen la siguiente acción y los datos permanecen aislados aun alterando una URL o formulario.
+- **SC-009**: El circuito alta de cliente → compra → cobro parcial → cobro con vuelto → anulación se completa en navegador con los mismos resultados que la API.
+- **SC-010**: Las operaciones sin protección de formulario, de otro gimnasio o de un rol no habilitado se rechazan; las vistas son utilizables en escritorio y a 390 px de ancho.
